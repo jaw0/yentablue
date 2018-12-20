@@ -1,0 +1,25 @@
+
+syntax = "proto3";
+package merkle;
+
+
+message leaf_save {
+        uint64         version         = 1;
+        uint32         shard           = 2;
+        string         key             = 3;
+}
+message leaf_saves {
+        repeated leaf_save      save   = 1;
+}
+
+message node_save {
+        int64          key_count       = 1;
+        int32          slot            = 2;
+        int32          children        = 3;
+        bytes          hash            = 4;
+}
+message node_saves {
+        repeated node_save      save   = 1;
+}
+
+

@@ -1,0 +1,12 @@
+
+syntax = "proto3";
+package database;
+
+message record {
+         uint32         flags           = 1;
+         uint32         shard           = 2;
+         uint64         version         = 3;
+         uint64         expire          = 4;
+         bytes          value           = 5;
+}
+

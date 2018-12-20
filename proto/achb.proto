@@ -1,0 +1,150 @@
+
+syntax = "proto2";
+package acproto;
+import "github.com/jaw0/kibitz/peer.proto";
+
+message ACPHeartBeat {
+        required kibitz.PeerInfo peer_info      = 1;
+        optional int32          sort_metric     = 2;
+        optional int32          process_id      = 3;
+
+        optional int32          cpu_metric      = 4;
+        optional int32          capacity_metric = 5;
+        repeated string         database        = 6;
+        optional bool           uptodate        = 7;    // all databases are synced
+}
+
+message ACPHeartBeatRequest {
+        optional ACPHeartBeat   myself        = 1;
+}
+
+message ACPHeartBeatReply {
+        required int32          status_code     = 1;
+        optional string         status_message  = 2;
+        repeated ACPHeartBeat   hbinfo          = 3;
+}
+
+message ACPY2MapDatum {
+        required string         map             = 1;
+        optional uint32         shard           = 2;
+        required string         key             = 3;
+        optional uint64         version         = 4;
+        optional bytes          value           = 5;
+        optional uint64         expire          = 7;
+        optional uint64         conf_time       = 9;    // ring version - so client can detect reconfig
+        optional uint64         if_version      = 10;
+        repeated string         location        = 11;   // redirect - try here instead
+};
+
+message ACPY2GetSet {
+        repeated ACPY2MapDatum  data            = 1;
+};
+
+message ACPY2GetRange {
+        required string         map             = 1;
+        optional string         key0            = 2;
+        optional string         key1            = 3;
+        optional uint64         version0        = 4;
+        optional uint64         version1        = 5;
+        optional uint32         shard           = 6;    // nyi
+};
+
+message ACPY2DistRequest {
+        required int32          hop             = 1;
+        required uint64         expire          = 2;
+        optional string         sender          = 3;
+        required ACPY2MapDatum  data            = 4;
+};
+
+message ACPY2DistReply {
+        required int32          status_code     = 1;
+        required string         status_message  = 2;
+        required int32          result_code     = 3;
+        optional int64          conf_time       = 4;    // ring version - so client can detect reconfig
+};
+
+message ACPY2CheckValue {
+        required string         map             = 1;
+        optional uint32         treeid          = 2;
+        optional int32          level           = 3;
+        required uint64         version         = 4;
+        optional uint32         shard           = 5;
+        optional string         key             = 6;
+        optional bytes          hash            = 7;
+        optional int64          keycount        = 8;
+        optional int32          children        = 9;
+        optional bool           isvalid         = 10;
+};
+
+message ACPY2CheckRequest {
+        required string         map             = 1;
+        optional uint32         treeid          = 2;
+        required int32          level           = 3;
+        required uint64         version         = 4;
+        optional int32          maxresult       = 5;
+};
+
+message ACPY2CheckReply {
+        repeated ACPY2CheckValue check          = 1;
+};
+
+message ACPY2RingConfReq {
+        required string         map             = 1;
+        optional string         datacenter      = 2;
+};
+
+message ACPY2RingPart {
+        required uint32         shard           = 1;
+        repeated string         server          = 2;
+};
+
+message ACPY2RingConfReply {
+        required uint64         version         = 1;
+        required bool           is_stable       = 2;
+        repeated ACPY2RingPart  part            = 3;
+};
+
+
+message ACPY2ServerRequest {
+        optional string         subsystem       = 1;
+        optional string         environment     = 2;
+        optional string         hostname        = 3;
+        optional string         datacenter      = 4;
+        optional string         server_id       = 5;
+};
+message ACPY2ServerData {
+        required string         subsystem       = 1;
+        required string         environment     = 2;
+        required string         hostname        = 3;
+        optional string         datacenter      = 4;
+        optional string         rack            = 5;
+        required string         server_id       = 6;
+        repeated kibitz.NetInfo net_info        = 7;
+        required bool           is_up           = 8;
+        optional bool           is_local        = 9;
+        optional int32          sort_metric     = 10;
+        optional int32          cpu_metric      = 11;
+        optional int32          capacity_metric = 12;
+        repeated string         database        = 14;
+        optional bool           uptodate        = 15;
+        required uint64         time_up         = 16;
+
+};
+message ACPY2ServerReply {
+        repeated ACPY2ServerData data           = 1;
+};
+
+message ACPY2Empty {};
+
+service ACrpc {
+
+        rpc SendHB(ACPHeartBeatRequest) returns (ACPHeartBeatReply) {}
+        rpc GetMerkle(ACPY2CheckRequest) returns (ACPY2CheckReply) {}
+        rpc Get(ACPY2GetSet) returns (ACPY2GetSet) {}
+        rpc Put(ACPY2DistRequest) returns (ACPY2DistReply) {}
+        rpc Range(ACPY2GetRange) returns (ACPY2GetSet) {}
+        rpc RingConf(ACPY2RingConfReq) returns (ACPY2RingConfReply) {}
+        rpc Servers(ACPY2ServerRequest) returns (ACPY2ServerReply) {}
+
+        rpc ShutDown(ACPY2Empty) returns (ACPHeartBeatReply) {}
+}
