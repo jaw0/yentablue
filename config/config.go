@@ -24,6 +24,25 @@ type DBConf struct {
 	CacheSize int
 }
 
+// proto:
+//   ac   - AC::Yenta compat
+//   yb   - yentablue native
+//   http - must return 200
+//   tcp  - send, expect
+
+type Monitor struct {
+	Protocol    string // ac, yb, http, [...]
+	System      string
+	Environment string `name:"env"`
+	Datacenter  string
+	Rack        string
+	Id          string
+	Hostname    string
+	Addr        string
+	Port        int
+	URL         string // for proto 'http'
+}
+
 type Config struct {
 	Environment    string `name:"env"`
 	Datacenter     string
@@ -40,7 +59,7 @@ type Config struct {
 	Port_Server    int
 	Seedpeer       []string `validate:"ipport"`
 	Allow          []string `validate:"ipmask"`
-	Monitor        []string `validate:"ipport"`
+	Monitor        []*Monitor
 	Debug          map[string]bool
 	Database       []*DBConf
 }

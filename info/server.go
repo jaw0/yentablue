@@ -20,6 +20,7 @@ type Net struct {
 type Server struct {
 	Hostname       string
 	Datacenter     string
+	Environment    string
 	Rack           string
 	Id             string
 	Subsystem      string

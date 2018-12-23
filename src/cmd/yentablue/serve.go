@@ -175,6 +175,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	//	return
 	//}
 
+	w.Header().Set("Server", SUBSYS)
 	http.DefaultServeMux.ServeHTTP(w, req)
 }
 

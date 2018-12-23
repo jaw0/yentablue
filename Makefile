@@ -20,9 +20,10 @@ src/.deps: deps
 	-ln -s $(ROOT) src/github.com/jaw0/yentablue
 	touch src/.deps
 
-proto:
+mkproto:
 	cd proto;    PATH=$$PATH:$(ROOT)/bin protoc --gofast_out=plugins=grpc:. --proto_path=../..:. *.proto
 	cd database; PATH=$$PATH:$(ROOT)/bin protoc --gogoslick_out=. *.proto
 	cd merkle;   PATH=$$PATH:$(ROOT)/bin protoc --gogoslick_out=. *.proto
 	cd expire;   PATH=$$PATH:$(ROOT)/bin protoc --gogoslick_out=. *.proto
+	cd monitor;  PATH=$$PATH:$(ROOT)/bin protoc --gofast_out=. *.proto
 

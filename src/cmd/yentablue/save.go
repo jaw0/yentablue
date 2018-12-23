@@ -20,6 +20,7 @@ func addServerInfo(res []*info.Server, w *acproto.ACPHeartBeat, isUp bool) []*in
 
 	r := &info.Server{
 		Subsystem:      ii.GetSubsystem(),
+		Environment:    ii.GetEnvironment(),
 		Id:             ii.GetServerId(),
 		Datacenter:     ii.GetDatacenter(),
 		Rack:           ii.GetRack(),

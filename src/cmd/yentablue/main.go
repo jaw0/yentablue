@@ -28,12 +28,13 @@ import (
 
 	"github.com/jaw0/yentablue/config"
 	"github.com/jaw0/yentablue/gclient"
+	"github.com/jaw0/yentablue/monitor"
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/store"
 )
 
 const (
-	SUBSYS = "fgdb"
+	SUBSYS = "yenta"
 )
 
 type peerChange struct {
@@ -98,7 +99,6 @@ func main() {
 		Rack:       cf.Rack,
 		Port:       cf.Port_Server,
 		Seed:       cf.Seedpeer,
-		Monitor:    cf.Monitor,
 		// Id...
 		Promiscuous: true,
 		Iface:       &pinfo{},
@@ -112,6 +112,7 @@ func main() {
 	pdb.Start()
 	srv := startServer()
 	go periodicSaveServerInfo(cf.Save_status)
+	go monitor.Run(pdb)
 
 	block()
 
