@@ -1,0 +1,65 @@
+
+# example config file
+
+# what environment? prod, dev, staging, ...
+env             prod
+
+# use what tcp port
+port_server	5301
+
+# databases will be stored under what directory
+basedir         /tmp/data
+
+# save status to a file?
+save_status     /tmp/acservers
+
+# allow unauthenticated connections from these networks
+allow		10.0.0.1/8
+allow		10.0.0.2/8
+allow           192.168.200.0/24
+
+# locate the network at startup
+# recommened: 2 per datacenter
+seedpeer        192.168.200.2:5301
+seedpeer        192.168.200.3:5301
+
+# encrypt + authenticate connections using pki
+tls_root        /etc/yentablue/conf/out/ROOT.crt
+# cert should be signed by the root key
+tls_cert        /etc/yentablue/conf/out/athena.crt
+tls_key         /etc/yentablue/conf/out/athena.key
+
+# enable debugging?
+# debug  all
+debug    database
+
+
+# configure databases
+database {
+         name           cmdb
+         pathname       /tmp/cmdb
+         backend        leveldb
+         cachesize      1000
+         secret         squeamish-ossifrage
+}
+
+database {
+         name           test
+         pathname       testdb
+         backend        sqlite
+}
+
+# monitor other systems
+# and gossip their status
+monitor {
+        protocol        ac
+        system          mrquincy
+        port            3501
+}
+
+monitor {
+        protocol        http
+        system          apache
+        port            80
+        url             http://localhost/robots.txt
+}
