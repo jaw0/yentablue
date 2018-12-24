@@ -12,19 +12,24 @@ import (
 	"time"
 )
 
+const (
+	ORDER_SORT     = 1
+	ORDER_CPU      = 2
+	ORDER_CAPACITY = 3
+)
+
 type Net struct {
 	Dom  string
 	Addr string
 }
 
 type Server struct {
+	Subsystem      string
+	Environment    string
 	Hostname       string
 	Datacenter     string
-	Environment    string
 	Rack           string
 	Id             string
-	Subsystem      string
-	Env            string
 	IsUp           bool
 	IsLocal        bool
 	Uptodate       bool
@@ -110,7 +115,7 @@ func (sd *SD) GetServers(sys, env string, nofar bool) []*Server {
 		if sys != "" && sys != s.Subsystem {
 			continue
 		}
-		if env != "" && env != s.Env {
+		if env != "" && env != s.Environment {
 			continue
 		}
 		if nofar && !s.IsLocal {
@@ -123,7 +128,23 @@ func (sd *SD) GetServers(sys, env string, nofar bool) []*Server {
 	return res
 }
 
-func (sd *SD) GetServersOrdered(sys, env string, nofar bool) []*Server {
+func (s *Server) orderMetric(orderby int) int32 {
+
+	switch orderby {
+	case ORDER_SORT:
+		return s.SortMetric
+	case ORDER_CPU:
+		// metric is load avg. less is better.
+		return s.CpuMetric
+	case ORDER_CAPACITY:
+		// metric is space available. more is better.
+		return -s.CapacityMetric
+	}
+
+	return 0
+}
+
+func (sd *SD) GetServersOrdered(sys, env string, nofar bool, orderby int) []*Server {
 
 	// prefer stable, local
 	stable := time.Now().UnixNano() - int64(STABLETIME)
@@ -157,7 +178,7 @@ func (sd *SD) GetServersOrdered(sys, env string, nofar bool) []*Server {
 
 	// sort by metric
 	sort.Slice(all, func(i, j int) bool {
-		return all[i].SortMetric < all[j].SortMetric
+		return all[i].orderMetric(orderby) < all[j].orderMetric(orderby)
 	})
 
 	// semi-randomize
@@ -167,13 +188,13 @@ func (sd *SD) GetServersOrdered(sys, env string, nofar bool) []*Server {
 	if i < 0 {
 		i = 0
 	}
-	limit := all[i].SortMetric
+	limit := all[i].orderMetric(orderby)
 
 	left := []*Server{}
 	right := []*Server{}
 
 	for _, s := range all {
-		if s.SortMetric <= limit {
+		if s.orderMetric(orderby) <= limit {
 			left = append(left, s)
 		} else {
 			right = append(right, s)
@@ -186,12 +207,7 @@ func (sd *SD) GetServersOrdered(sys, env string, nofar bool) []*Server {
 }
 
 func shuffle(a []*Server) {
-
-	i := len(a)
-
-	for i > 1 {
-		j := rand.Int31n(int32(i))
-		i--
+	rand.Shuffle(len(a), func(i, j int) {
 		a[i], a[j] = a[j], a[i]
-	}
+	})
 }

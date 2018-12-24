@@ -311,10 +311,10 @@ func (c *C) GetServersInfo(sys string, env string, host string, dc string, id st
 
 	for _, d := range res.Data {
 		r := &info.Server{
+			Subsystem:      d.GetSubsystem(),
+			Environment:    d.GetEnvironment(),
 			Hostname:       d.GetHostname(),
 			Datacenter:     d.GetDatacenter(),
-			Subsystem:      d.GetSubsystem(),
-			Env:            d.GetEnvironment(),
 			Rack:           d.GetRack(),
 			Id:             d.GetServerId(),
 			Database:       d.Database,
