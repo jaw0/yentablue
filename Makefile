@@ -21,7 +21,7 @@ src/.deps: deps
 	touch src/.deps
 
 mkproto:
-	cd proto;    PATH=$$PATH:$(ROOT)/bin protoc --gofast_out=plugins=grpc:. --proto_path=../..:. *.proto
+	cd proto;    PATH=$$PATH:$(ROOT)/bin protoc --gofast_out=plugins=grpc:. --proto_path=../src:. *.proto
 	cd database; PATH=$$PATH:$(ROOT)/bin protoc --gogoslick_out=. *.proto
 	cd merkle;   PATH=$$PATH:$(ROOT)/bin protoc --gogoslick_out=. *.proto
 	cd expire;   PATH=$$PATH:$(ROOT)/bin protoc --gogoslick_out=. *.proto

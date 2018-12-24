@@ -27,7 +27,9 @@ func main() {
 	var concur int
 	var dbname string
 	var server string
+	var verbose bool
 
+	flag.BoolVar(&verbose, "v", false, "verbose")
 	flag.IntVar(&numget, "n", 10, "count")
 	flag.IntVar(&concur, "c", 1, "concurrency")
 	flag.StringVar(&dbname, "m", "cmdb", "database name")
@@ -70,8 +72,8 @@ func main() {
 					runtime.Goexit()
 				}
 
-				if false {
-					fmt.Printf(">%v\n", res)
+				if verbose {
+					diag.Verbose("get %s -> %v", key, res)
 				}
 			}
 		}(c)

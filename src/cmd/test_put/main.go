@@ -28,7 +28,9 @@ func main() {
 	var concur int
 	var dbname string
 	var server string
+	var verbose bool
 
+	flag.BoolVar(&verbose, "v", false, "verbose")
 	flag.IntVar(&numput, "n", 10, "count")
 	flag.IntVar(&concur, "c", 1, "concurrency")
 	flag.StringVar(&dbname, "m", "cmdb", "database name")
@@ -74,6 +76,9 @@ func main() {
 				if err != nil {
 					fmt.Printf("ERROR: %v\n", err)
 					runtime.Goexit()
+				}
+				if verbose {
+					diag.Verbose("put %s", key)
 				}
 			}
 		}(c)
