@@ -211,3 +211,24 @@ func shuffle(a []*Server) {
 		a[i], a[j] = a[j], a[i]
 	})
 }
+
+func (s *Server) BestAddr() string {
+
+	var pub string
+
+	for _, addr := range s.NetInfo {
+		if addr.Dom == "" {
+			pub = addr.Addr
+			if !s.IsLocal {
+				// faraway server, use public address
+				return pub
+			}
+		}
+		if s.IsLocal && addr.Dom != "" {
+			// usable private address
+			return addr.Addr
+		}
+	}
+	// local server, no private address. use public
+	return pub
+}
