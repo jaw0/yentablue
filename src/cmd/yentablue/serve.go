@@ -15,7 +15,6 @@ import (
 	"github.com/soheilhy/cmux"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	gpeer "google.golang.org/grpc/peer"
 
 	"github.com/jaw0/acgo/diag"
@@ -52,34 +51,21 @@ func startServer() *Server {
 		maxgo = 20
 	}
 
-	//return startNoSSL(l, uint32(maxgo))
-	return startSSL(l, uint32(maxgo))
+	dl.Verbose("starting network on tcp/%d as id %s (%s)", port, pdb.Id(), pdb.Env())
+	return startMux(l, uint32(maxgo))
 
 }
 
-// is ok =>
-func XXXstartSSL(l net.Listener, maxgo uint32) *Server {
-
-	s := &Server{tcp: l}
-
-	grpcS := grpc.NewServer(grpc.MaxConcurrentStreams(maxgo), grpc.UnaryInterceptor(statsInterceptor), grpc.Creds(credentials.NewTLS(tlsConfig)))
-	acproto.RegisterACrpcServer(grpcS, &myServer{})
-
-	go grpcS.Serve(l)
-
-	return s
-}
-
-func startSSL(l net.Listener, maxgo uint32) *Server {
+// grpc, https, http
+func startMux(l net.Listener, maxgo uint32) *Server {
 
 	s := &Server{tcp: l}
 
 	// insecure grpc
-	grpcServer := grpc.NewServer( /*grpc.MaxConcurrentStreams(5),*/ grpc.UnaryInterceptor(aclInterceptor))
+	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(aclInterceptor))
 	acproto.RegisterACrpcServer(grpcServer, &myServer{})
 	// secure
-	grpcSServer := grpc.NewServer( /*grpc.MaxConcurrentStreams(maxgo),*/ grpc.UnaryInterceptor(statsInterceptor)) // , grpc.Creds(credentials.NewTLS(tlsConfig)))
-
+	grpcSServer := grpc.NewServer(grpc.UnaryInterceptor(statsInterceptor))
 	acproto.RegisterACrpcServer(grpcSServer, &myServer{})
 
 	httpServer := &http.Server{Handler: s}
@@ -169,12 +155,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// this is from the grpc docs. it does not work.
-	//if req.ProtoMajor == 2 && strings.Contains(req.Header.Get("Content-Type"), "application/grpc") {
-	//	s.grpcs.ServeHTTP(w, req)
-	//	return
-	//}
-
 	w.Header().Set("Server", SUBSYS)
 	http.DefaultServeMux.ServeHTTP(w, req)
 }
@@ -191,22 +171,3 @@ func aclInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServer
 	}
 	return statsInterceptor(ctx, req, info, handler)
 }
-
-/*
-
-no cf.certs
-  acl or fail
-  httpmux:
-else
-  cmux
-    grpc [acl or fail]
-    tls:
-      use tls config(aclok)
-      httpmux
-
-    else:
-      acl or fail
-      httpmux
-
-
-*/
