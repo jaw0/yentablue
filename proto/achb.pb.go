@@ -13,8 +13,6 @@ import (
 	grpc "google.golang.org/grpc"
 )
 
-import github_com_golang_protobuf_proto "github.com/golang/protobuf/proto"
-
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -29,13 +27,13 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type ACPHeartBeat struct {
-	PeerInfo             *kibitz.PeerInfo `protobuf:"bytes,1,req,name=peer_info,json=peerInfo" json:"peer_info,omitempty"`
-	SortMetric           *int32           `protobuf:"varint,2,opt,name=sort_metric,json=sortMetric" json:"sort_metric,omitempty"`
-	ProcessId            *int32           `protobuf:"varint,3,opt,name=process_id,json=processId" json:"process_id,omitempty"`
-	CpuMetric            *int32           `protobuf:"varint,4,opt,name=cpu_metric,json=cpuMetric" json:"cpu_metric,omitempty"`
-	CapacityMetric       *int32           `protobuf:"varint,5,opt,name=capacity_metric,json=capacityMetric" json:"capacity_metric,omitempty"`
-	Database             []string         `protobuf:"bytes,6,rep,name=database" json:"database,omitempty"`
-	Uptodate             *bool            `protobuf:"varint,7,opt,name=uptodate" json:"uptodate,omitempty"`
+	PeerInfo             *kibitz.PeerInfo `protobuf:"bytes,1,opt,name=peer_info,json=peerInfo,proto3" json:"peer_info,omitempty"`
+	SortMetric           int32            `protobuf:"varint,2,opt,name=sort_metric,json=sortMetric,proto3" json:"sort_metric,omitempty"`
+	ProcessId            int32            `protobuf:"varint,3,opt,name=process_id,json=processId,proto3" json:"process_id,omitempty"`
+	CpuMetric            int32            `protobuf:"varint,4,opt,name=cpu_metric,json=cpuMetric,proto3" json:"cpu_metric,omitempty"`
+	CapacityMetric       int32            `protobuf:"varint,5,opt,name=capacity_metric,json=capacityMetric,proto3" json:"capacity_metric,omitempty"`
+	Database             []string         `protobuf:"bytes,6,rep,name=database,proto3" json:"database,omitempty"`
+	Uptodate             bool             `protobuf:"varint,7,opt,name=uptodate,proto3" json:"uptodate,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -45,7 +43,7 @@ func (m *ACPHeartBeat) Reset()         { *m = ACPHeartBeat{} }
 func (m *ACPHeartBeat) String() string { return proto.CompactTextString(m) }
 func (*ACPHeartBeat) ProtoMessage()    {}
 func (*ACPHeartBeat) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{0}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{0}
 }
 func (m *ACPHeartBeat) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -82,29 +80,29 @@ func (m *ACPHeartBeat) GetPeerInfo() *kibitz.PeerInfo {
 }
 
 func (m *ACPHeartBeat) GetSortMetric() int32 {
-	if m != nil && m.SortMetric != nil {
-		return *m.SortMetric
+	if m != nil {
+		return m.SortMetric
 	}
 	return 0
 }
 
 func (m *ACPHeartBeat) GetProcessId() int32 {
-	if m != nil && m.ProcessId != nil {
-		return *m.ProcessId
+	if m != nil {
+		return m.ProcessId
 	}
 	return 0
 }
 
 func (m *ACPHeartBeat) GetCpuMetric() int32 {
-	if m != nil && m.CpuMetric != nil {
-		return *m.CpuMetric
+	if m != nil {
+		return m.CpuMetric
 	}
 	return 0
 }
 
 func (m *ACPHeartBeat) GetCapacityMetric() int32 {
-	if m != nil && m.CapacityMetric != nil {
-		return *m.CapacityMetric
+	if m != nil {
+		return m.CapacityMetric
 	}
 	return 0
 }
@@ -117,14 +115,14 @@ func (m *ACPHeartBeat) GetDatabase() []string {
 }
 
 func (m *ACPHeartBeat) GetUptodate() bool {
-	if m != nil && m.Uptodate != nil {
-		return *m.Uptodate
+	if m != nil {
+		return m.Uptodate
 	}
 	return false
 }
 
 type ACPHeartBeatRequest struct {
-	Myself               *ACPHeartBeat `protobuf:"bytes,1,opt,name=myself" json:"myself,omitempty"`
+	Myself               *ACPHeartBeat `protobuf:"bytes,1,opt,name=myself,proto3" json:"myself,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -134,7 +132,7 @@ func (m *ACPHeartBeatRequest) Reset()         { *m = ACPHeartBeatRequest{} }
 func (m *ACPHeartBeatRequest) String() string { return proto.CompactTextString(m) }
 func (*ACPHeartBeatRequest) ProtoMessage()    {}
 func (*ACPHeartBeatRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{1}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{1}
 }
 func (m *ACPHeartBeatRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -171,9 +169,9 @@ func (m *ACPHeartBeatRequest) GetMyself() *ACPHeartBeat {
 }
 
 type ACPHeartBeatReply struct {
-	StatusCode           *int32          `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"`
-	StatusMessage        *string         `protobuf:"bytes,2,opt,name=status_message,json=statusMessage" json:"status_message,omitempty"`
-	Hbinfo               []*ACPHeartBeat `protobuf:"bytes,3,rep,name=hbinfo" json:"hbinfo,omitempty"`
+	StatusCode           int32           `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
+	StatusMessage        string          `protobuf:"bytes,2,opt,name=status_message,json=statusMessage,proto3" json:"status_message,omitempty"`
+	Hbinfo               []*ACPHeartBeat `protobuf:"bytes,3,rep,name=hbinfo,proto3" json:"hbinfo,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
 	XXX_unrecognized     []byte          `json:"-"`
 	XXX_sizecache        int32           `json:"-"`
@@ -183,7 +181,7 @@ func (m *ACPHeartBeatReply) Reset()         { *m = ACPHeartBeatReply{} }
 func (m *ACPHeartBeatReply) String() string { return proto.CompactTextString(m) }
 func (*ACPHeartBeatReply) ProtoMessage()    {}
 func (*ACPHeartBeatReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{2}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{2}
 }
 func (m *ACPHeartBeatReply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -213,15 +211,15 @@ func (m *ACPHeartBeatReply) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPHeartBeatReply proto.InternalMessageInfo
 
 func (m *ACPHeartBeatReply) GetStatusCode() int32 {
-	if m != nil && m.StatusCode != nil {
-		return *m.StatusCode
+	if m != nil {
+		return m.StatusCode
 	}
 	return 0
 }
 
 func (m *ACPHeartBeatReply) GetStatusMessage() string {
-	if m != nil && m.StatusMessage != nil {
-		return *m.StatusMessage
+	if m != nil {
+		return m.StatusMessage
 	}
 	return ""
 }
@@ -234,15 +232,15 @@ func (m *ACPHeartBeatReply) GetHbinfo() []*ACPHeartBeat {
 }
 
 type ACPY2MapDatum struct {
-	Map                  *string  `protobuf:"bytes,1,req,name=map" json:"map,omitempty"`
-	Shard                *uint32  `protobuf:"varint,2,opt,name=shard" json:"shard,omitempty"`
-	Key                  *string  `protobuf:"bytes,3,req,name=key" json:"key,omitempty"`
-	Version              *uint64  `protobuf:"varint,4,opt,name=version" json:"version,omitempty"`
-	Value                []byte   `protobuf:"bytes,5,opt,name=value" json:"value,omitempty"`
-	Expire               *uint64  `protobuf:"varint,7,opt,name=expire" json:"expire,omitempty"`
-	ConfTime             *uint64  `protobuf:"varint,9,opt,name=conf_time,json=confTime" json:"conf_time,omitempty"`
-	IfVersion            *uint64  `protobuf:"varint,10,opt,name=if_version,json=ifVersion" json:"if_version,omitempty"`
-	Location             []string `protobuf:"bytes,11,rep,name=location" json:"location,omitempty"`
+	Map                  string   `protobuf:"bytes,1,opt,name=map,proto3" json:"map,omitempty"`
+	Shard                uint32   `protobuf:"varint,2,opt,name=shard,proto3" json:"shard,omitempty"`
+	Key                  string   `protobuf:"bytes,3,opt,name=key,proto3" json:"key,omitempty"`
+	Version              uint64   `protobuf:"varint,4,opt,name=version,proto3" json:"version,omitempty"`
+	Value                []byte   `protobuf:"bytes,5,opt,name=value,proto3" json:"value,omitempty"`
+	Expire               uint64   `protobuf:"varint,7,opt,name=expire,proto3" json:"expire,omitempty"`
+	ConfTime             uint64   `protobuf:"varint,9,opt,name=conf_time,json=confTime,proto3" json:"conf_time,omitempty"`
+	IfVersion            uint64   `protobuf:"varint,10,opt,name=if_version,json=ifVersion,proto3" json:"if_version,omitempty"`
+	Location             []string `protobuf:"bytes,11,rep,name=location,proto3" json:"location,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -252,7 +250,7 @@ func (m *ACPY2MapDatum) Reset()         { *m = ACPY2MapDatum{} }
 func (m *ACPY2MapDatum) String() string { return proto.CompactTextString(m) }
 func (*ACPY2MapDatum) ProtoMessage()    {}
 func (*ACPY2MapDatum) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{3}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{3}
 }
 func (m *ACPY2MapDatum) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -282,29 +280,29 @@ func (m *ACPY2MapDatum) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2MapDatum proto.InternalMessageInfo
 
 func (m *ACPY2MapDatum) GetMap() string {
-	if m != nil && m.Map != nil {
-		return *m.Map
+	if m != nil {
+		return m.Map
 	}
 	return ""
 }
 
 func (m *ACPY2MapDatum) GetShard() uint32 {
-	if m != nil && m.Shard != nil {
-		return *m.Shard
+	if m != nil {
+		return m.Shard
 	}
 	return 0
 }
 
 func (m *ACPY2MapDatum) GetKey() string {
-	if m != nil && m.Key != nil {
-		return *m.Key
+	if m != nil {
+		return m.Key
 	}
 	return ""
 }
 
 func (m *ACPY2MapDatum) GetVersion() uint64 {
-	if m != nil && m.Version != nil {
-		return *m.Version
+	if m != nil {
+		return m.Version
 	}
 	return 0
 }
@@ -317,22 +315,22 @@ func (m *ACPY2MapDatum) GetValue() []byte {
 }
 
 func (m *ACPY2MapDatum) GetExpire() uint64 {
-	if m != nil && m.Expire != nil {
-		return *m.Expire
+	if m != nil {
+		return m.Expire
 	}
 	return 0
 }
 
 func (m *ACPY2MapDatum) GetConfTime() uint64 {
-	if m != nil && m.ConfTime != nil {
-		return *m.ConfTime
+	if m != nil {
+		return m.ConfTime
 	}
 	return 0
 }
 
 func (m *ACPY2MapDatum) GetIfVersion() uint64 {
-	if m != nil && m.IfVersion != nil {
-		return *m.IfVersion
+	if m != nil {
+		return m.IfVersion
 	}
 	return 0
 }
@@ -345,7 +343,7 @@ func (m *ACPY2MapDatum) GetLocation() []string {
 }
 
 type ACPY2GetSet struct {
-	Data                 []*ACPY2MapDatum `protobuf:"bytes,1,rep,name=data" json:"data,omitempty"`
+	Data                 []*ACPY2MapDatum `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -355,7 +353,7 @@ func (m *ACPY2GetSet) Reset()         { *m = ACPY2GetSet{} }
 func (m *ACPY2GetSet) String() string { return proto.CompactTextString(m) }
 func (*ACPY2GetSet) ProtoMessage()    {}
 func (*ACPY2GetSet) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{4}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{4}
 }
 func (m *ACPY2GetSet) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -392,12 +390,12 @@ func (m *ACPY2GetSet) GetData() []*ACPY2MapDatum {
 }
 
 type ACPY2GetRange struct {
-	Map                  *string  `protobuf:"bytes,1,req,name=map" json:"map,omitempty"`
-	Key0                 *string  `protobuf:"bytes,2,opt,name=key0" json:"key0,omitempty"`
-	Key1                 *string  `protobuf:"bytes,3,opt,name=key1" json:"key1,omitempty"`
-	Version0             *uint64  `protobuf:"varint,4,opt,name=version0" json:"version0,omitempty"`
-	Version1             *uint64  `protobuf:"varint,5,opt,name=version1" json:"version1,omitempty"`
-	Shard                *uint32  `protobuf:"varint,6,opt,name=shard" json:"shard,omitempty"`
+	Map                  string   `protobuf:"bytes,1,opt,name=map,proto3" json:"map,omitempty"`
+	Key0                 string   `protobuf:"bytes,2,opt,name=key0,proto3" json:"key0,omitempty"`
+	Key1                 string   `protobuf:"bytes,3,opt,name=key1,proto3" json:"key1,omitempty"`
+	Version0             uint64   `protobuf:"varint,4,opt,name=version0,proto3" json:"version0,omitempty"`
+	Version1             uint64   `protobuf:"varint,5,opt,name=version1,proto3" json:"version1,omitempty"`
+	Shard                uint32   `protobuf:"varint,6,opt,name=shard,proto3" json:"shard,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -407,7 +405,7 @@ func (m *ACPY2GetRange) Reset()         { *m = ACPY2GetRange{} }
 func (m *ACPY2GetRange) String() string { return proto.CompactTextString(m) }
 func (*ACPY2GetRange) ProtoMessage()    {}
 func (*ACPY2GetRange) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{5}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{5}
 }
 func (m *ACPY2GetRange) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -437,52 +435,52 @@ func (m *ACPY2GetRange) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2GetRange proto.InternalMessageInfo
 
 func (m *ACPY2GetRange) GetMap() string {
-	if m != nil && m.Map != nil {
-		return *m.Map
+	if m != nil {
+		return m.Map
 	}
 	return ""
 }
 
 func (m *ACPY2GetRange) GetKey0() string {
-	if m != nil && m.Key0 != nil {
-		return *m.Key0
+	if m != nil {
+		return m.Key0
 	}
 	return ""
 }
 
 func (m *ACPY2GetRange) GetKey1() string {
-	if m != nil && m.Key1 != nil {
-		return *m.Key1
+	if m != nil {
+		return m.Key1
 	}
 	return ""
 }
 
 func (m *ACPY2GetRange) GetVersion0() uint64 {
-	if m != nil && m.Version0 != nil {
-		return *m.Version0
+	if m != nil {
+		return m.Version0
 	}
 	return 0
 }
 
 func (m *ACPY2GetRange) GetVersion1() uint64 {
-	if m != nil && m.Version1 != nil {
-		return *m.Version1
+	if m != nil {
+		return m.Version1
 	}
 	return 0
 }
 
 func (m *ACPY2GetRange) GetShard() uint32 {
-	if m != nil && m.Shard != nil {
-		return *m.Shard
+	if m != nil {
+		return m.Shard
 	}
 	return 0
 }
 
 type ACPY2DistRequest struct {
-	Hop                  *int32         `protobuf:"varint,1,req,name=hop" json:"hop,omitempty"`
-	Expire               *uint64        `protobuf:"varint,2,req,name=expire" json:"expire,omitempty"`
-	Sender               *string        `protobuf:"bytes,3,opt,name=sender" json:"sender,omitempty"`
-	Data                 *ACPY2MapDatum `protobuf:"bytes,4,req,name=data" json:"data,omitempty"`
+	Hop                  int32          `protobuf:"varint,1,opt,name=hop,proto3" json:"hop,omitempty"`
+	Expire               uint64         `protobuf:"varint,2,opt,name=expire,proto3" json:"expire,omitempty"`
+	Sender               string         `protobuf:"bytes,3,opt,name=sender,proto3" json:"sender,omitempty"`
+	Data                 *ACPY2MapDatum `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
 	XXX_unrecognized     []byte         `json:"-"`
 	XXX_sizecache        int32          `json:"-"`
@@ -492,7 +490,7 @@ func (m *ACPY2DistRequest) Reset()         { *m = ACPY2DistRequest{} }
 func (m *ACPY2DistRequest) String() string { return proto.CompactTextString(m) }
 func (*ACPY2DistRequest) ProtoMessage()    {}
 func (*ACPY2DistRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{6}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{6}
 }
 func (m *ACPY2DistRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -522,22 +520,22 @@ func (m *ACPY2DistRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2DistRequest proto.InternalMessageInfo
 
 func (m *ACPY2DistRequest) GetHop() int32 {
-	if m != nil && m.Hop != nil {
-		return *m.Hop
+	if m != nil {
+		return m.Hop
 	}
 	return 0
 }
 
 func (m *ACPY2DistRequest) GetExpire() uint64 {
-	if m != nil && m.Expire != nil {
-		return *m.Expire
+	if m != nil {
+		return m.Expire
 	}
 	return 0
 }
 
 func (m *ACPY2DistRequest) GetSender() string {
-	if m != nil && m.Sender != nil {
-		return *m.Sender
+	if m != nil {
+		return m.Sender
 	}
 	return ""
 }
@@ -550,10 +548,10 @@ func (m *ACPY2DistRequest) GetData() *ACPY2MapDatum {
 }
 
 type ACPY2DistReply struct {
-	StatusCode           *int32   `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"`
-	StatusMessage        *string  `protobuf:"bytes,2,req,name=status_message,json=statusMessage" json:"status_message,omitempty"`
-	ResultCode           *int32   `protobuf:"varint,3,req,name=result_code,json=resultCode" json:"result_code,omitempty"`
-	ConfTime             *int64   `protobuf:"varint,4,opt,name=conf_time,json=confTime" json:"conf_time,omitempty"`
+	StatusCode           int32    `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
+	StatusMessage        string   `protobuf:"bytes,2,opt,name=status_message,json=statusMessage,proto3" json:"status_message,omitempty"`
+	ResultCode           int32    `protobuf:"varint,3,opt,name=result_code,json=resultCode,proto3" json:"result_code,omitempty"`
+	ConfTime             int64    `protobuf:"varint,4,opt,name=conf_time,json=confTime,proto3" json:"conf_time,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -563,7 +561,7 @@ func (m *ACPY2DistReply) Reset()         { *m = ACPY2DistReply{} }
 func (m *ACPY2DistReply) String() string { return proto.CompactTextString(m) }
 func (*ACPY2DistReply) ProtoMessage()    {}
 func (*ACPY2DistReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{7}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{7}
 }
 func (m *ACPY2DistReply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -593,44 +591,44 @@ func (m *ACPY2DistReply) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2DistReply proto.InternalMessageInfo
 
 func (m *ACPY2DistReply) GetStatusCode() int32 {
-	if m != nil && m.StatusCode != nil {
-		return *m.StatusCode
+	if m != nil {
+		return m.StatusCode
 	}
 	return 0
 }
 
 func (m *ACPY2DistReply) GetStatusMessage() string {
-	if m != nil && m.StatusMessage != nil {
-		return *m.StatusMessage
+	if m != nil {
+		return m.StatusMessage
 	}
 	return ""
 }
 
 func (m *ACPY2DistReply) GetResultCode() int32 {
-	if m != nil && m.ResultCode != nil {
-		return *m.ResultCode
+	if m != nil {
+		return m.ResultCode
 	}
 	return 0
 }
 
 func (m *ACPY2DistReply) GetConfTime() int64 {
-	if m != nil && m.ConfTime != nil {
-		return *m.ConfTime
+	if m != nil {
+		return m.ConfTime
 	}
 	return 0
 }
 
 type ACPY2CheckValue struct {
-	Map                  *string  `protobuf:"bytes,1,req,name=map" json:"map,omitempty"`
-	Treeid               *uint32  `protobuf:"varint,2,opt,name=treeid" json:"treeid,omitempty"`
-	Level                *int32   `protobuf:"varint,3,opt,name=level" json:"level,omitempty"`
-	Version              *uint64  `protobuf:"varint,4,req,name=version" json:"version,omitempty"`
-	Shard                *uint32  `protobuf:"varint,5,opt,name=shard" json:"shard,omitempty"`
-	Key                  *string  `protobuf:"bytes,6,opt,name=key" json:"key,omitempty"`
-	Hash                 []byte   `protobuf:"bytes,7,opt,name=hash" json:"hash,omitempty"`
-	Keycount             *int64   `protobuf:"varint,8,opt,name=keycount" json:"keycount,omitempty"`
-	Children             *int32   `protobuf:"varint,9,opt,name=children" json:"children,omitempty"`
-	Isvalid              *bool    `protobuf:"varint,10,opt,name=isvalid" json:"isvalid,omitempty"`
+	Map                  string   `protobuf:"bytes,1,opt,name=map,proto3" json:"map,omitempty"`
+	Treeid               uint32   `protobuf:"varint,2,opt,name=treeid,proto3" json:"treeid,omitempty"`
+	Level                int32    `protobuf:"varint,3,opt,name=level,proto3" json:"level,omitempty"`
+	Version              uint64   `protobuf:"varint,4,opt,name=version,proto3" json:"version,omitempty"`
+	Shard                uint32   `protobuf:"varint,5,opt,name=shard,proto3" json:"shard,omitempty"`
+	Key                  string   `protobuf:"bytes,6,opt,name=key,proto3" json:"key,omitempty"`
+	Hash                 []byte   `protobuf:"bytes,7,opt,name=hash,proto3" json:"hash,omitempty"`
+	Keycount             int64    `protobuf:"varint,8,opt,name=keycount,proto3" json:"keycount,omitempty"`
+	Children             int32    `protobuf:"varint,9,opt,name=children,proto3" json:"children,omitempty"`
+	Isvalid              bool     `protobuf:"varint,10,opt,name=isvalid,proto3" json:"isvalid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -640,7 +638,7 @@ func (m *ACPY2CheckValue) Reset()         { *m = ACPY2CheckValue{} }
 func (m *ACPY2CheckValue) String() string { return proto.CompactTextString(m) }
 func (*ACPY2CheckValue) ProtoMessage()    {}
 func (*ACPY2CheckValue) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{8}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{8}
 }
 func (m *ACPY2CheckValue) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -670,43 +668,43 @@ func (m *ACPY2CheckValue) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2CheckValue proto.InternalMessageInfo
 
 func (m *ACPY2CheckValue) GetMap() string {
-	if m != nil && m.Map != nil {
-		return *m.Map
+	if m != nil {
+		return m.Map
 	}
 	return ""
 }
 
 func (m *ACPY2CheckValue) GetTreeid() uint32 {
-	if m != nil && m.Treeid != nil {
-		return *m.Treeid
+	if m != nil {
+		return m.Treeid
 	}
 	return 0
 }
 
 func (m *ACPY2CheckValue) GetLevel() int32 {
-	if m != nil && m.Level != nil {
-		return *m.Level
+	if m != nil {
+		return m.Level
 	}
 	return 0
 }
 
 func (m *ACPY2CheckValue) GetVersion() uint64 {
-	if m != nil && m.Version != nil {
-		return *m.Version
+	if m != nil {
+		return m.Version
 	}
 	return 0
 }
 
 func (m *ACPY2CheckValue) GetShard() uint32 {
-	if m != nil && m.Shard != nil {
-		return *m.Shard
+	if m != nil {
+		return m.Shard
 	}
 	return 0
 }
 
 func (m *ACPY2CheckValue) GetKey() string {
-	if m != nil && m.Key != nil {
-		return *m.Key
+	if m != nil {
+		return m.Key
 	}
 	return ""
 }
@@ -719,32 +717,32 @@ func (m *ACPY2CheckValue) GetHash() []byte {
 }
 
 func (m *ACPY2CheckValue) GetKeycount() int64 {
-	if m != nil && m.Keycount != nil {
-		return *m.Keycount
+	if m != nil {
+		return m.Keycount
 	}
 	return 0
 }
 
 func (m *ACPY2CheckValue) GetChildren() int32 {
-	if m != nil && m.Children != nil {
-		return *m.Children
+	if m != nil {
+		return m.Children
 	}
 	return 0
 }
 
 func (m *ACPY2CheckValue) GetIsvalid() bool {
-	if m != nil && m.Isvalid != nil {
-		return *m.Isvalid
+	if m != nil {
+		return m.Isvalid
 	}
 	return false
 }
 
 type ACPY2CheckRequest struct {
-	Map                  *string  `protobuf:"bytes,1,req,name=map" json:"map,omitempty"`
-	Treeid               *uint32  `protobuf:"varint,2,opt,name=treeid" json:"treeid,omitempty"`
-	Level                *int32   `protobuf:"varint,3,req,name=level" json:"level,omitempty"`
-	Version              *uint64  `protobuf:"varint,4,req,name=version" json:"version,omitempty"`
-	Maxresult            *int32   `protobuf:"varint,5,opt,name=maxresult" json:"maxresult,omitempty"`
+	Map                  string   `protobuf:"bytes,1,opt,name=map,proto3" json:"map,omitempty"`
+	Treeid               uint32   `protobuf:"varint,2,opt,name=treeid,proto3" json:"treeid,omitempty"`
+	Level                int32    `protobuf:"varint,3,opt,name=level,proto3" json:"level,omitempty"`
+	Version              uint64   `protobuf:"varint,4,opt,name=version,proto3" json:"version,omitempty"`
+	Maxresult            int32    `protobuf:"varint,5,opt,name=maxresult,proto3" json:"maxresult,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -754,7 +752,7 @@ func (m *ACPY2CheckRequest) Reset()         { *m = ACPY2CheckRequest{} }
 func (m *ACPY2CheckRequest) String() string { return proto.CompactTextString(m) }
 func (*ACPY2CheckRequest) ProtoMessage()    {}
 func (*ACPY2CheckRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{9}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{9}
 }
 func (m *ACPY2CheckRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -784,42 +782,42 @@ func (m *ACPY2CheckRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2CheckRequest proto.InternalMessageInfo
 
 func (m *ACPY2CheckRequest) GetMap() string {
-	if m != nil && m.Map != nil {
-		return *m.Map
+	if m != nil {
+		return m.Map
 	}
 	return ""
 }
 
 func (m *ACPY2CheckRequest) GetTreeid() uint32 {
-	if m != nil && m.Treeid != nil {
-		return *m.Treeid
+	if m != nil {
+		return m.Treeid
 	}
 	return 0
 }
 
 func (m *ACPY2CheckRequest) GetLevel() int32 {
-	if m != nil && m.Level != nil {
-		return *m.Level
+	if m != nil {
+		return m.Level
 	}
 	return 0
 }
 
 func (m *ACPY2CheckRequest) GetVersion() uint64 {
-	if m != nil && m.Version != nil {
-		return *m.Version
+	if m != nil {
+		return m.Version
 	}
 	return 0
 }
 
 func (m *ACPY2CheckRequest) GetMaxresult() int32 {
-	if m != nil && m.Maxresult != nil {
-		return *m.Maxresult
+	if m != nil {
+		return m.Maxresult
 	}
 	return 0
 }
 
 type ACPY2CheckReply struct {
-	Check                []*ACPY2CheckValue `protobuf:"bytes,1,rep,name=check" json:"check,omitempty"`
+	Check                []*ACPY2CheckValue `protobuf:"bytes,1,rep,name=check,proto3" json:"check,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
 	XXX_unrecognized     []byte             `json:"-"`
 	XXX_sizecache        int32              `json:"-"`
@@ -829,7 +827,7 @@ func (m *ACPY2CheckReply) Reset()         { *m = ACPY2CheckReply{} }
 func (m *ACPY2CheckReply) String() string { return proto.CompactTextString(m) }
 func (*ACPY2CheckReply) ProtoMessage()    {}
 func (*ACPY2CheckReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{10}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{10}
 }
 func (m *ACPY2CheckReply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -866,8 +864,8 @@ func (m *ACPY2CheckReply) GetCheck() []*ACPY2CheckValue {
 }
 
 type ACPY2RingConfReq struct {
-	Map                  *string  `protobuf:"bytes,1,req,name=map" json:"map,omitempty"`
-	Datacenter           *string  `protobuf:"bytes,2,opt,name=datacenter" json:"datacenter,omitempty"`
+	Map                  string   `protobuf:"bytes,1,opt,name=map,proto3" json:"map,omitempty"`
+	Datacenter           string   `protobuf:"bytes,2,opt,name=datacenter,proto3" json:"datacenter,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -877,7 +875,7 @@ func (m *ACPY2RingConfReq) Reset()         { *m = ACPY2RingConfReq{} }
 func (m *ACPY2RingConfReq) String() string { return proto.CompactTextString(m) }
 func (*ACPY2RingConfReq) ProtoMessage()    {}
 func (*ACPY2RingConfReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{11}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{11}
 }
 func (m *ACPY2RingConfReq) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -907,22 +905,22 @@ func (m *ACPY2RingConfReq) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2RingConfReq proto.InternalMessageInfo
 
 func (m *ACPY2RingConfReq) GetMap() string {
-	if m != nil && m.Map != nil {
-		return *m.Map
+	if m != nil {
+		return m.Map
 	}
 	return ""
 }
 
 func (m *ACPY2RingConfReq) GetDatacenter() string {
-	if m != nil && m.Datacenter != nil {
-		return *m.Datacenter
+	if m != nil {
+		return m.Datacenter
 	}
 	return ""
 }
 
 type ACPY2RingPart struct {
-	Shard                *uint32  `protobuf:"varint,1,req,name=shard" json:"shard,omitempty"`
-	Server               []string `protobuf:"bytes,2,rep,name=server" json:"server,omitempty"`
+	Shard                uint32   `protobuf:"varint,1,opt,name=shard,proto3" json:"shard,omitempty"`
+	Server               []string `protobuf:"bytes,2,rep,name=server,proto3" json:"server,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -932,7 +930,7 @@ func (m *ACPY2RingPart) Reset()         { *m = ACPY2RingPart{} }
 func (m *ACPY2RingPart) String() string { return proto.CompactTextString(m) }
 func (*ACPY2RingPart) ProtoMessage()    {}
 func (*ACPY2RingPart) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{12}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{12}
 }
 func (m *ACPY2RingPart) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -962,8 +960,8 @@ func (m *ACPY2RingPart) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2RingPart proto.InternalMessageInfo
 
 func (m *ACPY2RingPart) GetShard() uint32 {
-	if m != nil && m.Shard != nil {
-		return *m.Shard
+	if m != nil {
+		return m.Shard
 	}
 	return 0
 }
@@ -976,9 +974,9 @@ func (m *ACPY2RingPart) GetServer() []string {
 }
 
 type ACPY2RingConfReply struct {
-	Version              *uint64          `protobuf:"varint,1,req,name=version" json:"version,omitempty"`
-	IsStable             *bool            `protobuf:"varint,2,req,name=is_stable,json=isStable" json:"is_stable,omitempty"`
-	Part                 []*ACPY2RingPart `protobuf:"bytes,3,rep,name=part" json:"part,omitempty"`
+	Version              uint64           `protobuf:"varint,1,opt,name=version,proto3" json:"version,omitempty"`
+	IsStable             bool             `protobuf:"varint,2,opt,name=is_stable,json=isStable,proto3" json:"is_stable,omitempty"`
+	Part                 []*ACPY2RingPart `protobuf:"bytes,3,rep,name=part,proto3" json:"part,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -988,7 +986,7 @@ func (m *ACPY2RingConfReply) Reset()         { *m = ACPY2RingConfReply{} }
 func (m *ACPY2RingConfReply) String() string { return proto.CompactTextString(m) }
 func (*ACPY2RingConfReply) ProtoMessage()    {}
 func (*ACPY2RingConfReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{13}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{13}
 }
 func (m *ACPY2RingConfReply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1018,15 +1016,15 @@ func (m *ACPY2RingConfReply) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2RingConfReply proto.InternalMessageInfo
 
 func (m *ACPY2RingConfReply) GetVersion() uint64 {
-	if m != nil && m.Version != nil {
-		return *m.Version
+	if m != nil {
+		return m.Version
 	}
 	return 0
 }
 
 func (m *ACPY2RingConfReply) GetIsStable() bool {
-	if m != nil && m.IsStable != nil {
-		return *m.IsStable
+	if m != nil {
+		return m.IsStable
 	}
 	return false
 }
@@ -1039,11 +1037,11 @@ func (m *ACPY2RingConfReply) GetPart() []*ACPY2RingPart {
 }
 
 type ACPY2ServerRequest struct {
-	Subsystem            *string  `protobuf:"bytes,1,opt,name=subsystem" json:"subsystem,omitempty"`
-	Environment          *string  `protobuf:"bytes,2,opt,name=environment" json:"environment,omitempty"`
-	Hostname             *string  `protobuf:"bytes,3,opt,name=hostname" json:"hostname,omitempty"`
-	Datacenter           *string  `protobuf:"bytes,4,opt,name=datacenter" json:"datacenter,omitempty"`
-	ServerId             *string  `protobuf:"bytes,5,opt,name=server_id,json=serverId" json:"server_id,omitempty"`
+	Subsystem            string   `protobuf:"bytes,1,opt,name=subsystem,proto3" json:"subsystem,omitempty"`
+	Environment          string   `protobuf:"bytes,2,opt,name=environment,proto3" json:"environment,omitempty"`
+	Hostname             string   `protobuf:"bytes,3,opt,name=hostname,proto3" json:"hostname,omitempty"`
+	Datacenter           string   `protobuf:"bytes,4,opt,name=datacenter,proto3" json:"datacenter,omitempty"`
+	ServerId             string   `protobuf:"bytes,5,opt,name=server_id,json=serverId,proto3" json:"server_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1053,7 +1051,7 @@ func (m *ACPY2ServerRequest) Reset()         { *m = ACPY2ServerRequest{} }
 func (m *ACPY2ServerRequest) String() string { return proto.CompactTextString(m) }
 func (*ACPY2ServerRequest) ProtoMessage()    {}
 func (*ACPY2ServerRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{14}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{14}
 }
 func (m *ACPY2ServerRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1083,56 +1081,56 @@ func (m *ACPY2ServerRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2ServerRequest proto.InternalMessageInfo
 
 func (m *ACPY2ServerRequest) GetSubsystem() string {
-	if m != nil && m.Subsystem != nil {
-		return *m.Subsystem
+	if m != nil {
+		return m.Subsystem
 	}
 	return ""
 }
 
 func (m *ACPY2ServerRequest) GetEnvironment() string {
-	if m != nil && m.Environment != nil {
-		return *m.Environment
+	if m != nil {
+		return m.Environment
 	}
 	return ""
 }
 
 func (m *ACPY2ServerRequest) GetHostname() string {
-	if m != nil && m.Hostname != nil {
-		return *m.Hostname
+	if m != nil {
+		return m.Hostname
 	}
 	return ""
 }
 
 func (m *ACPY2ServerRequest) GetDatacenter() string {
-	if m != nil && m.Datacenter != nil {
-		return *m.Datacenter
+	if m != nil {
+		return m.Datacenter
 	}
 	return ""
 }
 
 func (m *ACPY2ServerRequest) GetServerId() string {
-	if m != nil && m.ServerId != nil {
-		return *m.ServerId
+	if m != nil {
+		return m.ServerId
 	}
 	return ""
 }
 
 type ACPY2ServerData struct {
-	Subsystem            *string           `protobuf:"bytes,1,req,name=subsystem" json:"subsystem,omitempty"`
-	Environment          *string           `protobuf:"bytes,2,req,name=environment" json:"environment,omitempty"`
-	Hostname             *string           `protobuf:"bytes,3,req,name=hostname" json:"hostname,omitempty"`
-	Datacenter           *string           `protobuf:"bytes,4,opt,name=datacenter" json:"datacenter,omitempty"`
-	Rack                 *string           `protobuf:"bytes,5,opt,name=rack" json:"rack,omitempty"`
-	ServerId             *string           `protobuf:"bytes,6,req,name=server_id,json=serverId" json:"server_id,omitempty"`
-	NetInfo              []*kibitz.NetInfo `protobuf:"bytes,7,rep,name=net_info,json=netInfo" json:"net_info,omitempty"`
-	IsUp                 *bool             `protobuf:"varint,8,req,name=is_up,json=isUp" json:"is_up,omitempty"`
-	IsLocal              *bool             `protobuf:"varint,9,opt,name=is_local,json=isLocal" json:"is_local,omitempty"`
-	SortMetric           *int32            `protobuf:"varint,10,opt,name=sort_metric,json=sortMetric" json:"sort_metric,omitempty"`
-	CpuMetric            *int32            `protobuf:"varint,11,opt,name=cpu_metric,json=cpuMetric" json:"cpu_metric,omitempty"`
-	CapacityMetric       *int32            `protobuf:"varint,12,opt,name=capacity_metric,json=capacityMetric" json:"capacity_metric,omitempty"`
-	Database             []string          `protobuf:"bytes,14,rep,name=database" json:"database,omitempty"`
-	Uptodate             *bool             `protobuf:"varint,15,opt,name=uptodate" json:"uptodate,omitempty"`
-	TimeUp               *uint64           `protobuf:"varint,16,req,name=time_up,json=timeUp" json:"time_up,omitempty"`
+	Subsystem            string            `protobuf:"bytes,1,opt,name=subsystem,proto3" json:"subsystem,omitempty"`
+	Environment          string            `protobuf:"bytes,2,opt,name=environment,proto3" json:"environment,omitempty"`
+	Hostname             string            `protobuf:"bytes,3,opt,name=hostname,proto3" json:"hostname,omitempty"`
+	Datacenter           string            `protobuf:"bytes,4,opt,name=datacenter,proto3" json:"datacenter,omitempty"`
+	Rack                 string            `protobuf:"bytes,5,opt,name=rack,proto3" json:"rack,omitempty"`
+	ServerId             string            `protobuf:"bytes,6,opt,name=server_id,json=serverId,proto3" json:"server_id,omitempty"`
+	NetInfo              []*kibitz.NetInfo `protobuf:"bytes,7,rep,name=net_info,json=netInfo,proto3" json:"net_info,omitempty"`
+	IsUp                 bool              `protobuf:"varint,8,opt,name=is_up,json=isUp,proto3" json:"is_up,omitempty"`
+	IsLocal              bool              `protobuf:"varint,9,opt,name=is_local,json=isLocal,proto3" json:"is_local,omitempty"`
+	SortMetric           int32             `protobuf:"varint,10,opt,name=sort_metric,json=sortMetric,proto3" json:"sort_metric,omitempty"`
+	CpuMetric            int32             `protobuf:"varint,11,opt,name=cpu_metric,json=cpuMetric,proto3" json:"cpu_metric,omitempty"`
+	CapacityMetric       int32             `protobuf:"varint,12,opt,name=capacity_metric,json=capacityMetric,proto3" json:"capacity_metric,omitempty"`
+	Database             []string          `protobuf:"bytes,14,rep,name=database,proto3" json:"database,omitempty"`
+	Uptodate             bool              `protobuf:"varint,15,opt,name=uptodate,proto3" json:"uptodate,omitempty"`
+	TimeUp               uint64            `protobuf:"varint,16,opt,name=time_up,json=timeUp,proto3" json:"time_up,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
 	XXX_unrecognized     []byte            `json:"-"`
 	XXX_sizecache        int32             `json:"-"`
@@ -1142,7 +1140,7 @@ func (m *ACPY2ServerData) Reset()         { *m = ACPY2ServerData{} }
 func (m *ACPY2ServerData) String() string { return proto.CompactTextString(m) }
 func (*ACPY2ServerData) ProtoMessage()    {}
 func (*ACPY2ServerData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{15}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{15}
 }
 func (m *ACPY2ServerData) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1172,43 +1170,43 @@ func (m *ACPY2ServerData) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACPY2ServerData proto.InternalMessageInfo
 
 func (m *ACPY2ServerData) GetSubsystem() string {
-	if m != nil && m.Subsystem != nil {
-		return *m.Subsystem
+	if m != nil {
+		return m.Subsystem
 	}
 	return ""
 }
 
 func (m *ACPY2ServerData) GetEnvironment() string {
-	if m != nil && m.Environment != nil {
-		return *m.Environment
+	if m != nil {
+		return m.Environment
 	}
 	return ""
 }
 
 func (m *ACPY2ServerData) GetHostname() string {
-	if m != nil && m.Hostname != nil {
-		return *m.Hostname
+	if m != nil {
+		return m.Hostname
 	}
 	return ""
 }
 
 func (m *ACPY2ServerData) GetDatacenter() string {
-	if m != nil && m.Datacenter != nil {
-		return *m.Datacenter
+	if m != nil {
+		return m.Datacenter
 	}
 	return ""
 }
 
 func (m *ACPY2ServerData) GetRack() string {
-	if m != nil && m.Rack != nil {
-		return *m.Rack
+	if m != nil {
+		return m.Rack
 	}
 	return ""
 }
 
 func (m *ACPY2ServerData) GetServerId() string {
-	if m != nil && m.ServerId != nil {
-		return *m.ServerId
+	if m != nil {
+		return m.ServerId
 	}
 	return ""
 }
@@ -1221,36 +1219,36 @@ func (m *ACPY2ServerData) GetNetInfo() []*kibitz.NetInfo {
 }
 
 func (m *ACPY2ServerData) GetIsUp() bool {
-	if m != nil && m.IsUp != nil {
-		return *m.IsUp
+	if m != nil {
+		return m.IsUp
 	}
 	return false
 }
 
 func (m *ACPY2ServerData) GetIsLocal() bool {
-	if m != nil && m.IsLocal != nil {
-		return *m.IsLocal
+	if m != nil {
+		return m.IsLocal
 	}
 	return false
 }
 
 func (m *ACPY2ServerData) GetSortMetric() int32 {
-	if m != nil && m.SortMetric != nil {
-		return *m.SortMetric
+	if m != nil {
+		return m.SortMetric
 	}
 	return 0
 }
 
 func (m *ACPY2ServerData) GetCpuMetric() int32 {
-	if m != nil && m.CpuMetric != nil {
-		return *m.CpuMetric
+	if m != nil {
+		return m.CpuMetric
 	}
 	return 0
 }
 
 func (m *ACPY2ServerData) GetCapacityMetric() int32 {
-	if m != nil && m.CapacityMetric != nil {
-		return *m.CapacityMetric
+	if m != nil {
+		return m.CapacityMetric
 	}
 	return 0
 }
@@ -1263,21 +1261,21 @@ func (m *ACPY2ServerData) GetDatabase() []string {
 }
 
 func (m *ACPY2ServerData) GetUptodate() bool {
-	if m != nil && m.Uptodate != nil {
-		return *m.Uptodate
+	if m != nil {
+		return m.Uptodate
 	}
 	return false
 }
 
 func (m *ACPY2ServerData) GetTimeUp() uint64 {
-	if m != nil && m.TimeUp != nil {
-		return *m.TimeUp
+	if m != nil {
+		return m.TimeUp
 	}
 	return 0
 }
 
 type ACPY2ServerReply struct {
-	Data                 []*ACPY2ServerData `protobuf:"bytes,1,rep,name=data" json:"data,omitempty"`
+	Data                 []*ACPY2ServerData `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
 	XXX_unrecognized     []byte             `json:"-"`
 	XXX_sizecache        int32              `json:"-"`
@@ -1287,7 +1285,7 @@ func (m *ACPY2ServerReply) Reset()         { *m = ACPY2ServerReply{} }
 func (m *ACPY2ServerReply) String() string { return proto.CompactTextString(m) }
 func (*ACPY2ServerReply) ProtoMessage()    {}
 func (*ACPY2ServerReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{16}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{16}
 }
 func (m *ACPY2ServerReply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1333,7 +1331,7 @@ func (m *ACPY2Empty) Reset()         { *m = ACPY2Empty{} }
 func (m *ACPY2Empty) String() string { return proto.CompactTextString(m) }
 func (*ACPY2Empty) ProtoMessage()    {}
 func (*ACPY2Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_achb_a37b42bc256bb4fa, []int{17}
+	return fileDescriptor_achb_1e483a50cd59b922, []int{17}
 }
 func (m *ACPY2Empty) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1701,9 +1699,7 @@ func (m *ACPHeartBeat) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.PeerInfo == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.PeerInfo != nil {
 		dAtA[i] = 0xa
 		i++
 		i = encodeVarintAchb(dAtA, i, uint64(m.PeerInfo.Size()))
@@ -1713,25 +1709,25 @@ func (m *ACPHeartBeat) MarshalTo(dAtA []byte) (int, error) {
 		}
 		i += n1
 	}
-	if m.SortMetric != nil {
+	if m.SortMetric != 0 {
 		dAtA[i] = 0x10
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.SortMetric))
+		i = encodeVarintAchb(dAtA, i, uint64(m.SortMetric))
 	}
-	if m.ProcessId != nil {
+	if m.ProcessId != 0 {
 		dAtA[i] = 0x18
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.ProcessId))
+		i = encodeVarintAchb(dAtA, i, uint64(m.ProcessId))
 	}
-	if m.CpuMetric != nil {
+	if m.CpuMetric != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.CpuMetric))
+		i = encodeVarintAchb(dAtA, i, uint64(m.CpuMetric))
 	}
-	if m.CapacityMetric != nil {
+	if m.CapacityMetric != 0 {
 		dAtA[i] = 0x28
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.CapacityMetric))
+		i = encodeVarintAchb(dAtA, i, uint64(m.CapacityMetric))
 	}
 	if len(m.Database) > 0 {
 		for _, s := range m.Database {
@@ -1748,10 +1744,10 @@ func (m *ACPHeartBeat) MarshalTo(dAtA []byte) (int, error) {
 			i += copy(dAtA[i:], s)
 		}
 	}
-	if m.Uptodate != nil {
+	if m.Uptodate {
 		dAtA[i] = 0x38
 		i++
-		if *m.Uptodate {
+		if m.Uptodate {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -1810,18 +1806,16 @@ func (m *ACPHeartBeatReply) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.StatusCode == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.StatusCode != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.StatusCode))
+		i = encodeVarintAchb(dAtA, i, uint64(m.StatusCode))
 	}
-	if m.StatusMessage != nil {
+	if len(m.StatusMessage) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.StatusMessage)))
-		i += copy(dAtA[i:], *m.StatusMessage)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.StatusMessage)))
+		i += copy(dAtA[i:], m.StatusMessage)
 	}
 	if len(m.Hbinfo) > 0 {
 		for _, msg := range m.Hbinfo {
@@ -1856,52 +1850,48 @@ func (m *ACPY2MapDatum) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Map == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Map) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Map)))
-		i += copy(dAtA[i:], *m.Map)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Map)))
+		i += copy(dAtA[i:], m.Map)
 	}
-	if m.Shard != nil {
+	if m.Shard != 0 {
 		dAtA[i] = 0x10
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Shard))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Shard))
 	}
-	if m.Key == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Key) > 0 {
 		dAtA[i] = 0x1a
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Key)))
-		i += copy(dAtA[i:], *m.Key)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Key)))
+		i += copy(dAtA[i:], m.Key)
 	}
-	if m.Version != nil {
+	if m.Version != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Version))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Version))
 	}
-	if m.Value != nil {
+	if len(m.Value) > 0 {
 		dAtA[i] = 0x2a
 		i++
 		i = encodeVarintAchb(dAtA, i, uint64(len(m.Value)))
 		i += copy(dAtA[i:], m.Value)
 	}
-	if m.Expire != nil {
+	if m.Expire != 0 {
 		dAtA[i] = 0x38
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Expire))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Expire))
 	}
-	if m.ConfTime != nil {
+	if m.ConfTime != 0 {
 		dAtA[i] = 0x48
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.ConfTime))
+		i = encodeVarintAchb(dAtA, i, uint64(m.ConfTime))
 	}
-	if m.IfVersion != nil {
+	if m.IfVersion != 0 {
 		dAtA[i] = 0x50
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.IfVersion))
+		i = encodeVarintAchb(dAtA, i, uint64(m.IfVersion))
 	}
 	if len(m.Location) > 0 {
 		for _, s := range m.Location {
@@ -1972,40 +1962,38 @@ func (m *ACPY2GetRange) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Map == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Map) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Map)))
-		i += copy(dAtA[i:], *m.Map)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Map)))
+		i += copy(dAtA[i:], m.Map)
 	}
-	if m.Key0 != nil {
+	if len(m.Key0) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Key0)))
-		i += copy(dAtA[i:], *m.Key0)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Key0)))
+		i += copy(dAtA[i:], m.Key0)
 	}
-	if m.Key1 != nil {
+	if len(m.Key1) > 0 {
 		dAtA[i] = 0x1a
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Key1)))
-		i += copy(dAtA[i:], *m.Key1)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Key1)))
+		i += copy(dAtA[i:], m.Key1)
 	}
-	if m.Version0 != nil {
+	if m.Version0 != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Version0))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Version0))
 	}
-	if m.Version1 != nil {
+	if m.Version1 != 0 {
 		dAtA[i] = 0x28
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Version1))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Version1))
 	}
-	if m.Shard != nil {
+	if m.Shard != 0 {
 		dAtA[i] = 0x30
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Shard))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Shard))
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -2028,29 +2016,23 @@ func (m *ACPY2DistRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Hop == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Hop != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Hop))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Hop))
 	}
-	if m.Expire == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Expire != 0 {
 		dAtA[i] = 0x10
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Expire))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Expire))
 	}
-	if m.Sender != nil {
+	if len(m.Sender) > 0 {
 		dAtA[i] = 0x1a
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Sender)))
-		i += copy(dAtA[i:], *m.Sender)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Sender)))
+		i += copy(dAtA[i:], m.Sender)
 	}
-	if m.Data == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Data != nil {
 		dAtA[i] = 0x22
 		i++
 		i = encodeVarintAchb(dAtA, i, uint64(m.Data.Size()))
@@ -2081,32 +2063,26 @@ func (m *ACPY2DistReply) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.StatusCode == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.StatusCode != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.StatusCode))
+		i = encodeVarintAchb(dAtA, i, uint64(m.StatusCode))
 	}
-	if m.StatusMessage == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.StatusMessage) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.StatusMessage)))
-		i += copy(dAtA[i:], *m.StatusMessage)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.StatusMessage)))
+		i += copy(dAtA[i:], m.StatusMessage)
 	}
-	if m.ResultCode == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.ResultCode != 0 {
 		dAtA[i] = 0x18
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.ResultCode))
+		i = encodeVarintAchb(dAtA, i, uint64(m.ResultCode))
 	}
-	if m.ConfTime != nil {
+	if m.ConfTime != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.ConfTime))
+		i = encodeVarintAchb(dAtA, i, uint64(m.ConfTime))
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -2129,62 +2105,58 @@ func (m *ACPY2CheckValue) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Map == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Map) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Map)))
-		i += copy(dAtA[i:], *m.Map)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Map)))
+		i += copy(dAtA[i:], m.Map)
 	}
-	if m.Treeid != nil {
+	if m.Treeid != 0 {
 		dAtA[i] = 0x10
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Treeid))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Treeid))
 	}
-	if m.Level != nil {
+	if m.Level != 0 {
 		dAtA[i] = 0x18
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Level))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Level))
 	}
-	if m.Version == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Version != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Version))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Version))
 	}
-	if m.Shard != nil {
+	if m.Shard != 0 {
 		dAtA[i] = 0x28
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Shard))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Shard))
 	}
-	if m.Key != nil {
+	if len(m.Key) > 0 {
 		dAtA[i] = 0x32
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Key)))
-		i += copy(dAtA[i:], *m.Key)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Key)))
+		i += copy(dAtA[i:], m.Key)
 	}
-	if m.Hash != nil {
+	if len(m.Hash) > 0 {
 		dAtA[i] = 0x3a
 		i++
 		i = encodeVarintAchb(dAtA, i, uint64(len(m.Hash)))
 		i += copy(dAtA[i:], m.Hash)
 	}
-	if m.Keycount != nil {
+	if m.Keycount != 0 {
 		dAtA[i] = 0x40
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Keycount))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Keycount))
 	}
-	if m.Children != nil {
+	if m.Children != 0 {
 		dAtA[i] = 0x48
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Children))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Children))
 	}
-	if m.Isvalid != nil {
+	if m.Isvalid {
 		dAtA[i] = 0x50
 		i++
-		if *m.Isvalid {
+		if m.Isvalid {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -2212,37 +2184,31 @@ func (m *ACPY2CheckRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Map == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Map) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Map)))
-		i += copy(dAtA[i:], *m.Map)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Map)))
+		i += copy(dAtA[i:], m.Map)
 	}
-	if m.Treeid != nil {
+	if m.Treeid != 0 {
 		dAtA[i] = 0x10
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Treeid))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Treeid))
 	}
-	if m.Level == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Level != 0 {
 		dAtA[i] = 0x18
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Level))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Level))
 	}
-	if m.Version == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Version != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Version))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Version))
 	}
-	if m.Maxresult != nil {
+	if m.Maxresult != 0 {
 		dAtA[i] = 0x28
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Maxresult))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Maxresult))
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -2298,19 +2264,17 @@ func (m *ACPY2RingConfReq) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Map == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Map) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Map)))
-		i += copy(dAtA[i:], *m.Map)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Map)))
+		i += copy(dAtA[i:], m.Map)
 	}
-	if m.Datacenter != nil {
+	if len(m.Datacenter) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Datacenter)))
-		i += copy(dAtA[i:], *m.Datacenter)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Datacenter)))
+		i += copy(dAtA[i:], m.Datacenter)
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -2333,12 +2297,10 @@ func (m *ACPY2RingPart) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Shard == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Shard != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Shard))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Shard))
 	}
 	if len(m.Server) > 0 {
 		for _, s := range m.Server {
@@ -2376,19 +2338,15 @@ func (m *ACPY2RingConfReply) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Version == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.Version != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.Version))
+		i = encodeVarintAchb(dAtA, i, uint64(m.Version))
 	}
-	if m.IsStable == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.IsStable {
 		dAtA[i] = 0x10
 		i++
-		if *m.IsStable {
+		if m.IsStable {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -2428,35 +2386,35 @@ func (m *ACPY2ServerRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Subsystem != nil {
+	if len(m.Subsystem) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Subsystem)))
-		i += copy(dAtA[i:], *m.Subsystem)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Subsystem)))
+		i += copy(dAtA[i:], m.Subsystem)
 	}
-	if m.Environment != nil {
+	if len(m.Environment) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Environment)))
-		i += copy(dAtA[i:], *m.Environment)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Environment)))
+		i += copy(dAtA[i:], m.Environment)
 	}
-	if m.Hostname != nil {
+	if len(m.Hostname) > 0 {
 		dAtA[i] = 0x1a
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Hostname)))
-		i += copy(dAtA[i:], *m.Hostname)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Hostname)))
+		i += copy(dAtA[i:], m.Hostname)
 	}
-	if m.Datacenter != nil {
+	if len(m.Datacenter) > 0 {
 		dAtA[i] = 0x22
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Datacenter)))
-		i += copy(dAtA[i:], *m.Datacenter)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Datacenter)))
+		i += copy(dAtA[i:], m.Datacenter)
 	}
-	if m.ServerId != nil {
+	if len(m.ServerId) > 0 {
 		dAtA[i] = 0x2a
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.ServerId)))
-		i += copy(dAtA[i:], *m.ServerId)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.ServerId)))
+		i += copy(dAtA[i:], m.ServerId)
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -2479,49 +2437,41 @@ func (m *ACPY2ServerData) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Subsystem == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Subsystem) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Subsystem)))
-		i += copy(dAtA[i:], *m.Subsystem)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Subsystem)))
+		i += copy(dAtA[i:], m.Subsystem)
 	}
-	if m.Environment == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Environment) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Environment)))
-		i += copy(dAtA[i:], *m.Environment)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Environment)))
+		i += copy(dAtA[i:], m.Environment)
 	}
-	if m.Hostname == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Hostname) > 0 {
 		dAtA[i] = 0x1a
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Hostname)))
-		i += copy(dAtA[i:], *m.Hostname)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Hostname)))
+		i += copy(dAtA[i:], m.Hostname)
 	}
-	if m.Datacenter != nil {
+	if len(m.Datacenter) > 0 {
 		dAtA[i] = 0x22
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Datacenter)))
-		i += copy(dAtA[i:], *m.Datacenter)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Datacenter)))
+		i += copy(dAtA[i:], m.Datacenter)
 	}
-	if m.Rack != nil {
+	if len(m.Rack) > 0 {
 		dAtA[i] = 0x2a
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.Rack)))
-		i += copy(dAtA[i:], *m.Rack)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.Rack)))
+		i += copy(dAtA[i:], m.Rack)
 	}
-	if m.ServerId == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.ServerId) > 0 {
 		dAtA[i] = 0x32
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(len(*m.ServerId)))
-		i += copy(dAtA[i:], *m.ServerId)
+		i = encodeVarintAchb(dAtA, i, uint64(len(m.ServerId)))
+		i += copy(dAtA[i:], m.ServerId)
 	}
 	if len(m.NetInfo) > 0 {
 		for _, msg := range m.NetInfo {
@@ -2535,42 +2485,40 @@ func (m *ACPY2ServerData) MarshalTo(dAtA []byte) (int, error) {
 			i += n
 		}
 	}
-	if m.IsUp == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.IsUp {
 		dAtA[i] = 0x40
 		i++
-		if *m.IsUp {
+		if m.IsUp {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
 		}
 		i++
 	}
-	if m.IsLocal != nil {
+	if m.IsLocal {
 		dAtA[i] = 0x48
 		i++
-		if *m.IsLocal {
+		if m.IsLocal {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
 		}
 		i++
 	}
-	if m.SortMetric != nil {
+	if m.SortMetric != 0 {
 		dAtA[i] = 0x50
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.SortMetric))
+		i = encodeVarintAchb(dAtA, i, uint64(m.SortMetric))
 	}
-	if m.CpuMetric != nil {
+	if m.CpuMetric != 0 {
 		dAtA[i] = 0x58
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.CpuMetric))
+		i = encodeVarintAchb(dAtA, i, uint64(m.CpuMetric))
 	}
-	if m.CapacityMetric != nil {
+	if m.CapacityMetric != 0 {
 		dAtA[i] = 0x60
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.CapacityMetric))
+		i = encodeVarintAchb(dAtA, i, uint64(m.CapacityMetric))
 	}
 	if len(m.Database) > 0 {
 		for _, s := range m.Database {
@@ -2587,24 +2535,22 @@ func (m *ACPY2ServerData) MarshalTo(dAtA []byte) (int, error) {
 			i += copy(dAtA[i:], s)
 		}
 	}
-	if m.Uptodate != nil {
+	if m.Uptodate {
 		dAtA[i] = 0x78
 		i++
-		if *m.Uptodate {
+		if m.Uptodate {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
 		}
 		i++
 	}
-	if m.TimeUp == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.TimeUp != 0 {
 		dAtA[i] = 0x80
 		i++
 		dAtA[i] = 0x1
 		i++
-		i = encodeVarintAchb(dAtA, i, uint64(*m.TimeUp))
+		i = encodeVarintAchb(dAtA, i, uint64(m.TimeUp))
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -2685,17 +2631,17 @@ func (m *ACPHeartBeat) Size() (n int) {
 		l = m.PeerInfo.Size()
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.SortMetric != nil {
-		n += 1 + sovAchb(uint64(*m.SortMetric))
+	if m.SortMetric != 0 {
+		n += 1 + sovAchb(uint64(m.SortMetric))
 	}
-	if m.ProcessId != nil {
-		n += 1 + sovAchb(uint64(*m.ProcessId))
+	if m.ProcessId != 0 {
+		n += 1 + sovAchb(uint64(m.ProcessId))
 	}
-	if m.CpuMetric != nil {
-		n += 1 + sovAchb(uint64(*m.CpuMetric))
+	if m.CpuMetric != 0 {
+		n += 1 + sovAchb(uint64(m.CpuMetric))
 	}
-	if m.CapacityMetric != nil {
-		n += 1 + sovAchb(uint64(*m.CapacityMetric))
+	if m.CapacityMetric != 0 {
+		n += 1 + sovAchb(uint64(m.CapacityMetric))
 	}
 	if len(m.Database) > 0 {
 		for _, s := range m.Database {
@@ -2703,7 +2649,7 @@ func (m *ACPHeartBeat) Size() (n int) {
 			n += 1 + l + sovAchb(uint64(l))
 		}
 	}
-	if m.Uptodate != nil {
+	if m.Uptodate {
 		n += 2
 	}
 	if m.XXX_unrecognized != nil {
@@ -2734,11 +2680,11 @@ func (m *ACPHeartBeatReply) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.StatusCode != nil {
-		n += 1 + sovAchb(uint64(*m.StatusCode))
+	if m.StatusCode != 0 {
+		n += 1 + sovAchb(uint64(m.StatusCode))
 	}
-	if m.StatusMessage != nil {
-		l = len(*m.StatusMessage)
+	l = len(m.StatusMessage)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
 	if len(m.Hbinfo) > 0 {
@@ -2759,32 +2705,32 @@ func (m *ACPY2MapDatum) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Map != nil {
-		l = len(*m.Map)
+	l = len(m.Map)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Shard != nil {
-		n += 1 + sovAchb(uint64(*m.Shard))
+	if m.Shard != 0 {
+		n += 1 + sovAchb(uint64(m.Shard))
 	}
-	if m.Key != nil {
-		l = len(*m.Key)
+	l = len(m.Key)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Version != nil {
-		n += 1 + sovAchb(uint64(*m.Version))
+	if m.Version != 0 {
+		n += 1 + sovAchb(uint64(m.Version))
 	}
-	if m.Value != nil {
-		l = len(m.Value)
+	l = len(m.Value)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Expire != nil {
-		n += 1 + sovAchb(uint64(*m.Expire))
+	if m.Expire != 0 {
+		n += 1 + sovAchb(uint64(m.Expire))
 	}
-	if m.ConfTime != nil {
-		n += 1 + sovAchb(uint64(*m.ConfTime))
+	if m.ConfTime != 0 {
+		n += 1 + sovAchb(uint64(m.ConfTime))
 	}
-	if m.IfVersion != nil {
-		n += 1 + sovAchb(uint64(*m.IfVersion))
+	if m.IfVersion != 0 {
+		n += 1 + sovAchb(uint64(m.IfVersion))
 	}
 	if len(m.Location) > 0 {
 		for _, s := range m.Location {
@@ -2822,26 +2768,26 @@ func (m *ACPY2GetRange) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Map != nil {
-		l = len(*m.Map)
+	l = len(m.Map)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Key0 != nil {
-		l = len(*m.Key0)
+	l = len(m.Key0)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Key1 != nil {
-		l = len(*m.Key1)
+	l = len(m.Key1)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Version0 != nil {
-		n += 1 + sovAchb(uint64(*m.Version0))
+	if m.Version0 != 0 {
+		n += 1 + sovAchb(uint64(m.Version0))
 	}
-	if m.Version1 != nil {
-		n += 1 + sovAchb(uint64(*m.Version1))
+	if m.Version1 != 0 {
+		n += 1 + sovAchb(uint64(m.Version1))
 	}
-	if m.Shard != nil {
-		n += 1 + sovAchb(uint64(*m.Shard))
+	if m.Shard != 0 {
+		n += 1 + sovAchb(uint64(m.Shard))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -2855,14 +2801,14 @@ func (m *ACPY2DistRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Hop != nil {
-		n += 1 + sovAchb(uint64(*m.Hop))
+	if m.Hop != 0 {
+		n += 1 + sovAchb(uint64(m.Hop))
 	}
-	if m.Expire != nil {
-		n += 1 + sovAchb(uint64(*m.Expire))
+	if m.Expire != 0 {
+		n += 1 + sovAchb(uint64(m.Expire))
 	}
-	if m.Sender != nil {
-		l = len(*m.Sender)
+	l = len(m.Sender)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
 	if m.Data != nil {
@@ -2881,18 +2827,18 @@ func (m *ACPY2DistReply) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.StatusCode != nil {
-		n += 1 + sovAchb(uint64(*m.StatusCode))
+	if m.StatusCode != 0 {
+		n += 1 + sovAchb(uint64(m.StatusCode))
 	}
-	if m.StatusMessage != nil {
-		l = len(*m.StatusMessage)
+	l = len(m.StatusMessage)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.ResultCode != nil {
-		n += 1 + sovAchb(uint64(*m.ResultCode))
+	if m.ResultCode != 0 {
+		n += 1 + sovAchb(uint64(m.ResultCode))
 	}
-	if m.ConfTime != nil {
-		n += 1 + sovAchb(uint64(*m.ConfTime))
+	if m.ConfTime != 0 {
+		n += 1 + sovAchb(uint64(m.ConfTime))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -2906,37 +2852,37 @@ func (m *ACPY2CheckValue) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Map != nil {
-		l = len(*m.Map)
+	l = len(m.Map)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Treeid != nil {
-		n += 1 + sovAchb(uint64(*m.Treeid))
+	if m.Treeid != 0 {
+		n += 1 + sovAchb(uint64(m.Treeid))
 	}
-	if m.Level != nil {
-		n += 1 + sovAchb(uint64(*m.Level))
+	if m.Level != 0 {
+		n += 1 + sovAchb(uint64(m.Level))
 	}
-	if m.Version != nil {
-		n += 1 + sovAchb(uint64(*m.Version))
+	if m.Version != 0 {
+		n += 1 + sovAchb(uint64(m.Version))
 	}
-	if m.Shard != nil {
-		n += 1 + sovAchb(uint64(*m.Shard))
+	if m.Shard != 0 {
+		n += 1 + sovAchb(uint64(m.Shard))
 	}
-	if m.Key != nil {
-		l = len(*m.Key)
+	l = len(m.Key)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Hash != nil {
-		l = len(m.Hash)
+	l = len(m.Hash)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Keycount != nil {
-		n += 1 + sovAchb(uint64(*m.Keycount))
+	if m.Keycount != 0 {
+		n += 1 + sovAchb(uint64(m.Keycount))
 	}
-	if m.Children != nil {
-		n += 1 + sovAchb(uint64(*m.Children))
+	if m.Children != 0 {
+		n += 1 + sovAchb(uint64(m.Children))
 	}
-	if m.Isvalid != nil {
+	if m.Isvalid {
 		n += 2
 	}
 	if m.XXX_unrecognized != nil {
@@ -2951,21 +2897,21 @@ func (m *ACPY2CheckRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Map != nil {
-		l = len(*m.Map)
+	l = len(m.Map)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Treeid != nil {
-		n += 1 + sovAchb(uint64(*m.Treeid))
+	if m.Treeid != 0 {
+		n += 1 + sovAchb(uint64(m.Treeid))
 	}
-	if m.Level != nil {
-		n += 1 + sovAchb(uint64(*m.Level))
+	if m.Level != 0 {
+		n += 1 + sovAchb(uint64(m.Level))
 	}
-	if m.Version != nil {
-		n += 1 + sovAchb(uint64(*m.Version))
+	if m.Version != 0 {
+		n += 1 + sovAchb(uint64(m.Version))
 	}
-	if m.Maxresult != nil {
-		n += 1 + sovAchb(uint64(*m.Maxresult))
+	if m.Maxresult != 0 {
+		n += 1 + sovAchb(uint64(m.Maxresult))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -2997,12 +2943,12 @@ func (m *ACPY2RingConfReq) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Map != nil {
-		l = len(*m.Map)
+	l = len(m.Map)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Datacenter != nil {
-		l = len(*m.Datacenter)
+	l = len(m.Datacenter)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -3017,8 +2963,8 @@ func (m *ACPY2RingPart) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Shard != nil {
-		n += 1 + sovAchb(uint64(*m.Shard))
+	if m.Shard != 0 {
+		n += 1 + sovAchb(uint64(m.Shard))
 	}
 	if len(m.Server) > 0 {
 		for _, s := range m.Server {
@@ -3038,10 +2984,10 @@ func (m *ACPY2RingConfReply) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Version != nil {
-		n += 1 + sovAchb(uint64(*m.Version))
+	if m.Version != 0 {
+		n += 1 + sovAchb(uint64(m.Version))
 	}
-	if m.IsStable != nil {
+	if m.IsStable {
 		n += 2
 	}
 	if len(m.Part) > 0 {
@@ -3062,24 +3008,24 @@ func (m *ACPY2ServerRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Subsystem != nil {
-		l = len(*m.Subsystem)
+	l = len(m.Subsystem)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Environment != nil {
-		l = len(*m.Environment)
+	l = len(m.Environment)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Hostname != nil {
-		l = len(*m.Hostname)
+	l = len(m.Hostname)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Datacenter != nil {
-		l = len(*m.Datacenter)
+	l = len(m.Datacenter)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.ServerId != nil {
-		l = len(*m.ServerId)
+	l = len(m.ServerId)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -3094,28 +3040,28 @@ func (m *ACPY2ServerData) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Subsystem != nil {
-		l = len(*m.Subsystem)
+	l = len(m.Subsystem)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Environment != nil {
-		l = len(*m.Environment)
+	l = len(m.Environment)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Hostname != nil {
-		l = len(*m.Hostname)
+	l = len(m.Hostname)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Datacenter != nil {
-		l = len(*m.Datacenter)
+	l = len(m.Datacenter)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.Rack != nil {
-		l = len(*m.Rack)
+	l = len(m.Rack)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
-	if m.ServerId != nil {
-		l = len(*m.ServerId)
+	l = len(m.ServerId)
+	if l > 0 {
 		n += 1 + l + sovAchb(uint64(l))
 	}
 	if len(m.NetInfo) > 0 {
@@ -3124,20 +3070,20 @@ func (m *ACPY2ServerData) Size() (n int) {
 			n += 1 + l + sovAchb(uint64(l))
 		}
 	}
-	if m.IsUp != nil {
+	if m.IsUp {
 		n += 2
 	}
-	if m.IsLocal != nil {
+	if m.IsLocal {
 		n += 2
 	}
-	if m.SortMetric != nil {
-		n += 1 + sovAchb(uint64(*m.SortMetric))
+	if m.SortMetric != 0 {
+		n += 1 + sovAchb(uint64(m.SortMetric))
 	}
-	if m.CpuMetric != nil {
-		n += 1 + sovAchb(uint64(*m.CpuMetric))
+	if m.CpuMetric != 0 {
+		n += 1 + sovAchb(uint64(m.CpuMetric))
 	}
-	if m.CapacityMetric != nil {
-		n += 1 + sovAchb(uint64(*m.CapacityMetric))
+	if m.CapacityMetric != 0 {
+		n += 1 + sovAchb(uint64(m.CapacityMetric))
 	}
 	if len(m.Database) > 0 {
 		for _, s := range m.Database {
@@ -3145,11 +3091,11 @@ func (m *ACPY2ServerData) Size() (n int) {
 			n += 1 + l + sovAchb(uint64(l))
 		}
 	}
-	if m.Uptodate != nil {
+	if m.Uptodate {
 		n += 2
 	}
-	if m.TimeUp != nil {
-		n += 2 + sovAchb(uint64(*m.TimeUp))
+	if m.TimeUp != 0 {
+		n += 2 + sovAchb(uint64(m.TimeUp))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -3201,7 +3147,6 @@ func sozAchb(x uint64) (n int) {
 	return sovAchb(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
 func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3263,12 +3208,11 @@ func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SortMetric", wireType)
 			}
-			var v int32
+			m.SortMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3278,17 +3222,16 @@ func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.SortMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.SortMetric = &v
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ProcessId", wireType)
 			}
-			var v int32
+			m.ProcessId = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3298,17 +3241,16 @@ func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.ProcessId |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.ProcessId = &v
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CpuMetric", wireType)
 			}
-			var v int32
+			m.CpuMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3318,17 +3260,16 @@ func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.CpuMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CpuMetric = &v
 		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CapacityMetric", wireType)
 			}
-			var v int32
+			m.CapacityMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3338,12 +3279,11 @@ func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.CapacityMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CapacityMetric = &v
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Database", wireType)
@@ -3392,8 +3332,7 @@ func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			b := bool(v != 0)
-			m.Uptodate = &b
+			m.Uptodate = bool(v != 0)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAchb(dAtA[iNdEx:])
@@ -3409,9 +3348,6 @@ func (m *ACPHeartBeat) Unmarshal(dAtA []byte) error {
 			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	}
 
 	if iNdEx > l {
@@ -3504,7 +3440,6 @@ func (m *ACPHeartBeatRequest) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPHeartBeatReply) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3537,7 +3472,7 @@ func (m *ACPHeartBeatReply) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusCode", wireType)
 			}
-			var v int32
+			m.StatusCode = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3547,13 +3482,11 @@ func (m *ACPHeartBeatReply) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.StatusCode |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.StatusCode = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusMessage", wireType)
@@ -3581,8 +3514,7 @@ func (m *ACPHeartBeatReply) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.StatusMessage = &s
+			m.StatusMessage = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -3631,9 +3563,6 @@ func (m *ACPHeartBeatReply) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -3641,7 +3570,6 @@ func (m *ACPHeartBeatReply) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3697,15 +3625,13 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Map = &s
+			m.Map = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Shard", wireType)
 			}
-			var v uint32
+			m.Shard = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3715,12 +3641,11 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint32(b) & 0x7F) << shift
+				m.Shard |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Shard = &v
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Key", wireType)
@@ -3748,15 +3673,13 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Key = &s
+			m.Key = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000002)
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
 			}
-			var v uint64
+			m.Version = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3766,12 +3689,11 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Version |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Version = &v
 		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Value", wireType)
@@ -3807,7 +3729,7 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Expire", wireType)
 			}
-			var v uint64
+			m.Expire = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3817,17 +3739,16 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Expire |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Expire = &v
 		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ConfTime", wireType)
 			}
-			var v uint64
+			m.ConfTime = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3837,17 +3758,16 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.ConfTime |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.ConfTime = &v
 		case 10:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field IfVersion", wireType)
 			}
-			var v uint64
+			m.IfVersion = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -3857,12 +3777,11 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.IfVersion |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.IfVersion = &v
 		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
@@ -3907,12 +3826,6 @@ func (m *ACPY2MapDatum) Unmarshal(dAtA []byte) error {
 			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	}
 
 	if iNdEx > l {
@@ -4003,7 +3916,6 @@ func (m *ACPY2GetSet) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4059,10 +3971,8 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Map = &s
+			m.Map = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Key0", wireType)
@@ -4090,8 +4000,7 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Key0 = &s
+			m.Key0 = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -4120,14 +4029,13 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Key1 = &s
+			m.Key1 = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Version0", wireType)
 			}
-			var v uint64
+			m.Version0 = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4137,17 +4045,16 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Version0 |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Version0 = &v
 		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Version1", wireType)
 			}
-			var v uint64
+			m.Version1 = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4157,17 +4064,16 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Version1 |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Version1 = &v
 		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Shard", wireType)
 			}
-			var v uint32
+			m.Shard = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4177,12 +4083,11 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint32(b) & 0x7F) << shift
+				m.Shard |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Shard = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAchb(dAtA[iNdEx:])
@@ -4199,9 +4104,6 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -4209,7 +4111,6 @@ func (m *ACPY2GetRange) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4242,7 +4143,7 @@ func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Hop", wireType)
 			}
-			var v int32
+			m.Hop = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4252,18 +4153,16 @@ func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Hop |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Hop = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Expire", wireType)
 			}
-			var v uint64
+			m.Expire = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4273,13 +4172,11 @@ func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Expire |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Expire = &v
-			hasFields[0] |= uint64(0x00000002)
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
@@ -4307,8 +4204,7 @@ func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Sender = &s
+			m.Sender = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -4343,7 +4239,6 @@ func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000004)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAchb(dAtA[iNdEx:])
@@ -4360,15 +4255,6 @@ func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -4376,7 +4262,6 @@ func (m *ACPY2DistRequest) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4409,7 +4294,7 @@ func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusCode", wireType)
 			}
-			var v int32
+			m.StatusCode = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4419,13 +4304,11 @@ func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.StatusCode |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.StatusCode = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusMessage", wireType)
@@ -4453,15 +4336,13 @@ func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.StatusMessage = &s
+			m.StatusMessage = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000002)
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ResultCode", wireType)
 			}
-			var v int32
+			m.ResultCode = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4471,18 +4352,16 @@ func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.ResultCode |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.ResultCode = &v
-			hasFields[0] |= uint64(0x00000004)
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ConfTime", wireType)
 			}
-			var v int64
+			m.ConfTime = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4492,12 +4371,11 @@ func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int64(b) & 0x7F) << shift
+				m.ConfTime |= (int64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.ConfTime = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAchb(dAtA[iNdEx:])
@@ -4514,15 +4392,6 @@ func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -4530,7 +4399,6 @@ func (m *ACPY2DistReply) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4586,15 +4454,13 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Map = &s
+			m.Map = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Treeid", wireType)
 			}
-			var v uint32
+			m.Treeid = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4604,17 +4470,16 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint32(b) & 0x7F) << shift
+				m.Treeid |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Treeid = &v
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
 			}
-			var v int32
+			m.Level = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4624,17 +4489,16 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Level |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Level = &v
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
 			}
-			var v uint64
+			m.Version = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4644,18 +4508,16 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Version |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Version = &v
-			hasFields[0] |= uint64(0x00000002)
 		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Shard", wireType)
 			}
-			var v uint32
+			m.Shard = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4665,12 +4527,11 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint32(b) & 0x7F) << shift
+				m.Shard |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Shard = &v
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Key", wireType)
@@ -4698,8 +4559,7 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Key = &s
+			m.Key = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
@@ -4736,7 +4596,7 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Keycount", wireType)
 			}
-			var v int64
+			m.Keycount = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4746,17 +4606,16 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int64(b) & 0x7F) << shift
+				m.Keycount |= (int64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Keycount = &v
 		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Children", wireType)
 			}
-			var v int32
+			m.Children = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4766,12 +4625,11 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Children |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Children = &v
 		case 10:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Isvalid", wireType)
@@ -4791,8 +4649,7 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			b := bool(v != 0)
-			m.Isvalid = &b
+			m.Isvalid = bool(v != 0)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAchb(dAtA[iNdEx:])
@@ -4809,12 +4666,6 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -4822,7 +4673,6 @@ func (m *ACPY2CheckValue) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2CheckRequest) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4878,15 +4728,13 @@ func (m *ACPY2CheckRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Map = &s
+			m.Map = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Treeid", wireType)
 			}
-			var v uint32
+			m.Treeid = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4896,17 +4744,16 @@ func (m *ACPY2CheckRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint32(b) & 0x7F) << shift
+				m.Treeid |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Treeid = &v
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
 			}
-			var v int32
+			m.Level = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4916,18 +4763,16 @@ func (m *ACPY2CheckRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Level |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Level = &v
-			hasFields[0] |= uint64(0x00000002)
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
 			}
-			var v uint64
+			m.Version = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4937,18 +4782,16 @@ func (m *ACPY2CheckRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Version |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Version = &v
-			hasFields[0] |= uint64(0x00000004)
 		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Maxresult", wireType)
 			}
-			var v int32
+			m.Maxresult = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -4958,12 +4801,11 @@ func (m *ACPY2CheckRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Maxresult |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Maxresult = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAchb(dAtA[iNdEx:])
@@ -4979,15 +4821,6 @@ func (m *ACPY2CheckRequest) Unmarshal(dAtA []byte) error {
 			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	}
 
 	if iNdEx > l {
@@ -5078,7 +4911,6 @@ func (m *ACPY2CheckReply) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2RingConfReq) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5134,10 +4966,8 @@ func (m *ACPY2RingConfReq) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Map = &s
+			m.Map = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Datacenter", wireType)
@@ -5165,8 +4995,7 @@ func (m *ACPY2RingConfReq) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Datacenter = &s
+			m.Datacenter = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -5184,9 +5013,6 @@ func (m *ACPY2RingConfReq) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -5194,7 +5020,6 @@ func (m *ACPY2RingConfReq) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2RingPart) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5227,7 +5052,7 @@ func (m *ACPY2RingPart) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Shard", wireType)
 			}
-			var v uint32
+			m.Shard = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -5237,13 +5062,11 @@ func (m *ACPY2RingPart) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint32(b) & 0x7F) << shift
+				m.Shard |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Shard = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Server", wireType)
@@ -5289,9 +5112,6 @@ func (m *ACPY2RingPart) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -5299,7 +5119,6 @@ func (m *ACPY2RingPart) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2RingConfReply) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5332,7 +5151,7 @@ func (m *ACPY2RingConfReply) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
 			}
-			var v uint64
+			m.Version = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -5342,13 +5161,11 @@ func (m *ACPY2RingConfReply) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.Version |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Version = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field IsStable", wireType)
@@ -5368,9 +5185,7 @@ func (m *ACPY2RingConfReply) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			b := bool(v != 0)
-			m.IsStable = &b
-			hasFields[0] |= uint64(0x00000002)
+			m.IsStable = bool(v != 0)
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Part", wireType)
@@ -5417,12 +5232,6 @@ func (m *ACPY2RingConfReply) Unmarshal(dAtA []byte) error {
 			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	}
 
 	if iNdEx > l {
@@ -5486,8 +5295,7 @@ func (m *ACPY2ServerRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Subsystem = &s
+			m.Subsystem = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -5516,8 +5324,7 @@ func (m *ACPY2ServerRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Environment = &s
+			m.Environment = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -5546,8 +5353,7 @@ func (m *ACPY2ServerRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Hostname = &s
+			m.Hostname = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -5576,8 +5382,7 @@ func (m *ACPY2ServerRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Datacenter = &s
+			m.Datacenter = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -5606,8 +5411,7 @@ func (m *ACPY2ServerRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.ServerId = &s
+			m.ServerId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -5632,7 +5436,6 @@ func (m *ACPY2ServerRequest) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5688,10 +5491,8 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Subsystem = &s
+			m.Subsystem = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Environment", wireType)
@@ -5719,10 +5520,8 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Environment = &s
+			m.Environment = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000002)
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Hostname", wireType)
@@ -5750,10 +5549,8 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Hostname = &s
+			m.Hostname = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000004)
 		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Datacenter", wireType)
@@ -5781,8 +5578,7 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Datacenter = &s
+			m.Datacenter = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -5811,8 +5607,7 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Rack = &s
+			m.Rack = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
@@ -5841,10 +5636,8 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.ServerId = &s
+			m.ServerId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000008)
 		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NetInfo", wireType)
@@ -5895,9 +5688,7 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			b := bool(v != 0)
-			m.IsUp = &b
-			hasFields[0] |= uint64(0x00000010)
+			m.IsUp = bool(v != 0)
 		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field IsLocal", wireType)
@@ -5917,13 +5708,12 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			b := bool(v != 0)
-			m.IsLocal = &b
+			m.IsLocal = bool(v != 0)
 		case 10:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SortMetric", wireType)
 			}
-			var v int32
+			m.SortMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -5933,17 +5723,16 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.SortMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.SortMetric = &v
 		case 11:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CpuMetric", wireType)
 			}
-			var v int32
+			m.CpuMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -5953,17 +5742,16 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.CpuMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CpuMetric = &v
 		case 12:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CapacityMetric", wireType)
 			}
-			var v int32
+			m.CapacityMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -5973,12 +5761,11 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.CapacityMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CapacityMetric = &v
 		case 14:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Database", wireType)
@@ -6027,13 +5814,12 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			b := bool(v != 0)
-			m.Uptodate = &b
+			m.Uptodate = bool(v != 0)
 		case 16:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TimeUp", wireType)
 			}
-			var v uint64
+			m.TimeUp = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowAchb
@@ -6043,13 +5829,11 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (uint64(b) & 0x7F) << shift
+				m.TimeUp |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.TimeUp = &v
-			hasFields[0] |= uint64(0x00000020)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAchb(dAtA[iNdEx:])
@@ -6065,24 +5849,6 @@ func (m *ACPY2ServerData) Unmarshal(dAtA []byte) error {
 			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000008) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000010) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000020) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	}
 
 	if iNdEx > l {
@@ -6328,88 +6094,87 @@ var (
 	ErrIntOverflowAchb   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("achb.proto", fileDescriptor_achb_a37b42bc256bb4fa) }
+func init() { proto.RegisterFile("achb.proto", fileDescriptor_achb_1e483a50cd59b922) }
 
-var fileDescriptor_achb_a37b42bc256bb4fa = []byte{
-	// 1280 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x56, 0xcd, 0x6e, 0x1b, 0x55,
-	0x14, 0xee, 0x78, 0xfc, 0x33, 0x73, 0x9c, 0x26, 0xe1, 0xb6, 0xa4, 0x53, 0xa7, 0xa4, 0x66, 0x24,
-	0x44, 0x54, 0x81, 0xdb, 0x84, 0x05, 0x42, 0xa8, 0x12, 0xa9, 0x8d, 0xd2, 0x4a, 0x04, 0x45, 0x13,
-	0x5a, 0x89, 0x95, 0x75, 0x3d, 0x3e, 0x8e, 0x07, 0xcf, 0x5f, 0xe7, 0xde, 0x71, 0x6b, 0x56, 0xec,
-	0x90, 0x60, 0x0f, 0xbc, 0x04, 0xef, 0xc1, 0x92, 0x05, 0x0f, 0x80, 0xca, 0x8a, 0x47, 0x60, 0x81,
-	0x84, 0xee, 0xcf, 0xd8, 0x63, 0xd7, 0x49, 0x5b, 0x76, 0xf7, 0xfc, 0xcc, 0x99, 0x73, 0xbe, 0xef,
-	0x9c, 0x7b, 0x0f, 0x00, 0xf5, 0xc7, 0x83, 0x4e, 0x9a, 0x25, 0x3c, 0x21, 0x0d, 0xea, 0xcb, 0x43,
-	0xeb, 0xdd, 0xf3, 0x80, 0x8f, 0xf3, 0x41, 0xc7, 0x4f, 0xa2, 0xbb, 0xdf, 0xd0, 0x67, 0xf7, 0xee,
-	0x4e, 0x82, 0x41, 0xc0, 0xbf, 0xbd, 0x9b, 0x22, 0x66, 0xca, 0xd7, 0xfd, 0xd7, 0x80, 0x8d, 0xa3,
-	0xee, 0xe9, 0x43, 0xa4, 0x19, 0x7f, 0x80, 0x94, 0x93, 0x0f, 0xc1, 0x16, 0xe6, 0x7e, 0x10, 0x8f,
-	0x12, 0xc7, 0x68, 0x57, 0xf6, 0x9b, 0x87, 0xdb, 0x1d, 0xf5, 0x5d, 0xe7, 0x14, 0x31, 0x7b, 0x14,
-	0x8f, 0x12, 0xcf, 0x4a, 0xf5, 0x89, 0xdc, 0x86, 0x26, 0x4b, 0x32, 0xde, 0x8f, 0x90, 0x67, 0x81,
-	0xef, 0x54, 0xda, 0xc6, 0x7e, 0xcd, 0x03, 0xa1, 0x3a, 0x91, 0x1a, 0xf2, 0x0e, 0x40, 0x9a, 0x25,
-	0x3e, 0x32, 0xd6, 0x0f, 0x86, 0x8e, 0x29, 0xed, 0xb6, 0xd6, 0x3c, 0x1a, 0x0a, 0xb3, 0x9f, 0xe6,
-	0xc5, 0xe7, 0x55, 0x65, 0xf6, 0xd3, 0x5c, 0x7f, 0xfd, 0x3e, 0x6c, 0xf9, 0x34, 0xa5, 0x7e, 0xc0,
-	0x67, 0x85, 0x4f, 0x4d, 0xfa, 0x6c, 0x16, 0x6a, 0xed, 0xd8, 0x02, 0x6b, 0x48, 0x39, 0x1d, 0x50,
-	0x86, 0x4e, 0xbd, 0x6d, 0xee, 0xdb, 0xde, 0x5c, 0x16, 0xb6, 0x3c, 0xe5, 0xc9, 0x90, 0x72, 0x74,
-	0x1a, 0x6d, 0x63, 0xdf, 0xf2, 0xe6, 0xb2, 0xdb, 0x83, 0x6b, 0xe5, 0xf2, 0x3d, 0x7c, 0x9a, 0x23,
-	0x13, 0x28, 0xd4, 0xa3, 0x19, 0xc3, 0x70, 0xe4, 0x18, 0x6d, 0x63, 0xbf, 0x79, 0xf8, 0x76, 0x47,
-	0x63, 0xda, 0x59, 0xf2, 0xd6, 0x4e, 0xee, 0x0f, 0x06, 0xbc, 0xb5, 0x1c, 0x26, 0x0d, 0x67, 0x12,
-	0x1b, 0x4e, 0x79, 0xce, 0xfa, 0x7e, 0x32, 0x44, 0x09, 0xa6, 0xc0, 0x46, 0xaa, 0xba, 0xc9, 0x10,
-	0xc9, 0x7b, 0xb0, 0xa9, 0x1d, 0x22, 0x64, 0x8c, 0x9e, 0xa3, 0xc4, 0xcf, 0xf6, 0xae, 0x2a, 0xed,
-	0x89, 0x52, 0x8a, 0x64, 0xc6, 0x03, 0xc9, 0x87, 0xd9, 0x36, 0x2f, 0x49, 0x46, 0x39, 0xb9, 0x7f,
-	0x1b, 0x70, 0xf5, 0xa8, 0x7b, 0xfa, 0xf5, 0xe1, 0x09, 0x4d, 0x7b, 0x94, 0xe7, 0x11, 0xd9, 0x06,
-	0x33, 0xa2, 0xa9, 0x4c, 0xc0, 0xf6, 0xc4, 0x91, 0x5c, 0x87, 0x1a, 0x1b, 0xd3, 0x6c, 0x28, 0x7f,
-	0x78, 0xd5, 0x53, 0x82, 0xf0, 0x9b, 0xe0, 0xcc, 0x31, 0x95, 0xdf, 0x04, 0x67, 0xc4, 0x81, 0xc6,
-	0x14, 0x33, 0x16, 0x24, 0xb1, 0xe4, 0xa6, 0xea, 0x15, 0xa2, 0x88, 0x30, 0xa5, 0x61, 0x8e, 0x92,
-	0x8f, 0x0d, 0x4f, 0x09, 0x64, 0x07, 0xea, 0xf8, 0x3c, 0x0d, 0x32, 0x05, 0x74, 0xd5, 0xd3, 0x12,
-	0xd9, 0x05, 0xdb, 0x4f, 0xe2, 0x51, 0x9f, 0x07, 0x11, 0x3a, 0xb6, 0x34, 0x59, 0x42, 0xf1, 0x55,
-	0x10, 0xa1, 0xe8, 0x81, 0x60, 0xd4, 0x2f, 0xfe, 0x03, 0xd2, 0x6a, 0x07, 0xa3, 0x27, 0xfa, 0x4f,
-	0x2d, 0xb0, 0xc2, 0xc4, 0xa7, 0x5c, 0x18, 0x9b, 0x8a, 0xda, 0x42, 0x76, 0x3f, 0x81, 0xa6, 0x2c,
-	0xf5, 0x18, 0xf9, 0x19, 0x72, 0x72, 0x07, 0xaa, 0x82, 0x75, 0xc7, 0x90, 0x38, 0xed, 0x94, 0x71,
-	0x5a, 0xc0, 0xe1, 0x49, 0x1f, 0xf7, 0xe7, 0x02, 0xa6, 0x63, 0xe4, 0x1e, 0x8d, 0xcf, 0x71, 0x0d,
-	0x4c, 0x04, 0xaa, 0x13, 0x9c, 0xdd, 0xd3, 0xb4, 0xc8, 0xb3, 0xd6, 0x1d, 0xc8, 0x56, 0x56, 0xba,
-	0x03, 0x91, 0xa2, 0x4e, 0xff, 0x9e, 0xc6, 0x69, 0x2e, 0x97, 0x6c, 0x07, 0x12, 0xab, 0x85, 0xed,
-	0x60, 0x41, 0x43, 0xbd, 0x44, 0x83, 0xfb, 0x9d, 0x01, 0xdb, 0x32, 0xb3, 0x5e, 0xc0, 0xe6, 0x1d,
-	0xb9, 0x0d, 0xe6, 0x38, 0x49, 0x75, 0x13, 0x89, 0x63, 0x09, 0xeb, 0x4a, 0xbb, 0x52, 0xc2, 0x7a,
-	0x07, 0xea, 0x0c, 0xe3, 0x21, 0x66, 0x3a, 0x45, 0x2d, 0xcd, 0xc1, 0xa9, 0xca, 0xa1, 0xbe, 0x1c,
-	0x9c, 0x9f, 0x0c, 0xd8, 0x2c, 0xa5, 0xf0, 0xbf, 0xbb, 0xb9, 0xf2, 0x72, 0x37, 0xdf, 0x86, 0x66,
-	0x86, 0x2c, 0x0f, 0xb9, 0x8a, 0x63, 0xaa, 0x38, 0x4a, 0x25, 0xe3, 0x2c, 0xf5, 0x8a, 0x40, 0xd3,
-	0x5c, 0xf4, 0x8a, 0xfb, 0x8f, 0x01, 0x5b, 0x32, 0xb1, 0xee, 0x18, 0xfd, 0xc9, 0x13, 0xd9, 0x74,
-	0x2f, 0xf3, 0xb6, 0x03, 0x75, 0x9e, 0x21, 0x06, 0x45, 0x7f, 0x6b, 0x49, 0xe0, 0x1d, 0xe2, 0x14,
-	0x43, 0x7d, 0x0f, 0x29, 0x61, 0xb9, 0xc9, 0x2b, 0x2b, 0x4d, 0xae, 0xf8, 0xa9, 0xad, 0x19, 0x93,
-	0xba, 0x44, 0x57, 0x8e, 0x09, 0x81, 0xea, 0x98, 0xb2, 0xb1, 0x6c, 0xfa, 0x0d, 0x4f, 0x9e, 0x05,
-	0xef, 0x13, 0x9c, 0xf9, 0x49, 0x1e, 0x73, 0xc7, 0x52, 0x55, 0x14, 0xb2, 0xb0, 0xf9, 0xe3, 0x20,
-	0x1c, 0x66, 0x18, 0xcb, 0x69, 0xa8, 0x79, 0x73, 0x59, 0x64, 0x13, 0xb0, 0x29, 0x0d, 0x83, 0xa1,
-	0x1c, 0x05, 0xcb, 0x2b, 0x44, 0xf7, 0x47, 0x75, 0xcb, 0xe8, 0xda, 0x4b, 0x8d, 0xf1, 0xe6, 0xd5,
-	0x57, 0x5e, 0xa7, 0xfa, 0x5b, 0x60, 0x47, 0xf4, 0xb9, 0x62, 0x46, 0x5f, 0xbb, 0x0b, 0x85, 0x7b,
-	0x54, 0x26, 0x42, 0xb5, 0x48, 0x07, 0x6a, 0xbe, 0x90, 0xf4, 0xfc, 0x39, 0xcb, 0x2d, 0xb6, 0x60,
-	0xcc, 0x53, 0x6e, 0x6e, 0x4f, 0xf7, 0xb9, 0x17, 0xc4, 0xe7, 0xdd, 0x24, 0x1e, 0x79, 0xf8, 0x74,
-	0x4d, 0x39, 0x7b, 0x00, 0xa2, 0x27, 0x7d, 0x8c, 0x39, 0x66, 0x7a, 0x14, 0x4b, 0x1a, 0xf7, 0xbe,
-	0x9e, 0x63, 0x11, 0xe5, 0x94, 0x66, 0x7c, 0xc1, 0x9a, 0x08, 0x32, 0x67, 0x4d, 0x8e, 0x45, 0x36,
-	0x95, 0x21, 0x4c, 0x35, 0x16, 0x42, 0x72, 0x9f, 0x01, 0x59, 0x49, 0x42, 0x94, 0x52, 0x42, 0xc5,
-	0x58, 0x46, 0x65, 0x17, 0xec, 0x80, 0xf5, 0x19, 0xa7, 0x83, 0x50, 0x75, 0xb8, 0xe5, 0x59, 0x01,
-	0x3b, 0x93, 0xb2, 0x98, 0xb1, 0x94, 0x66, 0x5c, 0x5f, 0xd4, 0x2b, 0x33, 0x56, 0x24, 0xe8, 0x49,
-	0x1f, 0xf7, 0x57, 0x43, 0xff, 0xf9, 0x4c, 0x26, 0x52, 0xf0, 0x79, 0x0b, 0x6c, 0x96, 0x0f, 0xd8,
-	0x8c, 0x71, 0x8c, 0xe4, 0xeb, 0x63, 0x7b, 0x0b, 0x05, 0x69, 0x43, 0x13, 0xe3, 0x69, 0x90, 0x25,
-	0x71, 0x84, 0x31, 0xd7, 0x68, 0x94, 0x55, 0xa2, 0xb7, 0xc6, 0x09, 0xe3, 0x31, 0x8d, 0x50, 0x5f,
-	0x00, 0x73, 0x79, 0x05, 0xca, 0xea, 0x2a, 0x94, 0xa2, 0x36, 0x85, 0x8a, 0x78, 0xab, 0x6b, 0xea,
-	0x63, 0xa5, 0x78, 0x34, 0x74, 0xff, 0x30, 0x35, 0xe3, 0x2a, 0xdf, 0x1e, 0xe5, 0x74, 0x35, 0xd9,
-	0xca, 0x2b, 0x92, 0xad, 0x5c, 0x9e, 0x6c, 0xe5, 0x8d, 0x92, 0x25, 0x50, 0xcd, 0xa8, 0x3f, 0xd1,
-	0x79, 0xca, 0xf3, 0x72, 0x01, 0x75, 0x15, 0xb0, 0x28, 0x80, 0xdc, 0x01, 0x2b, 0x46, 0xae, 0x36,
-	0x9b, 0x86, 0x24, 0x68, 0xab, 0xd8, 0x6c, 0xbe, 0x44, 0x2e, 0x17, 0x9b, 0x46, 0xac, 0x0e, 0xe4,
-	0x1a, 0xd4, 0x02, 0xd6, 0xcf, 0x53, 0xc7, 0x92, 0x0c, 0x57, 0x03, 0xf6, 0x38, 0x25, 0x37, 0xc1,
-	0x0a, 0x58, 0x5f, 0x3c, 0x3e, 0xa1, 0x1c, 0x5b, 0x39, 0x9b, 0x5f, 0x08, 0x71, 0x75, 0x0f, 0x82,
-	0x75, 0x7b, 0x50, 0x69, 0xd1, 0x69, 0xbe, 0xc6, 0xa2, 0xb3, 0xf1, 0xca, 0x45, 0x67, 0xf3, 0x92,
-	0x45, 0x67, 0x6b, 0x79, 0xd1, 0x21, 0x37, 0xa0, 0x21, 0x2e, 0x54, 0x51, 0xd2, 0xb6, 0x7a, 0x2e,
-	0x84, 0xf8, 0x38, 0x75, 0x3f, 0xd3, 0x43, 0x58, 0x74, 0xa1, 0xe8, 0xfe, 0x0f, 0x96, 0xde, 0xd1,
-	0x95, 0x39, 0x5e, 0xd0, 0xaf, 0x1f, 0x8b, 0x0d, 0x00, 0x69, 0xf8, 0x3c, 0x4a, 0xf9, 0xec, 0xf0,
-	0xfb, 0x2a, 0xd4, 0x8e, 0xba, 0x59, 0xea, 0x93, 0x1e, 0xd4, 0xcf, 0x30, 0x1e, 0x3e, 0x7c, 0x40,
-	0x6e, 0xad, 0xdf, 0x58, 0x54, 0xc7, 0xb7, 0x5a, 0x17, 0x58, 0xd3, 0x70, 0xe6, 0x5e, 0x21, 0x5d,
-	0xb0, 0x8f, 0x91, 0x9f, 0x60, 0x36, 0x09, 0x91, 0xb4, 0xd6, 0x5c, 0x29, 0x45, 0x18, 0x67, 0xad,
-	0x4d, 0x05, 0xf9, 0x08, 0xcc, 0x63, 0xe4, 0xe4, 0xfa, 0xb2, 0x8b, 0xda, 0x1a, 0x5a, 0x6b, 0xb5,
-	0xee, 0x15, 0xf2, 0x29, 0x98, 0xa7, 0x39, 0x27, 0x37, 0x97, 0xcd, 0xa5, 0x47, 0xb9, 0x75, 0x63,
-	0x9d, 0x49, 0xfd, 0xf1, 0x63, 0xa8, 0xa9, 0xad, 0x62, 0xe7, 0xa5, 0xe8, 0x52, 0x7f, 0xe1, 0x5f,
-	0x7b, 0x60, 0x15, 0x57, 0xd1, 0xea, 0xaf, 0x4b, 0xf7, 0x64, 0x6b, 0xf7, 0x22, 0x53, 0x81, 0x5a,
-	0x43, 0xf1, 0xc4, 0xc8, 0xee, 0x3a, 0xfa, 0x8a, 0x0a, 0x6e, 0xae, 0x37, 0xaa, 0x20, 0xf7, 0xc1,
-	0x3a, 0x1b, 0xe7, 0xbc, 0x97, 0x3c, 0x8b, 0xc9, 0xb5, 0x65, 0x47, 0xc9, 0xf5, 0xe5, 0xcc, 0x3d,
-	0xd8, 0xfe, 0xed, 0xc5, 0x9e, 0xf1, 0xfb, 0x8b, 0x3d, 0xe3, 0xcf, 0x17, 0x7b, 0xc6, 0x2f, 0x7f,
-	0xed, 0x5d, 0xf9, 0x2f, 0x00, 0x00, 0xff, 0xff, 0x87, 0x82, 0x3d, 0x17, 0xa6, 0x0c, 0x00, 0x00,
+var fileDescriptor_achb_1e483a50cd59b922 = []byte{
+	// 1252 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x56, 0x4b, 0x8f, 0x1b, 0xc5,
+	0x13, 0xcf, 0xc4, 0xaf, 0x99, 0xf2, 0x66, 0x77, 0xff, 0x9d, 0xfc, 0x37, 0x8e, 0x37, 0x6c, 0x96,
+	0x91, 0x10, 0xab, 0x08, 0x9c, 0xd7, 0x01, 0x21, 0x14, 0x89, 0x8d, 0x8d, 0x36, 0x91, 0x58, 0xb4,
+	0x9a, 0x25, 0x91, 0x38, 0x59, 0xed, 0x99, 0xf2, 0xba, 0xf1, 0xbc, 0x32, 0xdd, 0xe3, 0xc4, 0x9c,
+	0xb8, 0x21, 0xc1, 0x1d, 0xf8, 0x12, 0x7c, 0x0f, 0x8e, 0x1c, 0xf8, 0x00, 0x28, 0x9c, 0xf8, 0x08,
+	0x1c, 0x90, 0x50, 0x3f, 0xc6, 0x9e, 0x71, 0xbc, 0x0b, 0x07, 0x10, 0xb7, 0xae, 0xc7, 0x54, 0x57,
+	0xfd, 0x7e, 0x55, 0x3d, 0x05, 0x40, 0xfd, 0xc9, 0xa8, 0x97, 0x66, 0x89, 0x48, 0x48, 0x8b, 0xfa,
+	0xea, 0xd0, 0x7d, 0xf3, 0x8c, 0x89, 0x49, 0x3e, 0xea, 0xf9, 0x49, 0x74, 0xe7, 0x73, 0xfa, 0xe2,
+	0xee, 0x9d, 0x29, 0x1b, 0x31, 0xf1, 0xc5, 0x9d, 0x14, 0x31, 0xd3, 0xbe, 0xee, 0x1f, 0x16, 0x6c,
+	0x1c, 0xf6, 0x4f, 0x1e, 0x23, 0xcd, 0xc4, 0x23, 0xa4, 0x82, 0xbc, 0x0b, 0x8e, 0x34, 0x0f, 0x59,
+	0x3c, 0x4e, 0x3a, 0xd6, 0xbe, 0x75, 0xd0, 0xbe, 0xbf, 0xdd, 0xd3, 0xdf, 0xf5, 0x4e, 0x10, 0xb3,
+	0x27, 0xf1, 0x38, 0xf1, 0xec, 0xd4, 0x9c, 0xc8, 0x2d, 0x68, 0xf3, 0x24, 0x13, 0xc3, 0x08, 0x45,
+	0xc6, 0xfc, 0xce, 0xe5, 0x7d, 0xeb, 0xa0, 0xe1, 0x81, 0x54, 0x1d, 0x2b, 0x0d, 0x79, 0x03, 0x20,
+	0xcd, 0x12, 0x1f, 0x39, 0x1f, 0xb2, 0xa0, 0x53, 0x53, 0x76, 0xc7, 0x68, 0x9e, 0x04, 0xd2, 0xec,
+	0xa7, 0x79, 0xf1, 0x79, 0x5d, 0x9b, 0xfd, 0x34, 0x37, 0x5f, 0xbf, 0x0d, 0x5b, 0x3e, 0x4d, 0xa9,
+	0xcf, 0xc4, 0xbc, 0xf0, 0x69, 0x28, 0x9f, 0xcd, 0x42, 0x6d, 0x1c, 0xbb, 0x60, 0x07, 0x54, 0xd0,
+	0x11, 0xe5, 0xd8, 0x69, 0xee, 0xd7, 0x0e, 0x1c, 0x6f, 0x21, 0x4b, 0x5b, 0x9e, 0x8a, 0x24, 0xa0,
+	0x02, 0x3b, 0xad, 0x7d, 0xeb, 0xc0, 0xf6, 0x16, 0xb2, 0x3b, 0x80, 0xab, 0xe5, 0xf2, 0x3d, 0x7c,
+	0x9e, 0x23, 0x97, 0x28, 0x34, 0xa3, 0x39, 0xc7, 0x70, 0x6c, 0x20, 0xf8, 0x7f, 0xcf, 0x60, 0xda,
+	0xab, 0x78, 0x1b, 0x27, 0xf7, 0x6b, 0x0b, 0xfe, 0x57, 0x0d, 0x93, 0x86, 0x73, 0x85, 0x8d, 0xa0,
+	0x22, 0xe7, 0x43, 0x3f, 0x09, 0x50, 0x45, 0x92, 0xd8, 0x28, 0x55, 0x3f, 0x09, 0x90, 0xbc, 0x05,
+	0x9b, 0xc6, 0x21, 0x42, 0xce, 0xe9, 0x19, 0x2a, 0xfc, 0x1c, 0xef, 0x8a, 0xd6, 0x1e, 0x6b, 0xa5,
+	0x4c, 0x66, 0x32, 0x52, 0x7c, 0xd4, 0xf6, 0x6b, 0x17, 0x24, 0xa3, 0x9d, 0xdc, 0xdf, 0x2c, 0xb8,
+	0x72, 0xd8, 0x3f, 0xf9, 0xec, 0xfe, 0x31, 0x4d, 0x07, 0x54, 0xe4, 0x11, 0xd9, 0x86, 0x5a, 0x44,
+	0x53, 0x95, 0x80, 0xe3, 0xc9, 0x23, 0xb9, 0x06, 0x0d, 0x3e, 0xa1, 0x59, 0xa0, 0x2e, 0xbc, 0xe2,
+	0x69, 0x41, 0xfa, 0x4d, 0x71, 0xae, 0x48, 0x72, 0x3c, 0x79, 0x24, 0x1d, 0x68, 0xcd, 0x30, 0xe3,
+	0x2c, 0x89, 0x15, 0x37, 0x75, 0xaf, 0x10, 0x65, 0x84, 0x19, 0x0d, 0x73, 0x54, 0x7c, 0x6c, 0x78,
+	0x5a, 0x20, 0x3b, 0xd0, 0xc4, 0x97, 0x29, 0xcb, 0x34, 0xd0, 0x75, 0xcf, 0x48, 0x64, 0x17, 0x1c,
+	0x3f, 0x89, 0xc7, 0x43, 0xc1, 0x22, 0xec, 0x38, 0xca, 0x64, 0x4b, 0xc5, 0xa7, 0x2c, 0x42, 0xd9,
+	0x03, 0x6c, 0x3c, 0x2c, 0xee, 0x01, 0x65, 0x75, 0xd8, 0xf8, 0x99, 0xb9, 0xa9, 0x0b, 0x76, 0x98,
+	0xf8, 0x54, 0x48, 0x63, 0x5b, 0x53, 0x5b, 0xc8, 0xee, 0xfb, 0xd0, 0x56, 0xa5, 0x1e, 0xa1, 0x38,
+	0x45, 0x41, 0x6e, 0x43, 0x5d, 0xb2, 0xde, 0xb1, 0x14, 0x4e, 0x3b, 0x65, 0x9c, 0x96, 0x70, 0x78,
+	0xca, 0xc7, 0xfd, 0xae, 0x80, 0xe9, 0x08, 0x85, 0x47, 0xe3, 0x33, 0x5c, 0x03, 0x13, 0x81, 0xfa,
+	0x14, 0xe7, 0x77, 0x0d, 0x2d, 0xea, 0x6c, 0x74, 0xf7, 0x0c, 0x4a, 0xea, 0x2c, 0x53, 0x34, 0xe9,
+	0xdf, 0x35, 0x38, 0x2d, 0xe4, 0x92, 0xed, 0x9e, 0xc2, 0x6a, 0x69, 0xbb, 0xb7, 0xa4, 0xa1, 0x59,
+	0xa2, 0xc1, 0xfd, 0xd2, 0x82, 0x6d, 0x95, 0xd9, 0x80, 0xf1, 0x45, 0x47, 0x6e, 0x43, 0x6d, 0x92,
+	0xa4, 0xa6, 0x89, 0xe4, 0xb1, 0x84, 0xf5, 0xe5, 0x0a, 0xd6, 0x3b, 0xd0, 0xe4, 0x18, 0x07, 0x98,
+	0x99, 0x14, 0x8d, 0xb4, 0x00, 0xa7, 0xae, 0x3a, 0xfa, 0x62, 0x70, 0xbe, 0xb5, 0x60, 0xb3, 0x94,
+	0xc2, 0x3f, 0xd9, 0xcd, 0xb7, 0xa0, 0x9d, 0x21, 0xcf, 0x43, 0xa1, 0xe3, 0xe8, 0x17, 0x01, 0xb4,
+	0x4a, 0xc5, 0xa9, 0xf4, 0x8a, 0x4c, 0xb6, 0xb6, 0xec, 0x15, 0xf7, 0x77, 0x0b, 0xb6, 0x54, 0x62,
+	0xfd, 0x09, 0xfa, 0xd3, 0x67, 0xaa, 0xe9, 0x5e, 0xe7, 0x6d, 0x07, 0x9a, 0x22, 0x43, 0x64, 0x45,
+	0x7f, 0x1b, 0x49, 0xe2, 0x1d, 0xe2, 0x0c, 0x43, 0x73, 0xab, 0x16, 0x2e, 0x6e, 0x72, 0xcd, 0x4f,
+	0x63, 0xcd, 0x98, 0x34, 0x97, 0x63, 0x42, 0xa0, 0x3e, 0xa1, 0x7c, 0xa2, 0x9a, 0x7e, 0xc3, 0x53,
+	0x67, 0xc9, 0xfb, 0x14, 0xe7, 0x7e, 0x92, 0xc7, 0xa2, 0x63, 0xeb, 0x2a, 0x0a, 0x59, 0xda, 0xfc,
+	0x09, 0x0b, 0x83, 0x0c, 0x63, 0x35, 0x0d, 0x0d, 0x6f, 0x21, 0xcb, 0x6c, 0x18, 0x9f, 0xd1, 0x90,
+	0x05, 0x6a, 0x14, 0x6c, 0xaf, 0x10, 0xdd, 0x6f, 0xf4, 0x2b, 0x63, 0x6a, 0x2f, 0x35, 0xc6, 0xbf,
+	0x54, 0xfd, 0x4d, 0x70, 0x22, 0xfa, 0x52, 0x33, 0x63, 0x9e, 0xdd, 0xa5, 0xc2, 0x3d, 0x2c, 0x13,
+	0xa1, 0x5b, 0xa4, 0x07, 0x0d, 0x5f, 0x4a, 0x66, 0xfe, 0x3a, 0xd5, 0x16, 0x5b, 0x32, 0xe6, 0x69,
+	0x37, 0x77, 0x60, 0xfa, 0xdc, 0x63, 0xf1, 0x59, 0x3f, 0x89, 0xc7, 0x1e, 0x3e, 0x5f, 0x53, 0xce,
+	0x1e, 0x80, 0xec, 0x49, 0x1f, 0x63, 0x81, 0x99, 0xe9, 0xa9, 0x92, 0xc6, 0x7d, 0x68, 0xe6, 0x58,
+	0x46, 0x39, 0xa1, 0x99, 0x58, 0xb2, 0x66, 0x95, 0x59, 0x53, 0x63, 0x91, 0xcd, 0x54, 0x88, 0x9a,
+	0x1e, 0x0b, 0x29, 0xb9, 0x2f, 0x80, 0xac, 0x24, 0x21, 0x4b, 0x29, 0xa1, 0x62, 0x55, 0x51, 0xd9,
+	0x05, 0x87, 0xf1, 0x21, 0x17, 0x74, 0x14, 0xea, 0x0e, 0xb7, 0x3d, 0x9b, 0xf1, 0x53, 0x25, 0xcb,
+	0x19, 0x4b, 0x69, 0x26, 0xcc, 0x43, 0xbd, 0x32, 0x63, 0x45, 0x82, 0x9e, 0xf2, 0x71, 0x7f, 0xb0,
+	0xcc, 0xcd, 0xa7, 0x2a, 0x91, 0x82, 0xcf, 0x9b, 0xe0, 0xf0, 0x7c, 0xc4, 0xe7, 0x5c, 0x60, 0x64,
+	0x60, 0x58, 0x2a, 0xc8, 0x3e, 0xb4, 0x31, 0x9e, 0xb1, 0x2c, 0x89, 0x23, 0x8c, 0x85, 0x41, 0xa3,
+	0xac, 0x92, 0xbd, 0x35, 0x49, 0xb8, 0x88, 0x69, 0x84, 0xe6, 0x01, 0x58, 0xc8, 0x2b, 0x50, 0xd6,
+	0x57, 0xa1, 0x94, 0xb5, 0x69, 0x54, 0xe4, 0xbf, 0xba, 0xa1, 0x3f, 0xd6, 0x8a, 0x27, 0x81, 0xfb,
+	0x73, 0xcd, 0x30, 0xae, 0xf3, 0x1d, 0x50, 0x41, 0xff, 0xd3, 0x64, 0x09, 0xd4, 0x33, 0xea, 0x4f,
+	0x4d, 0x9e, 0xea, 0x5c, 0x2d, 0xa0, 0x59, 0x2d, 0x80, 0xdc, 0x06, 0x3b, 0x46, 0xa1, 0x37, 0x9b,
+	0x96, 0x22, 0x68, 0xab, 0xd8, 0x6c, 0x3e, 0x41, 0xa1, 0x16, 0x9b, 0x56, 0xac, 0x0f, 0xe4, 0x2a,
+	0x34, 0x18, 0x1f, 0xe6, 0xa9, 0x1a, 0x5d, 0xdb, 0xab, 0x33, 0xfe, 0x34, 0x25, 0x37, 0xc0, 0x66,
+	0x7c, 0x28, 0x7f, 0x3e, 0xa1, 0x1a, 0x5b, 0x35, 0x9b, 0x1f, 0x4b, 0x71, 0x75, 0x0f, 0x82, 0x75,
+	0x7b, 0x50, 0x69, 0xd1, 0x69, 0xff, 0x8d, 0x45, 0x67, 0xe3, 0x2f, 0x17, 0x9d, 0xcd, 0x0b, 0x16,
+	0x9d, 0xad, 0xea, 0xa2, 0x43, 0xae, 0x43, 0x4b, 0x3e, 0xa8, 0xb2, 0xa4, 0x6d, 0xfd, 0xbb, 0x90,
+	0xe2, 0xd3, 0xd4, 0xfd, 0xd0, 0x0c, 0x61, 0xd1, 0x85, 0xb2, 0xfb, 0xdf, 0xa9, 0xfc, 0x47, 0x57,
+	0xe6, 0x78, 0x49, 0xbf, 0xf9, 0x59, 0x6c, 0x00, 0x28, 0xc3, 0x47, 0x51, 0x2a, 0xe6, 0xf7, 0xbf,
+	0xaa, 0x43, 0xe3, 0xb0, 0x9f, 0xa5, 0x3e, 0x19, 0x40, 0xf3, 0x14, 0xe3, 0xe0, 0xf1, 0x23, 0x72,
+	0x73, 0xfd, 0xc6, 0xa2, 0x3b, 0xbe, 0xdb, 0x3d, 0xc7, 0x9a, 0x86, 0x73, 0xf7, 0x12, 0xe9, 0x83,
+	0x73, 0x84, 0xe2, 0x18, 0xb3, 0x69, 0x88, 0xa4, 0xbb, 0xe6, 0x49, 0x29, 0xc2, 0x74, 0xd6, 0xda,
+	0x74, 0x90, 0x07, 0x50, 0x3b, 0x42, 0x41, 0xae, 0x55, 0x5d, 0xf4, 0xd6, 0xd0, 0x5d, 0xab, 0x75,
+	0x2f, 0x91, 0x0f, 0xa0, 0x76, 0x92, 0x0b, 0x72, 0xa3, 0x6a, 0x2e, 0xfd, 0x94, 0xbb, 0xd7, 0xd7,
+	0x99, 0xf4, 0x8d, 0xef, 0x41, 0x43, 0x6f, 0x15, 0x3b, 0xaf, 0x45, 0x57, 0xfa, 0x73, 0x6f, 0x1d,
+	0x80, 0x5d, 0x3c, 0x45, 0xab, 0x57, 0x97, 0xde, 0xc9, 0xee, 0xee, 0x79, 0xa6, 0x02, 0xb5, 0x96,
+	0xe6, 0x89, 0x93, 0xdd, 0x75, 0xf4, 0x15, 0x15, 0xdc, 0x58, 0x6f, 0xd4, 0x41, 0x1e, 0x82, 0x7d,
+	0x3a, 0xc9, 0xc5, 0x20, 0x79, 0x11, 0x93, 0xab, 0x55, 0x47, 0xc5, 0xf5, 0xc5, 0xcc, 0x3d, 0xda,
+	0xfe, 0xf1, 0xd5, 0x9e, 0xf5, 0xd3, 0xab, 0x3d, 0xeb, 0x97, 0x57, 0x7b, 0xd6, 0xf7, 0xbf, 0xee,
+	0x5d, 0x1a, 0x35, 0x95, 0xf3, 0x83, 0x3f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x73, 0x43, 0x80, 0x79,
+	0xae, 0x0c, 0x00, 0x00,
 }

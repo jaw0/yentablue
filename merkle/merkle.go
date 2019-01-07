@@ -7,16 +7,15 @@ package merkle
 
 import (
 	"fmt"
-	"github.com/golang/protobuf/proto"
 	"math/rand"
 	"sort"
 	"sync"
 	"time"
 
+	"github.com/jaw0/acgo/diag"
 	"github.com/jaw0/yentablue/gclient"
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/soty"
-	"github.com/jaw0/acgo/diag"
 )
 
 type D struct {
@@ -259,8 +258,8 @@ func (m *D) Move(key string, ver uint64, shard uint32, oldLoc *soty.Loc, newLoc 
 func (m *D) haveVer(key string) (uint64, bool) {
 
 	r := acproto.ACPY2MapDatum{
-		Map: proto.String(m.name),
-		Key: proto.String(key),
+		Map: m.name,
+		Key: key,
 	}
 
 	ok, err := m.db.Get(&r)
@@ -276,11 +275,11 @@ func (m *D) Xfer(key string, ver uint64, oldLoc *soty.Loc, newLoc *soty.Loc) {
 
 	// send to new server
 	req := &acproto.ACPY2DistRequest{
-		Hop:    proto.Int(10), // prevent wide distribution
-		Expire: proto.Uint64(soty.Now() + uint64(10*time.Second)),
+		Hop:    10, // prevent wide distribution
+		Expire: soty.Now() + uint64(10*time.Second),
 		Data: &acproto.ACPY2MapDatum{
-			Map: proto.String(m.name),
-			Key: proto.String(key),
+			Map: m.name,
+			Key: key,
 		}}
 	m.db.Get(req.Data)
 

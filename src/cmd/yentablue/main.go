@@ -16,7 +16,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	//"google.golang.org/grpc/grpclog"
@@ -170,11 +169,11 @@ func Myself(info *kibitz.PeerInfo) *acproto.ACPHeartBeat {
 
 	return &acproto.ACPHeartBeat{
 		PeerInfo:       info,
-		ProcessId:      proto.Int32(int32(os.Getpid())),
-		SortMetric:     proto.Int32(load),
-		CapacityMetric: proto.Int32(avail),
-		CpuMetric:      proto.Int32(int32(runtime.NumCPU())*1000 - load),
-		Uptodate:       proto.Bool(sdb.Uptodate),
+		ProcessId:      int32(os.Getpid()),
+		SortMetric:     load,
+		CapacityMetric: avail,
+		CpuMetric:      int32(runtime.NumCPU())*1000 - load,
+		Uptodate:       sdb.Uptodate,
 		Database:       dbl,
 	}
 }

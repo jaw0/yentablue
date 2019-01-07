@@ -7,16 +7,15 @@ package merkle
 
 import (
 	"expvar"
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"sync"
 	"time"
 
+	"github.com/jaw0/acgo/diag"
 	"github.com/jaw0/yentablue/gclient"
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/putstatus"
 	"github.com/jaw0/yentablue/soty"
-	"github.com/jaw0/acgo/diag"
 )
 
 const (
@@ -446,9 +445,9 @@ func (wd *aeWork) dfsCheckNode(level int, ver uint64) (uint64, bool) {
 func (wd *aeWork) addKeyToReq(k needkey, req *acproto.ACPY2GetSet) {
 
 	req.Data = append(req.Data, &acproto.ACPY2MapDatum{
-		Map:     proto.String(wd.merk.name),
-		Key:     proto.String(k.key),
-		Version: proto.Uint64(k.ver),
+		Map:     wd.merk.name,
+		Key:     k.key,
+		Version: k.ver,
 	})
 }
 
@@ -615,10 +614,10 @@ func (wd *aeWork) aeFetchMerkle(ac acproto.ACrpcClient, level int, ver uint64) (
 
 	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
 	res, err := ac.GetMerkle(ctx, &acproto.ACPY2CheckRequest{
-		Map:     proto.String(wd.merk.name),
-		Treeid:  proto.Uint32(uint32(wd.loc.TreeID)),
-		Level:   proto.Int(level),
-		Version: proto.Uint64(ver),
+		Map:     wd.merk.name,
+		Treeid:  uint32(wd.loc.TreeID),
+		Level:   int32(level),
+		Version: ver,
 	})
 	cancel()
 

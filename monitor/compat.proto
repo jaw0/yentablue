@@ -1,0 +1,30 @@
+
+// AC::Yenta compat
+
+syntax = "proto3";
+package monitor;
+
+message ACP1HeartBeat {
+        int32          status_code     = 1;
+        string         status_message  = 2;
+        fixed32        ipv4            = 3;
+        int32          port            = 4;
+        fixed64        timestamp       = 5;
+        string         subsystem       = 6;
+        string         environment     = 7;
+        int32          sort_metric     = 8;
+        string         hostname        = 9;
+        string         server_id       = 10;
+        int32          process_id      = 11;
+        int32          capacity_metric = 12;
+}
+
+message ACP1HeartBeatRequest {
+        ACP1HeartBeat   myself         = 1;
+}
+
+message ACP1HeartBeatReply {
+        int32          status_code     = 1;
+        string         status_message  = 2;
+        repeated ACP1HeartBeat  hbinfo          = 3;
+}

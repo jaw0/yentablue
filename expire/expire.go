@@ -156,9 +156,9 @@ func (d *D) expireEdge() {
 
 		dl.Debug("expire %s", key)
 		d.db.Del(&acproto.ACPY2MapDatum{
-			Key:     &key,
-			Shard:   &shard,
-			Version: &ver,
+			Key:     key,
+			Shard:   shard,
+			Version: ver,
 		})
 		return true
 	})

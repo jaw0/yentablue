@@ -9,12 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/golang/protobuf/proto"
-
+	"github.com/jaw0/acgo/diag"
 	"github.com/jaw0/yentablue/gclient"
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/soty"
-	"github.com/jaw0/acgo/diag"
 )
 
 type DCPart struct {
@@ -203,8 +201,8 @@ func (p *P) GetConf(dcreq string) *acproto.ACPY2RingConfReply {
 	defer p.lock.RUnlock()
 
 	res := &acproto.ACPY2RingConfReply{
-		Version:  proto.Uint64(p.currVer),
-		IsStable: proto.Bool(p.currVer == p.stableVer),
+		Version:  p.currVer,
+		IsStable: p.currVer == p.stableVer,
 	}
 
 	if len(p.part) == 0 {
@@ -228,7 +226,7 @@ func (p *P) GetConf(dcreq string) *acproto.ACPY2RingConfReply {
 
 			sh := partIdx2Shard(p.ringbits, pidx)
 
-			res.Part = append(res.Part, &acproto.ACPY2RingPart{Shard: proto.Uint32(sh), Server: dc.servers})
+			res.Part = append(res.Part, &acproto.ACPY2RingPart{Shard: sh, Server: dc.servers})
 
 		}
 	}

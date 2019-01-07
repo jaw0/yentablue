@@ -78,31 +78,31 @@ func (mon *monDat) monitor_http() {
 		pi := info.PeerInfo
 
 		if jsinfo.Subsystem != "" {
-			pi.Subsystem = &jsinfo.Subsystem
+			pi.Subsystem = jsinfo.Subsystem
 		}
 		if jsinfo.Environment != "" {
-			pi.Environment = &jsinfo.Environment
+			pi.Environment = jsinfo.Environment
 		}
 		if jsinfo.Hostname != "" {
-			pi.Hostname = &jsinfo.Hostname
+			pi.Hostname = jsinfo.Hostname
 		}
 		if jsinfo.Datacenter != "" {
-			pi.Datacenter = &jsinfo.Datacenter
+			pi.Datacenter = jsinfo.Datacenter
 		}
 		if jsinfo.Rack != "" {
-			pi.Rack = &jsinfo.Rack
+			pi.Rack = jsinfo.Rack
 		}
 		if jsinfo.ServerId != "" {
-			pi.ServerId = &jsinfo.ServerId
+			pi.ServerId = jsinfo.ServerId
 		}
 		if jsinfo.SortMetric != 0 {
-			info.SortMetric = &jsinfo.SortMetric
+			info.SortMetric = jsinfo.SortMetric
 		}
 		if jsinfo.CpuMetric != 0 {
-			info.CpuMetric = &jsinfo.CpuMetric
+			info.CpuMetric = jsinfo.CpuMetric
 		}
 		if jsinfo.CapacityMetric != 0 {
-			info.CapacityMetric = &jsinfo.CapacityMetric
+			info.CapacityMetric = jsinfo.CapacityMetric
 		}
 	}
 

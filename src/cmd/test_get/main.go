@@ -12,7 +12,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
@@ -63,8 +62,8 @@ func main() {
 
 				res, err := ac.Get(context.Background(), &acproto.ACPY2GetSet{
 					Data: []*acproto.ACPY2MapDatum{{
-						Map: proto.String(dbname),
-						Key: proto.String(key),
+						Map: dbname,
+						Key: key,
 					}}})
 
 				if err != nil {

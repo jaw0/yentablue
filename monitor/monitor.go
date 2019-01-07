@@ -106,14 +106,14 @@ func (mon *monDat) init() {
 			d := ni.Dom
 
 			mon.netinfo = append(mon.netinfo, &kibitz.NetInfo{
-				Addr:   &a,
-				Natdom: &d,
+				Addr:   a,
+				Natdom: d,
 			})
 		}
 	} else {
 		a := mon.endpoint
 		d := ""
-		mon.netinfo = []*kibitz.NetInfo{{Addr: &a, Natdom: &d}}
+		mon.netinfo = []*kibitz.NetInfo{{Addr: a, Natdom: d}}
 	}
 
 	switch mcf.Protocol {
@@ -155,30 +155,30 @@ func (mon *monDat) fillHeartbeat(isup bool, info *acproto.ACPHeartBeat) {
 	pi := info.PeerInfo
 	mcf := mon.cf
 
-	if pi.StatusCode == nil {
+	if pi.StatusCode == 0 {
 		status := int32(kibitz.STATUS_DOWN)
 		if isup {
 			status = int32(kibitz.STATUS_UP)
 		}
-		pi.StatusCode = &status
+		pi.StatusCode = status
 	}
-	if pi.Subsystem == nil {
-		pi.Subsystem = &mcf.System
+	if pi.Subsystem == "" {
+		pi.Subsystem = mcf.System
 	}
-	if pi.Environment == nil {
-		pi.Environment = &mcf.Environment
+	if pi.Environment == "" {
+		pi.Environment = mcf.Environment
 	}
-	if pi.ServerId == nil {
-		pi.ServerId = &mcf.Id
+	if pi.ServerId == "" {
+		pi.ServerId = mcf.Id
 	}
-	if pi.Datacenter == nil {
-		pi.Datacenter = &mcf.Datacenter
+	if pi.Datacenter == "" {
+		pi.Datacenter = mcf.Datacenter
 	}
-	if pi.Rack == nil {
-		pi.Rack = &mcf.Rack
+	if pi.Rack == "" {
+		pi.Rack = mcf.Rack
 	}
-	if pi.Via == nil {
-		pi.Via = &viaMon
+	if pi.Via == "" {
+		pi.Via = viaMon
 	}
 	if len(pi.NetInfo) == 0 {
 		pi.NetInfo = mon.netinfo
@@ -200,10 +200,10 @@ func (mon *monDat) result(isup bool, info *acproto.ACPHeartBeat) {
 			tup = now
 		}
 
-		pi.TimeChecked = &now
-		pi.TimeCreated = &now
-		pi.TimeConf = &boot
-		pi.TimeUp = &tup
+		pi.TimeChecked = now
+		pi.TimeCreated = now
+		pi.TimeConf = boot
+		pi.TimeUp = tup
 
 		mon.id = pi.GetServerId() // save best known Id
 		mon.pdb.Update(info)

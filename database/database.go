@@ -194,15 +194,15 @@ func (db *DB) Get(rec *acproto.ACPY2MapDatum) (bool, error) {
 		return false, nil
 	}
 
-	rec.Version = &dr.Version
-	rec.Shard = &dr.Shard
+	rec.Version = dr.Version
+	rec.Shard = dr.Shard
 	rec.Value = dr.Value
 
 	ringVer := db.ring.CurrVer()
-	rec.ConfTime = &ringVer
+	rec.ConfTime = ringVer
 
 	if dr.Expire != 0 {
-		rec.Expire = &dr.Expire
+		rec.Expire = dr.Expire
 	}
 
 	if db.cache != nil && !cached {
@@ -244,7 +244,7 @@ func (db *DB) Put(rec *acproto.ACPY2MapDatum) (int, *soty.Loc) {
 			dl.Debug("have newer version")
 			return putstatus.NEWER, rloc
 		}
-		if rec.IfVersion != nil {
+		if rec.IfVersion != 0 {
 			// simulated atomic transactions
 			if rec.GetIfVersion() != pr.GetVersion() {
 				dl.Debug("if_version mismatch")
@@ -297,11 +297,11 @@ func (db *DB) filterAppendRes(req *acproto.ACPY2GetRange, res *acproto.ACPY2GetS
 
 	dat := &acproto.ACPY2MapDatum{
 		Map:     req.Map,
-		Key:     &key,
+		Key:     key,
 		Value:   dr.Value,
-		Version: &dr.Version,
-		Shard:   &dr.Shard,
-		Expire:  &dr.Expire,
+		Version: dr.Version,
+		Shard:   dr.Shard,
+		Expire:  dr.Expire,
 	}
 
 	res.Data = append(res.Data, dat)

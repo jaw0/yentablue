@@ -6,14 +6,13 @@
 package main
 
 import (
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 
 	"github.com/jaw0/kibitz"
 
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/putstatus"
-	"github.com/jaw0/yentablue/shard"
+	// "github.com/jaw0/yentablue/shard"
 )
 
 func (*myServer) SendHB(ctx context.Context, hb *acproto.ACPHeartBeatRequest) (*acproto.ACPHeartBeatReply, error) {
@@ -23,7 +22,7 @@ func (*myServer) SendHB(ctx context.Context, hb *acproto.ACPHeartBeatRequest) (*
 		pdb.UpdateSceptical(hb.Myself)
 	}
 
-	res := &acproto.ACPHeartBeatReply{StatusCode: proto.Int32(200), StatusMessage: proto.String("OK")}
+	res := &acproto.ACPHeartBeatReply{StatusCode: 200, StatusMessage: "OK"}
 	pwd := pdb.GetAll()
 
 	for _, p := range pwd {
@@ -51,8 +50,8 @@ func addServer(res *acproto.ACPY2ServerReply, w *acproto.ACPHeartBeat, isUp bool
 		Hostname:       ii.Hostname,
 		TimeUp:         ii.TimeUp,
 		NetInfo:        ii.NetInfo,
-		IsUp:           &isUp,
-		IsLocal:        &isLocal,
+		IsUp:           isUp,
+		IsLocal:        isLocal,
 		SortMetric:     w.SortMetric,
 		CpuMetric:      w.CpuMetric,
 		CapacityMetric: w.CapacityMetric,
@@ -73,19 +72,19 @@ func (*myServer) Servers(ctx context.Context, req *acproto.ACPY2ServerRequest) (
 		w := pd.(*acproto.ACPHeartBeat)
 		ii := w.PeerInfo
 
-		if req.Subsystem != nil && req.GetSubsystem() != ii.GetSubsystem() {
+		if req.Subsystem != "" && req.GetSubsystem() != ii.GetSubsystem() {
 			continue
 		}
-		if req.Environment != nil && req.GetEnvironment() != ii.GetEnvironment() {
+		if req.Environment != "" && req.GetEnvironment() != ii.GetEnvironment() {
 			continue
 		}
-		if req.Hostname != nil && req.GetHostname() != ii.GetHostname() {
+		if req.Hostname != "" && req.GetHostname() != ii.GetHostname() {
 			continue
 		}
-		if req.Datacenter != nil && req.GetDatacenter() != ii.GetDatacenter() {
+		if req.Datacenter != "" && req.GetDatacenter() != ii.GetDatacenter() {
 			continue
 		}
-		if req.ServerId != nil && req.GetServerId() != ii.GetServerId() {
+		if req.ServerId != "" && req.GetServerId() != ii.GetServerId() {
 			continue
 		}
 
@@ -110,21 +109,21 @@ func (*myServer) GetMerkle(ctx context.Context, hb *acproto.ACPY2CheckRequest) (
 
 	for _, m := range mt {
 		v := &acproto.ACPY2CheckValue{
-			Map:      proto.String(m.Map),
-			Level:    proto.Int(m.Level),
-			Treeid:   proto.Uint32(uint32(m.TreeID)),
-			Shard:    proto.Uint32(m.Shard),
-			Version:  proto.Uint64(m.Version),
-			Keycount: proto.Int64(m.KeyCount),
-			Children: proto.Int(m.Children),
-			Isvalid:  proto.Bool(m.IsValid),
+			Map:      m.Map,
+			Level:    int32(m.Level),
+			Treeid:   uint32(m.TreeID),
+			Shard:    m.Shard,
+			Version:  m.Version,
+			Keycount: m.KeyCount,
+			Children: int32(m.Children),
+			Isvalid:  m.IsValid,
 		}
 
 		if len(m.Hash) != 0 {
 			v.Hash = m.Hash
 		}
 		if len(m.Key) != 0 {
-			v.Key = proto.String(m.Key)
+			v.Key = m.Key
 		}
 
 		res.Check = append(res.Check, v)
@@ -143,7 +142,7 @@ func (*myServer) Get(ctx context.Context, req *acproto.ACPY2GetSet) (*acproto.AC
 		}
 
 		// not found? redirect to a better server
-		if r.GetVersion() == 0 && r.Shard != nil {
+		if r.GetVersion() == 0 {
 			sdb.Redirect(r)
 		}
 	}
@@ -165,10 +164,10 @@ func (*myServer) Put(ctx context.Context, req *acproto.ACPY2DistRequest) (*acpro
 
 	r := req.Data
 
-	if r.Shard == nil {
-		// fill in missing shard
-		r.Shard = proto.Uint32(shard.Hash(r.GetKey()))
-	}
+	// QQQ - if r.Shard == nil {
+	// QQQ - 	// fill in missing shard
+	// QQQ - 	r.Shard = shard.Hash(r.GetKey())
+	// QQQ - }
 	status, loc := sdb.Put(r)
 
 	switch status {
@@ -194,9 +193,9 @@ func (*myServer) Put(ctx context.Context, req *acproto.ACPY2DistRequest) (*acpro
 	}
 
 	return &acproto.ACPY2DistReply{
-		StatusCode:    proto.Int(200),
-		StatusMessage: proto.String("OK"),
-		ResultCode:    proto.Int(status),
+		StatusCode:    200,
+		StatusMessage: "OK",
+		ResultCode:    int32(status),
 	}, nil
 }
 
@@ -214,6 +213,6 @@ func (*myServer) RingConf(ctx context.Context, req *acproto.ACPY2RingConfReq) (*
 func (*myServer) ShutDown(ctx context.Context, req *acproto.ACPY2Empty) (*acproto.ACPHeartBeatReply, error) {
 
 	close(shutdown)
-	res := &acproto.ACPHeartBeatReply{StatusCode: proto.Int32(200), StatusMessage: proto.String("OK")}
+	res := &acproto.ACPHeartBeatReply{StatusCode: 200, StatusMessage: "OK"}
 	return res, nil
 }

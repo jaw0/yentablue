@@ -7,7 +7,6 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
-import github_com_golang_protobuf_proto "github.com/golang/protobuf/proto"
 import encoding_binary "encoding/binary"
 
 import io "io"
@@ -24,18 +23,18 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type ACP1HeartBeat struct {
-	StatusCode           *int32   `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"`
-	StatusMessage        *string  `protobuf:"bytes,2,opt,name=status_message,json=statusMessage" json:"status_message,omitempty"`
-	Ipv4                 *uint32  `protobuf:"fixed32,3,opt,name=ipv4" json:"ipv4,omitempty"`
-	Port                 *int32   `protobuf:"varint,4,opt,name=port" json:"port,omitempty"`
-	Timestamp            *uint64  `protobuf:"fixed64,5,opt,name=timestamp" json:"timestamp,omitempty"`
-	Subsystem            *string  `protobuf:"bytes,6,req,name=subsystem" json:"subsystem,omitempty"`
-	Environment          *string  `protobuf:"bytes,7,opt,name=environment" json:"environment,omitempty"`
-	SortMetric           *int32   `protobuf:"varint,8,opt,name=sort_metric,json=sortMetric" json:"sort_metric,omitempty"`
-	Hostname             *string  `protobuf:"bytes,9,opt,name=hostname" json:"hostname,omitempty"`
-	ServerId             *string  `protobuf:"bytes,10,req,name=server_id,json=serverId" json:"server_id,omitempty"`
-	ProcessId            *int32   `protobuf:"varint,11,req,name=process_id,json=processId" json:"process_id,omitempty"`
-	CapacityMetric       *int32   `protobuf:"varint,12,opt,name=capacity_metric,json=capacityMetric" json:"capacity_metric,omitempty"`
+	StatusCode           int32    `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
+	StatusMessage        string   `protobuf:"bytes,2,opt,name=status_message,json=statusMessage,proto3" json:"status_message,omitempty"`
+	Ipv4                 uint32   `protobuf:"fixed32,3,opt,name=ipv4,proto3" json:"ipv4,omitempty"`
+	Port                 int32    `protobuf:"varint,4,opt,name=port,proto3" json:"port,omitempty"`
+	Timestamp            uint64   `protobuf:"fixed64,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Subsystem            string   `protobuf:"bytes,6,opt,name=subsystem,proto3" json:"subsystem,omitempty"`
+	Environment          string   `protobuf:"bytes,7,opt,name=environment,proto3" json:"environment,omitempty"`
+	SortMetric           int32    `protobuf:"varint,8,opt,name=sort_metric,json=sortMetric,proto3" json:"sort_metric,omitempty"`
+	Hostname             string   `protobuf:"bytes,9,opt,name=hostname,proto3" json:"hostname,omitempty"`
+	ServerId             string   `protobuf:"bytes,10,opt,name=server_id,json=serverId,proto3" json:"server_id,omitempty"`
+	ProcessId            int32    `protobuf:"varint,11,opt,name=process_id,json=processId,proto3" json:"process_id,omitempty"`
+	CapacityMetric       int32    `protobuf:"varint,12,opt,name=capacity_metric,json=capacityMetric,proto3" json:"capacity_metric,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -45,7 +44,7 @@ func (m *ACP1HeartBeat) Reset()         { *m = ACP1HeartBeat{} }
 func (m *ACP1HeartBeat) String() string { return proto.CompactTextString(m) }
 func (*ACP1HeartBeat) ProtoMessage()    {}
 func (*ACP1HeartBeat) Descriptor() ([]byte, []int) {
-	return fileDescriptor_compat_bed30c9335c77d78, []int{0}
+	return fileDescriptor_compat_cac5b87282887205, []int{0}
 }
 func (m *ACP1HeartBeat) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -75,91 +74,91 @@ func (m *ACP1HeartBeat) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACP1HeartBeat proto.InternalMessageInfo
 
 func (m *ACP1HeartBeat) GetStatusCode() int32 {
-	if m != nil && m.StatusCode != nil {
-		return *m.StatusCode
+	if m != nil {
+		return m.StatusCode
 	}
 	return 0
 }
 
 func (m *ACP1HeartBeat) GetStatusMessage() string {
-	if m != nil && m.StatusMessage != nil {
-		return *m.StatusMessage
+	if m != nil {
+		return m.StatusMessage
 	}
 	return ""
 }
 
 func (m *ACP1HeartBeat) GetIpv4() uint32 {
-	if m != nil && m.Ipv4 != nil {
-		return *m.Ipv4
+	if m != nil {
+		return m.Ipv4
 	}
 	return 0
 }
 
 func (m *ACP1HeartBeat) GetPort() int32 {
-	if m != nil && m.Port != nil {
-		return *m.Port
+	if m != nil {
+		return m.Port
 	}
 	return 0
 }
 
 func (m *ACP1HeartBeat) GetTimestamp() uint64 {
-	if m != nil && m.Timestamp != nil {
-		return *m.Timestamp
+	if m != nil {
+		return m.Timestamp
 	}
 	return 0
 }
 
 func (m *ACP1HeartBeat) GetSubsystem() string {
-	if m != nil && m.Subsystem != nil {
-		return *m.Subsystem
+	if m != nil {
+		return m.Subsystem
 	}
 	return ""
 }
 
 func (m *ACP1HeartBeat) GetEnvironment() string {
-	if m != nil && m.Environment != nil {
-		return *m.Environment
+	if m != nil {
+		return m.Environment
 	}
 	return ""
 }
 
 func (m *ACP1HeartBeat) GetSortMetric() int32 {
-	if m != nil && m.SortMetric != nil {
-		return *m.SortMetric
+	if m != nil {
+		return m.SortMetric
 	}
 	return 0
 }
 
 func (m *ACP1HeartBeat) GetHostname() string {
-	if m != nil && m.Hostname != nil {
-		return *m.Hostname
+	if m != nil {
+		return m.Hostname
 	}
 	return ""
 }
 
 func (m *ACP1HeartBeat) GetServerId() string {
-	if m != nil && m.ServerId != nil {
-		return *m.ServerId
+	if m != nil {
+		return m.ServerId
 	}
 	return ""
 }
 
 func (m *ACP1HeartBeat) GetProcessId() int32 {
-	if m != nil && m.ProcessId != nil {
-		return *m.ProcessId
+	if m != nil {
+		return m.ProcessId
 	}
 	return 0
 }
 
 func (m *ACP1HeartBeat) GetCapacityMetric() int32 {
-	if m != nil && m.CapacityMetric != nil {
-		return *m.CapacityMetric
+	if m != nil {
+		return m.CapacityMetric
 	}
 	return 0
 }
 
 type ACP1HeartBeatRequest struct {
-	Myself               *ACP1HeartBeat `protobuf:"bytes,1,opt,name=myself" json:"myself,omitempty"`
+	Myself               *ACP1HeartBeat `protobuf:"bytes,1,opt,name=myself,proto3" json:"myself,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
 	XXX_unrecognized     []byte         `json:"-"`
 	XXX_sizecache        int32          `json:"-"`
@@ -169,7 +168,7 @@ func (m *ACP1HeartBeatRequest) Reset()         { *m = ACP1HeartBeatRequest{} }
 func (m *ACP1HeartBeatRequest) String() string { return proto.CompactTextString(m) }
 func (*ACP1HeartBeatRequest) ProtoMessage()    {}
 func (*ACP1HeartBeatRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_compat_bed30c9335c77d78, []int{1}
+	return fileDescriptor_compat_cac5b87282887205, []int{1}
 }
 func (m *ACP1HeartBeatRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -206,9 +205,9 @@ func (m *ACP1HeartBeatRequest) GetMyself() *ACP1HeartBeat {
 }
 
 type ACP1HeartBeatReply struct {
-	StatusCode           *int32           `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"`
-	StatusMessage        *string          `protobuf:"bytes,2,opt,name=status_message,json=statusMessage" json:"status_message,omitempty"`
-	Hbinfo               []*ACP1HeartBeat `protobuf:"bytes,3,rep,name=hbinfo" json:"hbinfo,omitempty"`
+	StatusCode           int32            `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
+	StatusMessage        string           `protobuf:"bytes,2,opt,name=status_message,json=statusMessage,proto3" json:"status_message,omitempty"`
+	Hbinfo               []*ACP1HeartBeat `protobuf:"bytes,3,rep,name=hbinfo,proto3" json:"hbinfo,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
@@ -218,7 +217,7 @@ func (m *ACP1HeartBeatReply) Reset()         { *m = ACP1HeartBeatReply{} }
 func (m *ACP1HeartBeatReply) String() string { return proto.CompactTextString(m) }
 func (*ACP1HeartBeatReply) ProtoMessage()    {}
 func (*ACP1HeartBeatReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_compat_bed30c9335c77d78, []int{2}
+	return fileDescriptor_compat_cac5b87282887205, []int{2}
 }
 func (m *ACP1HeartBeatReply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -248,15 +247,15 @@ func (m *ACP1HeartBeatReply) XXX_DiscardUnknown() {
 var xxx_messageInfo_ACP1HeartBeatReply proto.InternalMessageInfo
 
 func (m *ACP1HeartBeatReply) GetStatusCode() int32 {
-	if m != nil && m.StatusCode != nil {
-		return *m.StatusCode
+	if m != nil {
+		return m.StatusCode
 	}
 	return 0
 }
 
 func (m *ACP1HeartBeatReply) GetStatusMessage() string {
-	if m != nil && m.StatusMessage != nil {
-		return *m.StatusMessage
+	if m != nil {
+		return m.StatusMessage
 	}
 	return ""
 }
@@ -288,80 +287,72 @@ func (m *ACP1HeartBeat) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.StatusCode == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.StatusCode != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(*m.StatusCode))
+		i = encodeVarintCompat(dAtA, i, uint64(m.StatusCode))
 	}
-	if m.StatusMessage != nil {
+	if len(m.StatusMessage) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(len(*m.StatusMessage)))
-		i += copy(dAtA[i:], *m.StatusMessage)
+		i = encodeVarintCompat(dAtA, i, uint64(len(m.StatusMessage)))
+		i += copy(dAtA[i:], m.StatusMessage)
 	}
-	if m.Ipv4 != nil {
+	if m.Ipv4 != 0 {
 		dAtA[i] = 0x1d
 		i++
-		encoding_binary.LittleEndian.PutUint32(dAtA[i:], uint32(*m.Ipv4))
+		encoding_binary.LittleEndian.PutUint32(dAtA[i:], uint32(m.Ipv4))
 		i += 4
 	}
-	if m.Port != nil {
+	if m.Port != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(*m.Port))
+		i = encodeVarintCompat(dAtA, i, uint64(m.Port))
 	}
-	if m.Timestamp != nil {
+	if m.Timestamp != 0 {
 		dAtA[i] = 0x29
 		i++
-		encoding_binary.LittleEndian.PutUint64(dAtA[i:], uint64(*m.Timestamp))
+		encoding_binary.LittleEndian.PutUint64(dAtA[i:], uint64(m.Timestamp))
 		i += 8
 	}
-	if m.Subsystem == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.Subsystem) > 0 {
 		dAtA[i] = 0x32
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(len(*m.Subsystem)))
-		i += copy(dAtA[i:], *m.Subsystem)
+		i = encodeVarintCompat(dAtA, i, uint64(len(m.Subsystem)))
+		i += copy(dAtA[i:], m.Subsystem)
 	}
-	if m.Environment != nil {
+	if len(m.Environment) > 0 {
 		dAtA[i] = 0x3a
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(len(*m.Environment)))
-		i += copy(dAtA[i:], *m.Environment)
+		i = encodeVarintCompat(dAtA, i, uint64(len(m.Environment)))
+		i += copy(dAtA[i:], m.Environment)
 	}
-	if m.SortMetric != nil {
+	if m.SortMetric != 0 {
 		dAtA[i] = 0x40
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(*m.SortMetric))
+		i = encodeVarintCompat(dAtA, i, uint64(m.SortMetric))
 	}
-	if m.Hostname != nil {
+	if len(m.Hostname) > 0 {
 		dAtA[i] = 0x4a
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(len(*m.Hostname)))
-		i += copy(dAtA[i:], *m.Hostname)
+		i = encodeVarintCompat(dAtA, i, uint64(len(m.Hostname)))
+		i += copy(dAtA[i:], m.Hostname)
 	}
-	if m.ServerId == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if len(m.ServerId) > 0 {
 		dAtA[i] = 0x52
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(len(*m.ServerId)))
-		i += copy(dAtA[i:], *m.ServerId)
+		i = encodeVarintCompat(dAtA, i, uint64(len(m.ServerId)))
+		i += copy(dAtA[i:], m.ServerId)
 	}
-	if m.ProcessId == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.ProcessId != 0 {
 		dAtA[i] = 0x58
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(*m.ProcessId))
+		i = encodeVarintCompat(dAtA, i, uint64(m.ProcessId))
 	}
-	if m.CapacityMetric != nil {
+	if m.CapacityMetric != 0 {
 		dAtA[i] = 0x60
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(*m.CapacityMetric))
+		i = encodeVarintCompat(dAtA, i, uint64(m.CapacityMetric))
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -415,18 +406,16 @@ func (m *ACP1HeartBeatReply) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.StatusCode == nil {
-		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	} else {
+	if m.StatusCode != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(*m.StatusCode))
+		i = encodeVarintCompat(dAtA, i, uint64(m.StatusCode))
 	}
-	if m.StatusMessage != nil {
+	if len(m.StatusMessage) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintCompat(dAtA, i, uint64(len(*m.StatusMessage)))
-		i += copy(dAtA[i:], *m.StatusMessage)
+		i = encodeVarintCompat(dAtA, i, uint64(len(m.StatusMessage)))
+		i += copy(dAtA[i:], m.StatusMessage)
 	}
 	if len(m.Hbinfo) > 0 {
 		for _, msg := range m.Hbinfo {
@@ -461,46 +450,46 @@ func (m *ACP1HeartBeat) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.StatusCode != nil {
-		n += 1 + sovCompat(uint64(*m.StatusCode))
+	if m.StatusCode != 0 {
+		n += 1 + sovCompat(uint64(m.StatusCode))
 	}
-	if m.StatusMessage != nil {
-		l = len(*m.StatusMessage)
+	l = len(m.StatusMessage)
+	if l > 0 {
 		n += 1 + l + sovCompat(uint64(l))
 	}
-	if m.Ipv4 != nil {
+	if m.Ipv4 != 0 {
 		n += 5
 	}
-	if m.Port != nil {
-		n += 1 + sovCompat(uint64(*m.Port))
+	if m.Port != 0 {
+		n += 1 + sovCompat(uint64(m.Port))
 	}
-	if m.Timestamp != nil {
+	if m.Timestamp != 0 {
 		n += 9
 	}
-	if m.Subsystem != nil {
-		l = len(*m.Subsystem)
+	l = len(m.Subsystem)
+	if l > 0 {
 		n += 1 + l + sovCompat(uint64(l))
 	}
-	if m.Environment != nil {
-		l = len(*m.Environment)
+	l = len(m.Environment)
+	if l > 0 {
 		n += 1 + l + sovCompat(uint64(l))
 	}
-	if m.SortMetric != nil {
-		n += 1 + sovCompat(uint64(*m.SortMetric))
+	if m.SortMetric != 0 {
+		n += 1 + sovCompat(uint64(m.SortMetric))
 	}
-	if m.Hostname != nil {
-		l = len(*m.Hostname)
+	l = len(m.Hostname)
+	if l > 0 {
 		n += 1 + l + sovCompat(uint64(l))
 	}
-	if m.ServerId != nil {
-		l = len(*m.ServerId)
+	l = len(m.ServerId)
+	if l > 0 {
 		n += 1 + l + sovCompat(uint64(l))
 	}
-	if m.ProcessId != nil {
-		n += 1 + sovCompat(uint64(*m.ProcessId))
+	if m.ProcessId != 0 {
+		n += 1 + sovCompat(uint64(m.ProcessId))
 	}
-	if m.CapacityMetric != nil {
-		n += 1 + sovCompat(uint64(*m.CapacityMetric))
+	if m.CapacityMetric != 0 {
+		n += 1 + sovCompat(uint64(m.CapacityMetric))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -530,11 +519,11 @@ func (m *ACP1HeartBeatReply) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.StatusCode != nil {
-		n += 1 + sovCompat(uint64(*m.StatusCode))
+	if m.StatusCode != 0 {
+		n += 1 + sovCompat(uint64(m.StatusCode))
 	}
-	if m.StatusMessage != nil {
-		l = len(*m.StatusMessage)
+	l = len(m.StatusMessage)
+	if l > 0 {
 		n += 1 + l + sovCompat(uint64(l))
 	}
 	if len(m.Hbinfo) > 0 {
@@ -563,7 +552,6 @@ func sozCompat(x uint64) (n int) {
 	return sovCompat(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
 func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -596,7 +584,7 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusCode", wireType)
 			}
-			var v int32
+			m.StatusCode = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCompat
@@ -606,13 +594,11 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.StatusCode |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.StatusCode = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusMessage", wireType)
@@ -640,25 +626,23 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.StatusMessage = &s
+			m.StatusMessage = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 5 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Ipv4", wireType)
 			}
-			var v uint32
+			m.Ipv4 = 0
 			if (iNdEx + 4) > l {
 				return io.ErrUnexpectedEOF
 			}
-			v = uint32(encoding_binary.LittleEndian.Uint32(dAtA[iNdEx:]))
+			m.Ipv4 = uint32(encoding_binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 			iNdEx += 4
-			m.Ipv4 = &v
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Port", wireType)
 			}
-			var v int32
+			m.Port = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCompat
@@ -668,23 +652,21 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Port |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Port = &v
 		case 5:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
-			var v uint64
+			m.Timestamp = 0
 			if (iNdEx + 8) > l {
 				return io.ErrUnexpectedEOF
 			}
-			v = uint64(encoding_binary.LittleEndian.Uint64(dAtA[iNdEx:]))
+			m.Timestamp = uint64(encoding_binary.LittleEndian.Uint64(dAtA[iNdEx:]))
 			iNdEx += 8
-			m.Timestamp = &v
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Subsystem", wireType)
@@ -712,10 +694,8 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Subsystem = &s
+			m.Subsystem = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000002)
 		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Environment", wireType)
@@ -743,14 +723,13 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Environment = &s
+			m.Environment = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 8:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SortMetric", wireType)
 			}
-			var v int32
+			m.SortMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCompat
@@ -760,12 +739,11 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.SortMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.SortMetric = &v
 		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Hostname", wireType)
@@ -793,8 +771,7 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Hostname = &s
+			m.Hostname = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 10:
 			if wireType != 2 {
@@ -823,15 +800,13 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.ServerId = &s
+			m.ServerId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000004)
 		case 11:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ProcessId", wireType)
 			}
-			var v int32
+			m.ProcessId = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCompat
@@ -841,18 +816,16 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.ProcessId |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.ProcessId = &v
-			hasFields[0] |= uint64(0x00000008)
 		case 12:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CapacityMetric", wireType)
 			}
-			var v int32
+			m.CapacityMetric = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCompat
@@ -862,12 +835,11 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.CapacityMetric |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CapacityMetric = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := skipCompat(dAtA[iNdEx:])
@@ -883,18 +855,6 @@ func (m *ACP1HeartBeat) Unmarshal(dAtA []byte) error {
 			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
-	}
-	if hasFields[0]&uint64(0x00000008) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	}
 
 	if iNdEx > l {
@@ -987,7 +947,6 @@ func (m *ACP1HeartBeatRequest) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *ACP1HeartBeatReply) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1020,7 +979,7 @@ func (m *ACP1HeartBeatReply) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusCode", wireType)
 			}
-			var v int32
+			m.StatusCode = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCompat
@@ -1030,13 +989,11 @@ func (m *ACP1HeartBeatReply) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.StatusCode |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.StatusCode = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field StatusMessage", wireType)
@@ -1064,8 +1021,7 @@ func (m *ACP1HeartBeatReply) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.StatusMessage = &s
+			m.StatusMessage = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -1113,9 +1069,6 @@ func (m *ACP1HeartBeatReply) Unmarshal(dAtA []byte) error {
 			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	}
 
 	if iNdEx > l {
@@ -1228,32 +1181,32 @@ var (
 	ErrIntOverflowCompat   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("compat.proto", fileDescriptor_compat_bed30c9335c77d78) }
+func init() { proto.RegisterFile("compat.proto", fileDescriptor_compat_cac5b87282887205) }
 
-var fileDescriptor_compat_bed30c9335c77d78 = []byte{
-	// 381 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x91, 0x4f, 0x6e, 0xd4, 0x30,
-	0x14, 0xc6, 0x71, 0xa6, 0x93, 0x99, 0xbc, 0xb4, 0x05, 0x59, 0x08, 0x59, 0xfc, 0x09, 0xd6, 0x48,
-	0x88, 0xac, 0x22, 0x81, 0xb8, 0x00, 0xad, 0x84, 0xe8, 0xa2, 0x12, 0xca, 0x05, 0x46, 0x6e, 0xf2,
-	0x4a, 0x2d, 0xd5, 0xb1, 0xb1, 0xdf, 0x8c, 0x94, 0x3b, 0x70, 0x00, 0x8e, 0xc4, 0x92, 0x23, 0xa0,
-	0xe1, 0x20, 0xa0, 0x38, 0x29, 0xc3, 0xb0, 0x60, 0xc5, 0xee, 0xe5, 0xf7, 0xbe, 0xf8, 0xfb, 0xec,
-	0x0f, 0x8e, 0x1b, 0x6b, 0x9c, 0xa2, 0xca, 0x79, 0x4b, 0x96, 0x2f, 0x8c, 0xed, 0x34, 0x59, 0xbf,
-	0xfa, 0x99, 0xc0, 0xc9, 0xdb, 0xf3, 0x0f, 0xaf, 0xde, 0xa3, 0xf2, 0x74, 0x86, 0x8a, 0xf8, 0x73,
-	0xc8, 0x03, 0x29, 0xda, 0x84, 0x75, 0x63, 0x5b, 0x14, 0x4c, 0x26, 0xe5, 0xbc, 0x86, 0x11, 0x9d,
-	0xdb, 0x16, 0xf9, 0x0b, 0x38, 0x9d, 0x04, 0x06, 0x43, 0x50, 0x1f, 0x51, 0x24, 0x92, 0x95, 0x59,
-	0x7d, 0x32, 0xd2, 0xcb, 0x11, 0x72, 0x0e, 0x47, 0xda, 0x6d, 0xdf, 0x88, 0x99, 0x64, 0xe5, 0xa2,
-	0x8e, 0xf3, 0xc0, 0x9c, 0xf5, 0x24, 0x8e, 0x24, 0x2b, 0xe7, 0x75, 0x9c, 0xf9, 0x53, 0xc8, 0x48,
-	0x1b, 0x0c, 0xa4, 0x8c, 0x13, 0x73, 0xc9, 0xca, 0xb4, 0xde, 0x83, 0x61, 0x1b, 0x36, 0x57, 0xa1,
-	0x0f, 0x84, 0x46, 0xa4, 0x32, 0x29, 0xb3, 0x7a, 0x0f, 0xb8, 0x84, 0x1c, 0xbb, 0xad, 0xf6, 0xb6,
-	0x33, 0xd8, 0x91, 0x58, 0xc4, 0x1c, 0x7f, 0xa2, 0x78, 0x1b, 0xeb, 0x69, 0x6d, 0x90, 0xbc, 0x6e,
-	0xc4, 0x32, 0x1a, 0xc3, 0x80, 0x2e, 0x23, 0xe1, 0x8f, 0x61, 0x79, 0x63, 0x03, 0x75, 0xca, 0xa0,
-	0xc8, 0xe2, 0xff, 0xbf, 0xbf, 0xf9, 0x13, 0xc8, 0x02, 0xfa, 0x2d, 0xfa, 0xb5, 0x6e, 0x05, 0x44,
-	0xf3, 0xe5, 0x08, 0x2e, 0x5a, 0xfe, 0x0c, 0xc0, 0x79, 0xdb, 0x60, 0x08, 0xc3, 0x36, 0x8f, 0xcf,
-	0x94, 0x4d, 0xe4, 0xa2, 0xe5, 0x2f, 0xe1, 0x7e, 0xa3, 0x9c, 0x6a, 0x34, 0xf5, 0x77, 0xe6, 0xc7,
-	0xd1, 0xfc, 0xf4, 0x0e, 0x8f, 0x01, 0x56, 0xef, 0xe0, 0xe1, 0x41, 0x01, 0x35, 0x7e, 0xda, 0x60,
-	0x20, 0x5e, 0x41, 0x6a, 0xfa, 0x80, 0xb7, 0xd7, 0x82, 0x49, 0x56, 0xe6, 0xaf, 0x1f, 0x55, 0x53,
-	0x67, 0xd5, 0xa1, 0x7c, 0x52, 0xad, 0x3e, 0x33, 0xe0, 0x7f, 0x1d, 0xe4, 0x6e, 0xfb, 0xff, 0x56,
-	0x67, 0x05, 0xe9, 0xcd, 0x95, 0xee, 0xae, 0xad, 0x98, 0xc9, 0xd9, 0xbf, 0xe2, 0x8c, 0xaa, 0xb3,
-	0x07, 0x5f, 0x77, 0x05, 0xfb, 0xb6, 0x2b, 0xd8, 0xf7, 0x5d, 0xc1, 0xbe, 0xfc, 0x28, 0xee, 0xfd,
-	0x0a, 0x00, 0x00, 0xff, 0xff, 0x4e, 0x5d, 0xa5, 0x30, 0x82, 0x02, 0x00, 0x00,
+var fileDescriptor_compat_cac5b87282887205 = []byte{
+	// 378 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x92, 0x5b, 0x8e, 0xd3, 0x30,
+	0x14, 0x86, 0xf1, 0x74, 0x26, 0x9d, 0x9c, 0xcc, 0x14, 0x64, 0x21, 0x64, 0x71, 0x09, 0x51, 0x25,
+	0x44, 0x9e, 0x22, 0x71, 0xd9, 0x00, 0xad, 0x84, 0xe8, 0x43, 0x25, 0x94, 0x0d, 0x54, 0x6e, 0x72,
+	0x4a, 0x2d, 0xd5, 0xb1, 0xb1, 0x4f, 0x2b, 0x65, 0x0f, 0x2c, 0x80, 0x25, 0xf1, 0xc8, 0x12, 0x50,
+	0x59, 0x08, 0xa8, 0x4e, 0x4a, 0x29, 0x0f, 0x3c, 0xcd, 0xdb, 0xc9, 0xf7, 0xff, 0x39, 0x17, 0xfd,
+	0x86, 0x9b, 0xca, 0x68, 0x2b, 0xa9, 0xb0, 0xce, 0x90, 0xe1, 0x43, 0x6d, 0x1a, 0x45, 0xc6, 0x8d,
+	0x7f, 0x5d, 0xc0, 0xed, 0xbb, 0xe9, 0xc7, 0x57, 0x1f, 0x50, 0x3a, 0x9a, 0xa0, 0x24, 0xfe, 0x1c,
+	0x12, 0x4f, 0x92, 0xb6, 0x7e, 0x51, 0x99, 0x1a, 0x05, 0xcb, 0x58, 0x7e, 0x55, 0x42, 0x87, 0xa6,
+	0xa6, 0x46, 0xfe, 0x02, 0x46, 0xbd, 0x41, 0xa3, 0xf7, 0xf2, 0x13, 0x8a, 0x8b, 0x8c, 0xe5, 0x71,
+	0x79, 0xdb, 0xd1, 0x79, 0x07, 0x39, 0x87, 0x4b, 0x65, 0x77, 0x6f, 0xc5, 0x20, 0x63, 0xf9, 0xb0,
+	0x0c, 0xf5, 0x81, 0x59, 0xe3, 0x48, 0x5c, 0x86, 0xa6, 0xa1, 0xe6, 0x4f, 0x21, 0x26, 0xa5, 0xd1,
+	0x93, 0xd4, 0x56, 0x5c, 0x65, 0x2c, 0x8f, 0xca, 0x13, 0x38, 0xa8, 0x7e, 0xbb, 0xf4, 0xad, 0x27,
+	0xd4, 0x22, 0x0a, 0x73, 0x4e, 0x80, 0x67, 0x90, 0x60, 0xb3, 0x53, 0xce, 0x34, 0x1a, 0x1b, 0x12,
+	0xc3, 0xa0, 0xff, 0x8d, 0xc2, 0x35, 0xc6, 0xd1, 0x42, 0x23, 0x39, 0x55, 0x89, 0xeb, 0xfe, 0x1a,
+	0xe3, 0x68, 0x1e, 0x08, 0x7f, 0x0c, 0xd7, 0x6b, 0xe3, 0xa9, 0x91, 0x1a, 0x45, 0x1c, 0xfe, 0xff,
+	0xf3, 0xcd, 0x9f, 0x40, 0xec, 0xd1, 0xed, 0xd0, 0x2d, 0x54, 0x2d, 0xa0, 0x13, 0x3b, 0x30, 0xab,
+	0xf9, 0x33, 0x00, 0xeb, 0x4c, 0x85, 0xde, 0x1f, 0xd4, 0x24, 0x34, 0x8e, 0x7b, 0x32, 0xab, 0xf9,
+	0x4b, 0xb8, 0x5f, 0x49, 0x2b, 0x2b, 0x45, 0xed, 0x71, 0xf8, 0x4d, 0xf0, 0x8c, 0x8e, 0xb8, 0x5b,
+	0x60, 0xfc, 0x1e, 0x1e, 0x9e, 0x05, 0x50, 0xe2, 0xe7, 0x2d, 0x7a, 0xe2, 0x05, 0x44, 0xba, 0xf5,
+	0xb8, 0x59, 0x85, 0x08, 0x92, 0xd7, 0x8f, 0x8a, 0x3e, 0xb3, 0xe2, 0xdc, 0xde, 0xbb, 0xc6, 0x5f,
+	0x18, 0xf0, 0x7f, 0x1a, 0xd9, 0x4d, 0x7b, 0x67, 0x71, 0x16, 0x10, 0xad, 0x97, 0xaa, 0x59, 0x19,
+	0x31, 0xc8, 0x06, 0xff, 0x5b, 0xa7, 0x73, 0x4d, 0x1e, 0x7c, 0xdb, 0xa7, 0xec, 0xfb, 0x3e, 0x65,
+	0x3f, 0xf6, 0x29, 0xfb, 0xfa, 0x33, 0xbd, 0xb7, 0x8c, 0xc2, 0xd3, 0x7b, 0xf3, 0x3b, 0x00, 0x00,
+	0xff, 0xff, 0x4b, 0x5d, 0xcb, 0xf7, 0x8a, 0x02, 0x00, 0x00,
 }

@@ -11,14 +11,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 
+	"github.com/jaw0/acgo/diag"
 	"github.com/jaw0/yentablue/gclient"
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/putstatus"
 	"github.com/jaw0/yentablue/soty"
-	"github.com/jaw0/acgo/diag"
 )
 
 const (
@@ -470,8 +469,8 @@ func shuffle(l []string) {
 }
 
 func (p *P) updateReq(req *acproto.ACPY2DistRequest) {
-	req.Sender = proto.String(p.myid)
-	req.Hop = proto.Int32(req.GetHop() + 1)
+	req.Sender = p.myid
+	req.Hop = req.GetHop() + 1
 }
 
 //################################################################

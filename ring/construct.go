@@ -8,8 +8,6 @@ package ring
 import (
 	"time"
 
-	"github.com/golang/protobuf/proto"
-
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/ring/config"
 	"github.com/jaw0/yentablue/soty"
@@ -260,8 +258,8 @@ func (p *P) getConfig() ([]byte, uint64, bool) {
 	key := p.name + ".cf"
 
 	rec := &acproto.ACPY2MapDatum{
-		Map: proto.String("_conf"),
-		Key: proto.String(key),
+		Map: "_conf",
+		Key: key,
 	}
 	ok, _ := p.cfdb.Get(rec)
 

@@ -12,7 +12,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
@@ -63,13 +62,13 @@ func main() {
 				key := fmt.Sprintf("key%d", i+c*num)
 
 				_, err := ac.Put(context.Background(), &acproto.ACPY2DistRequest{
-					Hop:    proto.Int(0),
-					Expire: proto.Uint64(soty.Now() + uint64(5*time.Second)),
-					Sender: proto.String("localhost"),
+					Hop:    0,
+					Expire: soty.Now() + uint64(5*time.Second),
+					Sender: "localhost",
 					Data: &acproto.ACPY2MapDatum{
-						Map:     proto.String(dbname),
-						Key:     proto.String(key),
-						Version: proto.Uint64(soty.Now()),
+						Map:     dbname,
+						Key:     key,
+						Version: soty.Now(),
 						Value:   []byte("value value value"),
 					}})
 

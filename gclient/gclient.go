@@ -12,7 +12,6 @@ import (
 	"net"
 	"time"
 
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -121,12 +120,12 @@ func (c *C) Get(d *Datum) (*Datum, error) {
 	}
 
 	get := &acproto.ACPY2MapDatum{
-		Map:   proto.String(d.Map),
-		Key:   proto.String(d.Key),
-		Shard: proto.Uint32(d.Shard),
+		Map:   d.Map,
+		Key:   d.Key,
+		Shard: d.Shard,
 	}
 	if d.Version != 0 {
-		get.Version = proto.Uint64(d.Version)
+		get.Version = d.Version
 	}
 
 	res, err := c.rpc.Get(context.Background(), &acproto.ACPY2GetSet{
@@ -157,12 +156,12 @@ func (c *C) MGet(d []*Datum) ([]*Datum, error) {
 
 	for _, r := range d {
 		g := &acproto.ACPY2MapDatum{
-			Map: proto.String(r.Map),
-			Key: proto.String(r.Key),
+			Map: r.Map,
+			Key: r.Key,
 		}
 
 		if r.Version != 0 {
-			g.Version = proto.Uint64(r.Version)
+			g.Version = r.Version
 		}
 
 		gets = append(gets, g)
@@ -193,19 +192,19 @@ func (c *C) MGet(d []*Datum) ([]*Datum, error) {
 func (c *C) GetRange(mapname string, key0 string, key1 string, ver0 uint64, ver1 uint64) ([]*Datum, error) {
 
 	req := &acproto.ACPY2GetRange{
-		Map: &mapname,
+		Map: mapname,
 	}
 	if key0 != "" {
-		req.Key0 = &key0
+		req.Key0 = key0
 	}
 	if key1 != "" {
-		req.Key1 = &key1
+		req.Key1 = key1
 	}
 	if ver0 != 0 {
-		req.Version0 = &ver0
+		req.Version0 = ver0
 	}
 	if ver1 != 0 {
-		req.Version1 = &ver1
+		req.Version1 = ver1
 	}
 
 	res, err := c.rpc.Range(context.Background(), req)
@@ -242,19 +241,19 @@ func (c *C) Put(d *Datum) (int, error) {
 	}
 
 	put := &acproto.ACPY2MapDatum{
-		Map:     proto.String(d.Map),
-		Key:     proto.String(d.Key),
+		Map:     d.Map,
+		Key:     d.Key,
 		Value:   d.Value,
-		Shard:   proto.Uint32(d.Shard),
-		Version: proto.Uint64(d.Version),
+		Shard:   d.Shard,
+		Version: d.Version,
 	}
 	if d.IfVersion != 0 {
-		put.IfVersion = proto.Uint64(d.IfVersion)
+		put.IfVersion = d.IfVersion
 	}
 
 	res, err := c.rpc.Put(context.Background(), &acproto.ACPY2DistRequest{
-		Hop:    proto.Int(0),
-		Expire: proto.Uint64(soty.Now() + uint64(5*time.Second)),
+		Hop:    0,
+		Expire: soty.Now() + uint64(5*time.Second),
 		Data:   put,
 	})
 
@@ -284,19 +283,19 @@ func (c *C) GetServersInfo(sys string, env string, host string, dc string, id st
 	req := &acproto.ACPY2ServerRequest{}
 
 	if sys != "" {
-		req.Subsystem = proto.String(sys)
+		req.Subsystem = sys
 	}
 	if env != "" {
-		req.Environment = proto.String(env)
+		req.Environment = env
 	}
 	if host != "" {
-		req.Hostname = proto.String(host)
+		req.Hostname = host
 	}
 	if dc != "" {
-		req.Datacenter = proto.String(dc)
+		req.Datacenter = dc
 	}
 	if id != "" {
-		req.ServerId = proto.String(id)
+		req.ServerId = id
 	}
 
 	// send request
@@ -353,8 +352,8 @@ type RingConf struct {
 func (c *C) GetRingConf(db string, dc string) (*RingConf, error) {
 
 	res, err := c.rpc.RingConf(context.Background(), &acproto.ACPY2RingConfReq{
-		Map:        proto.String(db),
-		Datacenter: proto.String(dc),
+		Map:        db,
+		Datacenter: dc,
 	})
 
 	if err != nil {
