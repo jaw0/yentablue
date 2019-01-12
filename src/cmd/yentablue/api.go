@@ -1,22 +1,34 @@
-// Copyright (c) 2017
+// Copyright (c) 2018
 // Author: Jeff Weisberg <jaw @ tcp4me.com>
 // Created: 2018-Jul-20 13:55 (EDT)
-// Function:
+// Function: api
 
 package main
 
 import (
+	"encoding/json"
+	"net/http"
+
 	"golang.org/x/net/context"
 
 	"github.com/jaw0/kibitz"
 
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/putstatus"
-	// "github.com/jaw0/yentablue/shard"
+	"github.com/jaw0/yentablue/shard"
 )
 
+func init() {
+	// simplified client api
+	http.HandleFunc("/api/yb/hb", wwwApiHB)
+	http.HandleFunc("/api/yb/get", wwwApiGet)
+	http.HandleFunc("/api/yb/put", wwwApiPut)
+	http.HandleFunc("/api/yb/range", wwwApiRange)
+	http.HandleFunc("/api/yb/servers", wwwApiServers)
+	http.HandleFunc("/api/yb/ringcf", wwwApiRingConf)
+}
+
 func (*myServer) SendHB(ctx context.Context, hb *acproto.ACPHeartBeatRequest) (*acproto.ACPHeartBeatReply, error) {
-	//fmt.Printf("sendHB %v\n", hb)
 
 	if hb.Myself != nil {
 		pdb.UpdateSceptical(hb.Myself)
@@ -164,10 +176,14 @@ func (*myServer) Put(ctx context.Context, req *acproto.ACPY2DistRequest) (*acpro
 
 	r := req.Data
 
-	// QQQ - if r.Shard == nil {
-	// QQQ - 	// fill in missing shard
-	// QQQ - 	r.Shard = shard.Hash(r.GetKey())
-	// QQQ - }
+	if r.Shard == 0 {
+		// was it left out? or actually 0?
+		s := shard.Hash(r.GetKey())
+		if s != 0 {
+			dl.Debug("added missing shard")
+		}
+		r.Shard = s
+	}
 	status, loc := sdb.Put(r)
 
 	switch status {
@@ -215,4 +231,79 @@ func (*myServer) ShutDown(ctx context.Context, req *acproto.ACPY2Empty) (*acprot
 	close(shutdown)
 	res := &acproto.ACPHeartBeatReply{StatusCode: 200, StatusMessage: "OK"}
 	return res, nil
+}
+
+// ################################################################
+
+func wwwApiConvert(w http.ResponseWriter, r *http.Request, req interface{}, f func() (interface{}, error)) {
+
+	err := json.NewDecoder(r.Body).Decode(req)
+	r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	res, err := f()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
+func wwwApiHB(w http.ResponseWriter, r *http.Request) {
+
+	req := &acproto.ACPHeartBeatRequest{}
+	wwwApiConvert(w, r, req, func() (interface{}, error) {
+		x := &myServer{}
+		return x.SendHB(nil, req)
+	})
+}
+
+func wwwApiGet(w http.ResponseWriter, r *http.Request) {
+
+	req := &acproto.ACPY2GetSet{}
+	wwwApiConvert(w, r, req, func() (interface{}, error) {
+		x := &myServer{}
+		return x.Get(nil, req)
+	})
+}
+
+func wwwApiPut(w http.ResponseWriter, r *http.Request) {
+
+	req := &acproto.ACPY2DistRequest{}
+	wwwApiConvert(w, r, req, func() (interface{}, error) {
+		x := &myServer{}
+		return x.Put(nil, req)
+	})
+}
+
+func wwwApiRange(w http.ResponseWriter, r *http.Request) {
+
+	req := &acproto.ACPY2GetRange{}
+	wwwApiConvert(w, r, req, func() (interface{}, error) {
+		x := &myServer{}
+		return x.Range(nil, req)
+	})
+}
+
+func wwwApiServers(w http.ResponseWriter, r *http.Request) {
+
+	req := &acproto.ACPY2ServerRequest{}
+	wwwApiConvert(w, r, req, func() (interface{}, error) {
+		x := &myServer{}
+		return x.Servers(nil, req)
+	})
+}
+
+func wwwApiRingConf(w http.ResponseWriter, r *http.Request) {
+
+	req := &acproto.ACPY2RingConfReq{}
+	wwwApiConvert(w, r, req, func() (interface{}, error) {
+		x := &myServer{}
+		return x.RingConf(nil, req)
+	})
 }
