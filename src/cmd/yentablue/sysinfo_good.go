@@ -22,5 +22,5 @@ func currentLoad() int32 {
 
 	var info syscall.Sysinfo_t
 	syscall.Sysinfo(&info)
-	return int32(1000 * float32(info.loads[0]) / 65536)
+	return int32(1000 * float32(info.Loads[0]) / 65536)
 }
