@@ -10,3 +10,5 @@ github.com/jaw0/acgo
 github.com/hashicorp/golang-lru
 github.com/gogo/protobuf/protoc-gen-gofast
 golang.org/x/crypto/pbkdf2
+github.com/jaw0/kibitz
+github.com/jaw0/streaminginsight
