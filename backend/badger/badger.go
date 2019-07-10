@@ -27,10 +27,8 @@ func Open(name string, path string) (*Be, error) {
 
 	dl.Debug("opening badgerdb '%s'", path)
 
-	badger.SetLogger(beLog{})
-	opts := badger.DefaultOptions
-	opts.Dir = path
-	opts.ValueDir = path
+	opts := badger.DefaultOptions(path)
+	opts.Logger = beLog{}
 	db, err := badger.Open(opts)
 
 	if err != nil {
@@ -149,4 +147,5 @@ func (be *Be) badgerMaint() {
 
 func (x beLog) Errorf(msg string, args ...interface{})   { dl.Verbose(msg, args...) }
 func (x beLog) Infof(msg string, args ...interface{})    { dl.Debug(msg, args...) }
+func (x beLog) Debugf(msg string, args ...interface{})   { dl.Debug(msg, args...) }
 func (x beLog) Warningf(msg string, args ...interface{}) { dl.Verbose(msg, args...) }
