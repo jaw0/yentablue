@@ -27,4 +27,5 @@ mkproto:
 	cd expire;   PATH=$$PATH:$(ROOT)/bin protoc --gogoslick_out=. *.proto
 	cd monitor;  PATH=$$PATH:$(ROOT)/bin protoc --gofast_out=. *.proto
 
-	cd proto;    PATH=$$PATH:$(ROOT)/bin protoc --ruby_out=. --proto_path=../src:. *.proto
+mkruby:
+	cd proto;    PATH=$$PATH protoc --ruby_out==plugins=grpc:. --proto_path=../src:. *.proto
