@@ -93,11 +93,12 @@ func main() {
 	cf := config.Cf()
 
 	pdb = kibitz.New(&kibitz.Conf{
-		System:     SUBSYS,
-		Datacenter: cf.Datacenter,
-		Rack:       cf.Rack,
-		Port:       cf.Port_Server,
-		Seed:       cf.Seedpeer,
+		System:      SUBSYS,
+		Datacenter:  cf.Datacenter,
+		Rack:        cf.Rack,
+		Port:        cf.Port_Server,
+		Seed:        cf.Seedpeer,
+		Environment: cf.Environment,
 		// Id...
 		Promiscuous: true,
 		Iface:       &pinfo{},
