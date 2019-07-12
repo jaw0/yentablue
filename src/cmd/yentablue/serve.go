@@ -76,14 +76,14 @@ func startMux(l net.Listener, maxgo uint32) *Server {
 
 	m := cmux.New(l)
 
-	grpcL := m.Match(cmux.HTTP2HeaderField("content-type", "application/grpc"))
+	grpcL := m.MatchWithWriters(cmux.HTTP2MatchHeaderFieldSendSettings("content-type", "application/grpc"))
 	httpL := m.Match(cmux.HTTP1Fast())
 	tlspl := m.Match(cmux.Any())
 
 	tlsl := tls.NewListener(tlspl, tlsConfig)
 
 	mSec := cmux.New(tlsl)
-	grpcSecL := mSec.Match(cmux.HTTP2HeaderField("content-type", "application/grpc"))
+	grpcSecL := mSec.MatchWithWriters(cmux.HTTP2MatchHeaderFieldSendSettings("content-type", "application/grpc"))
 	httpSecL := mSec.Match(cmux.HTTP1Fast())
 
 	go grpcServer.Serve(grpcL)
@@ -111,7 +111,7 @@ func startNoSSL(l net.Listener, maxgo uint32) *Server {
 
 	m := cmux.New(l)
 
-	grpcL := m.Match(cmux.HTTP2HeaderField("content-type", "application/grpc"))
+	grpcL := m.MatchWithWriters(cmux.HTTP2MatchHeaderFieldSendSettings("content-type", "application/grpc"))
 	httpL := m.Match(cmux.HTTP1Fast())
 
 	go grpcServer.Serve(grpcL)
