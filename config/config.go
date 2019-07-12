@@ -50,6 +50,7 @@ type Config struct {
 	Error_mailto   string
 	Error_mailfrom string
 	Basedir        string
+	Syslog         string
 	TLS_cert       string // our cert - .crt
 	TLS_key        string // our private key - .key
 	TLS_root       string // root cert - .crt
@@ -142,6 +143,7 @@ func read_config(file string) error {
 		Mailto:   newcf.Error_mailto,
 		Mailfrom: newcf.Error_mailfrom,
 		Debug:    newcf.Debug,
+		Facility: newcf.Syslog,
 	})
 
 	dl.Debug("got> %#v; %#v\n", newcf, newcf.Debug)

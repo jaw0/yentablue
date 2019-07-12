@@ -84,8 +84,8 @@ func main() {
 
 	// grpclog.SetLogger(&peerdb.Stfu{})
 	runtime.GOMAXPROCS(128)
+	diag.Init("yentablue")
 	config.Init(configfile)
-	diag.Init("prog")
 	dl.Verbose("starting...")
 
 	tlsConfig = configureTLS()
