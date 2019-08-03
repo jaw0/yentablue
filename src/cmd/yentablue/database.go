@@ -92,21 +92,21 @@ func openBE(cf *config.DBConf, dir string) database.BackEnder {
 		be, err := sqlite.Open(cf.Name, file)
 
 		if err != nil {
-			dl.Fatal("sqlite failed: %v", err)
+			dl.Fatal("sqlite failed: cannot open '%s': %v", file, err)
 		}
 		return be
 	case "leveldb":
 		be, err := goleveldb.Open(cf.Name, file)
 
 		if err != nil {
-			dl.Fatal("leveldb failed: %v", err)
+			dl.Fatal("leveldb failed: cannot open '%s': %v", file, err)
 		}
 		return be
 	case "badger":
 		be, err := badger.Open(cf.Name, file)
 
 		if err != nil {
-			dl.Fatal("badger failed: %v", err)
+			dl.Fatal("badger failed: cannot open '%s': %v", file, err)
 		}
 		return be
 
