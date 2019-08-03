@@ -25,6 +25,7 @@ type monDat struct {
 	cf       *config.Monitor
 	endpoint string
 	timeup   uint64
+	timedn   uint64
 	netinfo  []*kibitz.NetInfo
 }
 
@@ -194,22 +195,24 @@ func (mon *monDat) result(isup bool, info *acproto.ACPHeartBeat) {
 
 	if info != nil {
 		pi := info.PeerInfo
-		tup := mon.timeup
 
+		if mon.timedn == 0 || !isup {
+			mon.timedn = now
+		}
 		if isup {
-			tup = now
+			mon.timeup = now
 		}
 
 		pi.TimeChecked = now
 		pi.TimeCreated = now
 		pi.TimeConf = boot
-		pi.TimeUp = tup
+		pi.TimeLastUp = mon.timeup
+		pi.TimeUpSince = mon.timedn
 
 		mon.id = pi.GetServerId() // save best known Id
 		mon.pdb.Update(info)
 	}
 	if isup {
-		mon.timeup = now
 		mon.pdb.PeerUp(mon.id)
 	} else {
 		mon.pdb.PeerDn(mon.id)

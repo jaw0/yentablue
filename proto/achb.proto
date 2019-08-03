@@ -127,7 +127,8 @@ message ACPY2ServerData {
         int32          capacity_metric = 12;
         repeated string         database        = 14;
         bool           uptodate        = 15;
-        uint64         time_up         = 16;
+        uint64         time_last_up    = 16;
+        uint64         time_up_since   = 17;
 
 };
 message ACPY2ServerReply {

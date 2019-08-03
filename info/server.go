@@ -36,7 +36,8 @@ type Server struct {
 	SortMetric     int32
 	CpuMetric      int32
 	CapacityMetric int32
-	TimeUp         uint64
+	TimeLastUp     uint64
+	TimeUpSince    uint64
 	Database       []string
 	NetInfo        []Net
 }
@@ -159,7 +160,7 @@ func (sd *SD) GetServersOrdered(sys, env string, nofar bool, orderby int) []*Ser
 		}
 		all_local = append(all_local, s)
 
-		if s.TimeUp < uint64(stable) {
+		if s.TimeUpSince < uint64(stable) {
 			continue
 		}
 
