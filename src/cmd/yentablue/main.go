@@ -208,7 +208,7 @@ func peerChanger() {
 	}
 }
 
-func (x *pinfo) Send(addr string, timeout time.Duration, info *kibitz.PeerInfo) (bool, error) {
+func (x *pinfo) Send(addr string, timeout time.Duration, info *kibitz.PeerInfo) ([]kibitz.PeerImport, error) {
 
 	ac, closer, err := gclient.GrpcClient(&gclient.GrpcConfig{
 		Addr:    []string{addr},
@@ -218,7 +218,7 @@ func (x *pinfo) Send(addr string, timeout time.Duration, info *kibitz.PeerInfo) 
 
 	if err != nil {
 		dl.Debug(" => down err %v", err)
-		return false, err
+		return nil, err
 	}
 
 	if ac == nil {
@@ -234,22 +234,25 @@ func (x *pinfo) Send(addr string, timeout time.Duration, info *kibitz.PeerInfo) 
 
 	if err != nil {
 		dl.Debug(" => down err %v", err)
-		return false, err
+		return nil, err
 	}
 
 	if res.GetStatusCode() != 200 {
 		dl.Debug(" => down code %d", res.GetStatusCode)
-		return false, fmt.Errorf("status %d", res.GetStatusCode())
+		return nil, fmt.Errorf("status %d", res.GetStatusCode())
 	}
 
 	dl.Debug("recv %v", res)
 
 	// process results
-	for _, hb := range res.GetHbinfo() {
-		pdb.Update(hb)
+	hbinfos := res.GetHbinfo()
+	respi := make([]kibitz.PeerImport, len(hbinfos))
+	for i, hb := range hbinfos {
+		respi[i] = kibitz.PeerImport(hb)
 	}
 
-	return true, nil
+	return respi, nil
+
 }
 
 // ################################################################
