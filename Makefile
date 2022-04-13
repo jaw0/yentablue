@@ -1,24 +1,17 @@
 
 
 ROOT != pwd
-BIN=src/cmd/yentablue src/cmd/ybctl \
-	src/cmd/test_put src/cmd/test_get src/cmd/test_conn
+BIN=cmd/yentablue cmd/ybctl \
+	cmd/test_put cmd/test_get cmd/test_conn
 
 
-GO=env GOPATH=$(ROOT) go
+GO = env GOBIN=$(ROOT)/bin go
 
 
-all: src/.deps
+all:
 	for x in $(BIN); do \
 		( cd $$x; $(GO) install ) ; \
 	done
-
-src/.deps: deps
-	for d in `cat deps`; do \
-	        $(GO) get -insecure $$d; \
-	done
-	-ln -s $(ROOT) src/github.com/jaw0/yentablue
-	touch src/.deps
 
 mkproto:
 	cd proto;    PATH=$$PATH:$(ROOT)/bin protoc --gofast_out=plugins=grpc:. --proto_path=../src:. *.proto
