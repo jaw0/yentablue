@@ -81,6 +81,13 @@ func openBE(cf *config.DBConf, dir string) database.BackEnder {
 
 	var file string
 
+	if cf.Name == "" {
+		dl.Fatal("config error. missing 'name' for database")
+	}
+	if cf.Pathname == "" {
+		cf.Pathname = cf.Name
+	}
+
 	if cf.Pathname[0] == '/' {
 		file = cf.Pathname
 	} else {
