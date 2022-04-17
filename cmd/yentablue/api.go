@@ -53,6 +53,11 @@ func addServer(res *acproto.ACPY2ServerReply, w *acproto.ACPHeartBeat, isUp bool
 	ii := w.PeerInfo
 	isLocal := ii.GetDatacenter() == pdb.Datacenter()
 
+	dbName := make([]string, len(w.Database))
+	for i, dr := range w.Database {
+		dbName[i] = dr.Name
+	}
+
 	r := &acproto.ACPY2ServerData{
 		Subsystem:      ii.Subsystem,
 		Environment:    ii.Environment,
@@ -68,7 +73,7 @@ func addServer(res *acproto.ACPY2ServerReply, w *acproto.ACPHeartBeat, isUp bool
 		SortMetric:     w.SortMetric,
 		CpuMetric:      w.CpuMetric,
 		CapacityMetric: w.CapacityMetric,
-		Database:       w.Database,
+		Database:       dbName,
 		Uptodate:       w.Uptodate,
 	}
 
@@ -148,15 +153,19 @@ func (*myServer) GetMerkle(ctx context.Context, hb *acproto.ACPY2CheckRequest) (
 func (*myServer) Get(ctx context.Context, req *acproto.ACPY2GetSet) (*acproto.ACPY2GetSet, error) {
 
 	for _, r := range req.Data {
+		if r.Shard == 0 {
+			// was it left out? or actually 0?
+			s := shard.Hash(r.GetKey())
+			if s != 0 {
+				dl.Debug("added missing shard")
+			}
+			r.Shard = s
+		}
+
 		_, err := sdb.Get(r)
 
 		if err != nil {
 			return req, err
-		}
-
-		// not found? redirect to a better server
-		if r.GetVersion() == 0 {
-			sdb.Redirect(r)
 		}
 	}
 
@@ -236,6 +245,7 @@ func (*myServer) ShutDown(ctx context.Context, req *acproto.ACPY2Empty) (*acprot
 
 // ################################################################
 
+// make the api available as json post api
 func wwwApiConvert(w http.ResponseWriter, r *http.Request, req interface{}, f func() (interface{}, error)) {
 
 	err := json.NewDecoder(r.Body).Decode(req)

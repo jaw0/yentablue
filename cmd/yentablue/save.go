@@ -18,6 +18,11 @@ func addServerInfo(res []*info.Server, w *acproto.ACPHeartBeat, isUp bool) []*in
 
 	ii := w.PeerInfo
 
+	dbName := make([]string, len(w.Database))
+	for i, dr := range w.Database {
+		dbName[i] = dr.Name
+	}
+
 	r := &info.Server{
 		Subsystem:      ii.GetSubsystem(),
 		Environment:    ii.GetEnvironment(),
@@ -32,7 +37,7 @@ func addServerInfo(res []*info.Server, w *acproto.ACPHeartBeat, isUp bool) []*in
 		SortMetric:     w.GetSortMetric(),
 		CpuMetric:      w.GetCpuMetric(),
 		CapacityMetric: w.GetCapacityMetric(),
-		Database:       w.Database,
+		Database:       dbName,
 		Uptodate:       w.GetUptodate(),
 	}
 

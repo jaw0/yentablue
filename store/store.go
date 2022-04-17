@@ -174,7 +174,7 @@ func (db *SDB) PeerUpdate(id string, isup bool, pd *kibitz.Export, dat *acproto.
 
 	for _, n := range dat.Database {
 		// server reports that it has this db
-		dbcf[n] = true
+		dbcf[n.Name] = true
 	}
 
 	first := true

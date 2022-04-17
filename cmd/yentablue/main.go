@@ -159,10 +159,11 @@ func statsInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 func Myself(info *kibitz.PeerInfo) *acproto.ACPHeartBeat {
 
 	cf := config.Cf()
-	var dbl []string
+	var dbl []*acproto.ACPDatabaseInfo
 
 	for _, c := range cf.Database {
-		dbl = append(dbl, c.Name)
+		dbl = append(dbl, &acproto.ACPDatabaseInfo{Name: c.Name})
+		// RSN - more info per database
 	}
 
 	load := currentLoad()
