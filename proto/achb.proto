@@ -3,6 +3,11 @@ syntax = "proto3";
 package acproto;
 import "github.com/jaw0/kibitz/peer.proto";
 
+message ACPDatabaseInfo {
+        string          name            = 1;
+        // RSN - more info
+}
+
 message ACPHeartBeat {
         kibitz.PeerInfo peer_info      = 1;
         int32          sort_metric     = 2;
@@ -10,7 +15,7 @@ message ACPHeartBeat {
 
         int32          cpu_metric      = 4;
         int32          capacity_metric = 5;
-        repeated string         database        = 6;
+        repeated ACPDatabaseInfo         database        = 6;
         bool           uptodate        = 7;    // all databases are synced
 }
 
