@@ -172,9 +172,14 @@ func (p *P) distribSharded(loc *soty.Loc, req *acproto.ACPY2DistRequest, onDone 
 	for i := 0; i < ndc; i++ {
 		dist, _ := p.DistPeers(loc, i, false, sender)
 
-		// the list includes spares, shuffle them seperately
-		shuffle(dist[:nrepl])
-		shuffle(dist[nrepl:])
+		if len(dist) == 0 {
+			continue
+		}
+		if len(dist) >= nrepl {
+			// the list includes spares, shuffle them seperately
+			shuffle(dist[:nrepl])
+			shuffle(dist[nrepl:])
+		}
 
 		if i > 0 {
 			// far datacenter - send to one per DC (stop after 1st success)
