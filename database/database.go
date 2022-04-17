@@ -154,6 +154,9 @@ func (db *DB) Get(rec *acproto.ACPY2MapDatum) (bool, error) {
 	cached := false
 	key := rec.GetKey()
 
+	// fill in location, if not local
+	db.Redirect(rec)
+
 	// check cache
 	if db.cache != nil {
 		cval, ok := db.cache.Get(key)
@@ -185,6 +188,7 @@ func (db *DB) Get(rec *acproto.ACPY2MapDatum) (bool, error) {
 	if ver != 0 && ver != dr.GetVersion() {
 		// someone asked for this particular version, but we do not have.
 		dl.Debug("ver not found")
+		rec.Version = 0
 		return false, nil
 	}
 
@@ -197,13 +201,10 @@ func (db *DB) Get(rec *acproto.ACPY2MapDatum) (bool, error) {
 	rec.Version = dr.Version
 	rec.Shard = dr.Shard
 	rec.Value = dr.Value
+	rec.Expire = dr.Expire
 
 	ringVer := db.ring.CurrVer()
 	rec.ConfTime = ringVer
-
-	if dr.Expire != 0 {
-		rec.Expire = dr.Expire
-	}
 
 	if db.cache != nil && !cached {
 		db.cache.Add(key, dr)
@@ -482,15 +483,9 @@ func (db *DB) AE() bool {
 
 	for p := 0; p < npart; p++ {
 		rloc := db.ring.GetLocN(p)
-		if !rloc.IsLocal {
-			continue
-		}
+
 		peer := db.ring.RandomAEPeer(rloc)
 		dl.Debug("peer %s", peer)
-		if peer == "" {
-			continue
-		}
-
 		mok, mism, sync := db.merk.AE(rloc, peer, db.ring)
 		mismatch += mism
 		synced += sync

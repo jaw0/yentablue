@@ -64,6 +64,15 @@ func (m *D) AE(loc *soty.Loc, peer string, ring Ringerizer) (bool, int64, int64)
 
 	dlae.Debug("AE check %s[%d] with %s", m.name, loc.TreeID, peer)
 
+	if !loc.IsLocal {
+		m.RemoveTree(ring, loc, peer)
+		return true, 0, 0
+	}
+
+	if peer == "" {
+		return true, 0, 0
+	}
+
 	wd := &aeWork{
 		merk:   m,
 		loc:    loc,
