@@ -154,7 +154,7 @@ func (c *C) MGet(d []*Datum) ([]*Datum, error) {
 
 	gets := make([]*acproto.ACPY2MapDatum, len(d))
 
-	for _, r := range d {
+	for i, r := range d {
 		g := &acproto.ACPY2MapDatum{
 			Map: r.Map,
 			Key: r.Key,
@@ -164,7 +164,7 @@ func (c *C) MGet(d []*Datum) ([]*Datum, error) {
 			g.Version = r.Version
 		}
 
-		gets = append(gets, g)
+		gets[i] = g
 	}
 
 	res, err := c.rpc.Get(context.Background(), &acproto.ACPY2GetSet{
@@ -215,15 +215,14 @@ func (c *C) GetRange(mapname string, key0 string, key1 string, ver0 uint64, ver1
 
 	ret := make([]*Datum, len(res.Data))
 
-	for _, r := range res.Data {
-		d := &Datum{
+	for i, r := range res.Data {
+		ret[i] = &Datum{
 			Key:     r.GetKey(),
 			Value:   r.Value,
 			Version: r.GetVersion(),
 			Expire:  r.GetExpire(),
 			Shard:   r.GetShard(),
 		}
-		ret = append(ret, d)
 	}
 
 	return ret, nil
