@@ -78,6 +78,8 @@ type MStorer interface {
 type Ringerizer interface {
 	RandomAEPeer(*soty.Loc) string
 	GetLoc(uint32) *soty.Loc
+	IsStable() bool
+	NumReplicas() int
 }
 
 var dl = diag.Logger("merkle")
@@ -391,6 +393,51 @@ func (m *D) repart(ring Ringerizer, loc *soty.Loc, l *LeafSave) {
 	}
 
 	m.Xfer(l.Key, l.Version, loc, newLoc)
+}
+
+//################################################################
+
+func (m *D) RemoveTree(ring Ringerizer, loc *soty.Loc, peer string) {
+
+	dl.Debug("removing %#v", loc)
+
+	start := merkleKey(HEIGHT, loc.TreeID, 0)
+	end := merkleKey(HEIGHT, loc.TreeID+1, 0)
+
+	var nChk int64
+	var nXfer int64
+	var nDel int64
+
+	m.db.Range("m", start, end, func(key string, val []byte) bool {
+		leafs := bytes2leaf(val)
+		for _, l := range leafs.Save {
+
+			nChk++
+
+			if peer != "" {
+				// move the data, then delete the local copy
+				m.Xfer(l.Key, l.Version, loc, loc)
+				nXfer++
+			} else {
+				if ring.NumReplicas() == 1 && ring.IsStable() {
+					// there are no replicas wanted, just discard the data
+					req := &acproto.ACPY2MapDatum{
+						Map: m.name,
+						Key: l.Key,
+					}
+
+					m.Del(l.Key, l.Version, loc)
+					m.db.Del(req)
+					nDel++
+
+				}
+			}
+		}
+		return true
+
+	})
+
+	dl.Debug("checked %d, xfered %d, removed %d", nChk, nXfer, nDel)
 }
 
 //################################################################
