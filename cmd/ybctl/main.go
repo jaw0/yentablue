@@ -6,11 +6,13 @@
 package main
 
 import (
-	"errors"
+	"crypto/rand"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"os"
+	"strconv"
 
 	"golang.org/x/net/context"
 
@@ -29,13 +31,9 @@ import (
 //   servers
 //   get db
 //   put db
-//   shard db on|off
-//   replicas db #
-//   add db server
-//   remove db server
-//   replace db server server
+//   shard db on|off|#replicas
+//
 //   set db param value
-//   rebalance db
 //   status db
 
 // -h addr:port
@@ -43,11 +41,13 @@ import (
 var dl = diag.Logger("main")
 var sinfo = make(map[string]*info.Server)
 var ac *gclient.C
+var dryRun bool
 
 func main() {
 	var addr string
 
 	flag.StringVar(&addr, "h", "127.0.0.1:5301", "addr")
+	flag.BoolVar(&dryRun, "n", false, "dry run")
 	flag.Parse()
 
 	ac_, err := gclient.New(&gclient.GrpcConfig{
@@ -119,7 +119,7 @@ func getConf(db string) ([]byte, error) {
 		dl.Fatal("cannot get config %v", err)
 	}
 
-	if len(res.Value) != 1 {
+	if len(res.Value) < 1 {
 		return nil, nil
 	}
 
@@ -195,6 +195,7 @@ func shutdown() {
 func emptyCf() []byte {
 
 	rc := &ringcf.Ring{
+		Version: ringcf.VERSION,
 		Parts: []ringcf.Part{
 			{Shard: []uint32{0}},
 		},
@@ -207,18 +208,7 @@ func emptyCf() []byte {
 
 //################################################################
 
-func argsDbServer(args []string) (string, string, *ringcf.Ring, error) {
-
-	if len(args) < 3 {
-		return "", "", nil, errors.New("arg missing")
-	}
-
-	dbname := args[1]
-	server := args[2]
-
-	if sinfo[server] == nil {
-		dl.Verbose("WARNING: unknown server '%s'; typo or offline?", server)
-	}
+func getDBConf(dbname string) (*ringcf.Ring, error) {
 
 	dbcf, err := getConf(dbname)
 	if err != nil {
@@ -226,26 +216,189 @@ func argsDbServer(args []string) (string, string, *ringcf.Ring, error) {
 	}
 
 	if dbcf == nil {
-		return dbname, server, &ringcf.Ring{}, nil
+		return &ringcf.Ring{}, nil
 	}
 	rcf, err := ringcf.FromBytes(dbcf)
 	if err != nil {
 		dl.Fatal("error: %v", err)
 	}
 
-	return dbname, server, rcf, nil
+	return rcf, nil
+}
+
+func putDBConf(dbname string, rcf *ringcf.Ring) error {
+	if dryRun {
+		return nil
+	}
+
+	rcf.Version = ringcf.VERSION
+	buf, err := ringcf.ToBytes(rcf)
+	if err != nil {
+		dl.Fatal("%v", err)
+	}
+
+	setConf(dbname, buf)
+
+	return nil
 }
 
 //################################################################
 
 func cmdShard(args []string) {
 
-	dbname, server, rcf, err := argsDbServer(args)
+	if len(args) < 2 {
+		dl.Fatal("usage: dbname on/off/#replicas")
+	}
+
+	dbname := args[1]
+	rcf, err := getDBConf(dbname)
 
 	if err != nil {
 		// RSN - usage
 		dl.Fatal("error: %v", err)
 	}
 
-	dl.Verbose(">> %v %v %v", dbname, server, rcf)
+	if len(args) == 2 {
+		// display config
+		fmt.Printf("%#v\n", rcf)
+		// and curr status
+		res, _ := ac.GetRingConf(dbname, "*")
+		fmt.Printf("%#v\n", res)
+		return
+	}
+
+	if args[2] == "off" {
+		if rcf.Replicas == 0 {
+			dl.Verbose("already off")
+			return
+		}
+		dl.Verbose("disabling sharding for '%s'", dbname)
+		rcf.Replicas = 0
+		rcf.Parts = nil
+		putDBConf(dbname, rcf)
+		return
+	}
+
+	if args[2] == "on" {
+		if rcf.Replicas == 0 {
+			rcf.Replicas = 1
+		}
+	} else {
+		n, _ := strconv.Atoi(args[2])
+
+		if n == 0 {
+			dl.Fatal("to disable sharding, use 'off'")
+		}
+		rcf.Replicas = n
+	}
+
+	err = updateRing(dbname, rcf)
+	if err != nil {
+		dl.Fatal("error: %v", err)
+	}
+
+	dl.Verbose("> %#v", rcf)
+	putDBConf(dbname, rcf)
+}
+
+func updateRing(dbname string, rcf *ringcf.Ring) error {
+
+	const numNums = 4
+
+	// build list of all servers
+	// build list of servers on ring
+
+	dbServers := serversForDB(dbname)
+	rgServers := serversOnRing(rcf)
+
+	// copy + remove servers already configured
+	var newParts []ringcf.Part
+
+	for name, si := range dbServers {
+		if ri, ok := rgServers[name]; ok {
+			ri.Datacenter = si.Datacenter // update to current value
+			ri.Rack = si.Rack
+			newParts = append(newParts, *ri)
+			delete(dbServers, name)
+			delete(rgServers, name)
+		}
+	}
+
+	// reuse the shard#s from removed servers - less turmoil
+	var useNums []uint32
+	for name, pi := range rgServers {
+		for _, sn := range pi.Shard {
+			useNums = append(useNums, sn)
+		}
+		dl.Verbose("removing %s", name)
+	}
+
+	// add new servers
+	for name, si := range dbServers {
+		dl.Verbose("adding %s", name)
+
+		nums := make([]uint32, numNums)
+		for i := 0; i < numNums; i++ {
+			if len(useNums) != 0 {
+				nums[i] = useNums[0]
+				useNums = useNums[1:]
+			} else {
+				nums[i] = random()
+			}
+		}
+
+		newParts = append(newParts, ringcf.Part{
+			Server:     name,
+			Datacenter: si.Datacenter,
+			Rack:       si.Rack,
+			Shard:      nums,
+		})
+	}
+
+	rcf.Parts = newParts
+
+	// how many bits?
+	ns := len(newParts) * numNums * 4
+	rbits := int(math.Ceil(math.Log2(float64(ns))))
+	if rbits < 8 {
+		rbits = 8
+	}
+	rcf.RingBits = rbits
+
+	return nil
+}
+
+func random() uint32 {
+
+	b := make([]byte, 4)
+	if _, err := rand.Reader.Read(b); err != nil {
+		dl.Fatal("%v", err)
+	}
+
+	return uint32(b[0]) | (uint32(b[1]) << 8) | (uint32(b[2]) << 16) | (uint32(b[3]) << 24)
+}
+
+func serversForDB(dbname string) map[string]*info.Server {
+
+	res := make(map[string]*info.Server)
+
+	for name, si := range sinfo {
+		for _, dbn := range si.Database {
+			if dbn == dbname {
+				res[name] = si
+			}
+		}
+	}
+	return res
+}
+
+func serversOnRing(rcf *ringcf.Ring) map[string]*ringcf.Part {
+
+	res := make(map[string]*ringcf.Part)
+
+	for _, p := range rcf.Parts {
+		res[p.Server] = &p
+	}
+
+	return res
 }
