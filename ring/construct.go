@@ -23,7 +23,7 @@ func (p *P) configure() {
 func (p *P) maybeReconfigure() {
 
 	cftxt, cfver, cfok := p.getConfig()
-	dl.Debug("cf ver %x", cfver)
+	dl.Debug("cf %s ver %x", p.name, cfver)
 
 	if !cfok || cfver <= p.currVer {
 		return
@@ -150,7 +150,7 @@ func (p *P) addReplicas(parts []*Part, replicas int, pn int, start int, dn int, 
 		if !replicaIsCompatHere(server, rack, dc, tryrack) {
 			continue
 		}
-		dl.Debug("slot %d + %s", pn, server)
+		dl.Debug("slot %x + %s %v", pn, server, spare)
 		dc.servers = append(dc.servers, server)
 		dc.rack[server] = rack
 		if server == p.myid && !spare {
@@ -196,6 +196,7 @@ func interpolateParts(parts []*Part) {
 				// copy
 				dc.servers = ldc.servers
 				dc.rack = ldc.rack
+				p.isLocal = lp.isLocal
 			}
 		}
 	}
