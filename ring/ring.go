@@ -89,6 +89,8 @@ func New(name string, db Databaser, myid string, mydc string, myrack string, sdb
 		mydc:   mydc,
 		myrack: myrack,
 		all:    newPart(mydc),
+		stop:   make(chan struct{}),
+		restop: make(chan struct{}),
 	}
 
 	distGrpcp = grpcp
@@ -191,6 +193,12 @@ func (p *P) CurrVer() uint64 {
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 	return p.currVer
+}
+
+func (p *P) IsStable() bool {
+	p.lock.RLock()
+	defer p.lock.RUnlock()
+	return p.currVer == p.stableVer
 }
 
 // dc == "" => local
