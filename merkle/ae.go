@@ -28,6 +28,7 @@ const (
 )
 
 var dlae = diag.Logger("ae")
+var dlwk = diag.Logger("aework")
 var aeCount = expvar.NewInt("ae_count")
 var aeErrs = expvar.NewInt("ae_errs")
 var aeMismatch = expvar.NewInt("ae_mismatch")
@@ -53,6 +54,7 @@ type aeWork struct {
 	workc    chan todo
 	keys     []needkey
 	keysc    chan needkey
+	produce  sync.WaitGroup
 	done     sync.WaitGroup
 	missing  int64
 	mismatch int64
@@ -62,16 +64,18 @@ type aeWork struct {
 
 func (m *D) AE(loc *soty.Loc, peer string, ring Ringerizer) (bool, int64, int64) {
 
-	dlae.Debug("AE check %s[%d] with %s", m.name, loc.TreeID, peer)
-
 	if !loc.IsLocal {
+		dlae.Debug("AE check %s[%d] - not local", m.name, loc.TreeID)
 		m.RemoveTree(ring, loc, peer)
 		return true, 0, 0
 	}
 
 	if peer == "" {
+		dlae.Debug("AE check %s[%d] - no peer", m.name, loc.TreeID)
 		return true, 0, 0
 	}
+
+	dlae.Debug("AE check %s[%d] with %s", m.name, loc.TreeID, peer)
 
 	wd := &aeWork{
 		merk:   m,
@@ -97,7 +101,12 @@ func (m *D) AE(loc *soty.Loc, peer string, ring Ringerizer) (bool, int64, int64)
 	aeCount.Add(1)
 	aeMismatch.Add(wd.missing + wd.mismatch)
 	aeFetch.Add(wd.fetched)
-	dlae.Debug("ae done fail=%v (%d %d %d)", wd.failed, wd.missing, wd.mismatch, wd.fetched)
+
+	if wd.failed {
+		dlae.Debug("ae done failed; missing %d mismatch %d fetched %d", wd.missing, wd.mismatch, wd.fetched)
+	} else {
+		dlae.Debug("ae done sucess: missing %d mismatch %d fetched %d", wd.missing, wd.mismatch, wd.fetched)
+	}
 	return !wd.failed, wd.missing + wd.mismatch, wd.fetched
 }
 
@@ -125,12 +134,14 @@ func (wd *aeWork) startWorkers(peer string) {
 
 		select {
 		case <-alldone:
+			dlwk.Debug("all done")
 			break
 		case <-time.After(delay):
 			break
 		}
 
 		if wd.queuesEmpty() {
+			dlwk.Debug("queues empty")
 			break
 		}
 
@@ -141,12 +152,13 @@ func (wd *aeWork) startWorkers(peer string) {
 			p = wd.ring.RandomAEPeer(wd.loc)
 		}
 
-		dlae.Debug("starting ae worker with %s", p)
+		dlwk.Debug("starting ae worker %d with %s", i, p)
 		wd.done.Add(1)
 		go wd.aeWorker(p)
 	}
 
 	// wait for done
+	dlwk.Debug("waiting for workers to finish")
 	wd.done.Wait()
 }
 
@@ -166,22 +178,43 @@ func (wd *aeWork) aeWorker(peer string) {
 
 	ok := true
 
+	pc := &produceConsume{wd, false}
+	pc.producing()
+	defer pc.consuming()
+
+	done := make(chan struct{})
+
+	go func() {
+		// if there are no workers still producing, stop
+		wd.produce.Wait()
+		close(done)
+	}()
+
 	for {
+		dlwk.Debug("shifting")
 		wd.shiftKeys()
 		wd.shiftWork()
 
+		if wd.queuesEmpty() {
+			pc.consuming()
+		}
+
+		dlwk.Debug("waiting...")
 		select {
 		case k := <-wd.keysc:
+			pc.producing()
+			dlwk.Debug("fetching keys")
 			ok = wd.fetchKeys(k, ac)
 		case t := <-wd.workc:
+			pc.producing()
+			dlwk.Debug("checking merk")
 			ok = wd.checkMerk(t, ac)
-		case <-time.After(2 * time.Second):
-			if wd.queuesEmpty() {
-				return
-			}
-			continue
+		case <-done:
+			dlwk.Debug("done")
+			return
 		}
 		if !ok {
+			dlwk.Debug("!ok")
 			return
 		}
 	}
@@ -525,13 +558,9 @@ func (wd *aeWork) pushKey(k string, ver uint64) {
 	wd.lock.Lock()
 	defer wd.lock.Unlock()
 
-	// we must block, if the channel is filling, queue
-	if len(wd.keysc) > BUFSZ-2 {
-		wd.keys = append(wd.keys, needkey{key: k, ver: ver})
-		return
-	}
 	select {
 	case wd.keysc <- needkey{key: k, ver: ver}:
+		wd.shiftKeysL()
 		break
 	default:
 		wd.keys = append(wd.keys, needkey{key: k, ver: ver})
@@ -572,6 +601,9 @@ func (wd *aeWork) shiftWork() {
 func (wd *aeWork) shiftKeys() {
 	wd.lock.Lock()
 	defer wd.lock.Unlock()
+	wd.shiftKeysL()
+}
+func (wd *aeWork) shiftKeysL() {
 
 	n := 0
 
@@ -612,12 +644,42 @@ func (wd *aeWork) queuesEmpty() bool {
 
 // ################################################################
 
+// keep track of whether workers are producing or consuming
+// if all workers are done producing, they are done
+
+func (wd *aeWork) producing() {
+	wd.produce.Add(1)
+}
+func (wd *aeWork) consuming() {
+	wd.produce.Done()
+}
+
+type produceConsume struct {
+	wd          *aeWork
+	isProducing bool
+}
+
+func (pc *produceConsume) producing() {
+	if !pc.isProducing {
+		pc.wd.producing()
+		pc.isProducing = true
+	}
+}
+func (pc *produceConsume) consuming() {
+	if pc.isProducing {
+		pc.wd.consuming()
+		pc.isProducing = false
+	}
+}
+
 func (wd *aeWork) failure() bool {
 	wd.lock.Lock()
 	defer wd.lock.Unlock()
 	wd.failed = true
 	return false
 }
+
+// ################################################################
 
 func (wd *aeWork) aeFetchMerkle(ac acproto.ACrpcClient, level int, ver uint64) ([]*acproto.ACPY2CheckValue, bool) {
 
