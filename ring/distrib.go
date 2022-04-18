@@ -199,7 +199,7 @@ func (p *P) DistribLocal(loc *soty.Loc, req *acproto.ACPY2DistRequest, onDone fu
 	npart := p.NumParts()
 	dist, _ := p.DistPeers(loc, 0, false, "")
 
-	if npart > 1 {
+	if npart > 1 && len(dist) > nrepl {
 		// do not include the spares
 		dist = dist[:nrepl]
 	}

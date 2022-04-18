@@ -9,7 +9,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/jaw0/yentablue/store/ring/config"
+	"github.com/jaw0/kibitz"
+
+	"github.com/jaw0/yentablue/proto"
+	"github.com/jaw0/yentablue/ring/config"
 )
 
 func TestConstruct(t *testing.T) {
@@ -24,36 +27,59 @@ func TestConstruct(t *testing.T) {
 		myid:   "s1",
 		mydc:   "dc1",
 		myrack: "r1",
+		all:    newPart("dc1"),
 	}
 
 	np := p.configureParts(cf)
 
 	for pi, pt := range np {
-		fmt.Printf("Part %d\t%v\n", pi, pt.isLocal)
+		fmt.Printf("Part %x\t%v\t", pi, pt.isLocal)
 
 		for _, dc := range pt.dc {
-			fmt.Printf("  DC %s\t%v\n", dc.dcname, dc.isBoundary)
+			//fmt.Printf("  DC %s\t%v\n", dc.dcname, dc.isBoundary)
 			fmt.Printf("    %v\n", dc.servers)
-
+			dc = dc
 		}
 
+	}
+
+	p.part = np
+	p.replicas = cf.Replicas
+	p.ringbits = cf.RingBits
+
+	p.PeerUpdate("s2", true, true, true, &kibitz.Export{
+		IsSameDC: true,
+		BestAddr: "127.0.0.23:1234",
+	}, &acproto.ACPHeartBeat{
+		Uptodate: true,
+	})
+
+	loc := p.GetLoc(0x01)
+	peer := p.RandomAEPeer(loc)
+	fmt.Printf("lov %#v -> %s\n", loc, peer)
+
+	if peer != "127.0.0.23:1234" {
+		t.Fail()
+	}
+
+	loc = p.GetLoc(0xA1001234) //0x01)
+	peer = p.RandomAEPeer(loc)
+	fmt.Printf("lov %#v -> %s\n", loc, peer)
+
+	if peer != "" {
+		t.Fail()
 	}
 }
 
 var cftxt = `
 {
   "Version": 1,
-  "Replicas": 2,
+  "Replicas": 1,
   "RingBits": 8,
   "Parts": [
-     { "Server": "s1", "Datacenter": "dc1", "Rack": "r1", "Shard": [0] },
-     { "Server": "s2", "Datacenter": "dc1", "Rack": "r1", "Shard": [536870912] },
-     { "Server": "s3", "Datacenter": "dc1", "Rack": "r1", "Shard": [1073741824] },
-     { "Server": "s4", "Datacenter": "dc1", "Rack": "r1", "Shard": [1610612736] },
-     { "Server": "s5", "Datacenter": "dc1", "Rack": "r2", "Shard": [2147483648] },
-     { "Server": "s6", "Datacenter": "dc1", "Rack": "r2", "Shard": [2684354560] },
-     { "Server": "s7", "Datacenter": "dc1", "Rack": "r2", "Shard": [3221225472] },
-     { "Server": "s8", "Datacenter": "dc1", "Rack": "r2", "Shard": [3758096384] }
+     { "Server": "s1", "Datacenter": "dc1", "Rack": "r1", "Shard": [1685892766, 3364293257, 2444096260, 3070921507] },
+     { "Server": "s2", "Datacenter": "dc1", "Rack": "r1", "Shard": [ 715167895, 3612019622, 2246265240, 1747858774] },
+     { "Server": "s3", "Datacenter": "dc1", "Rack": "r1", "Shard": [ ] }
   ]
 }
 `

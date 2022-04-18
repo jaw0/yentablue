@@ -124,28 +124,43 @@ func removeFrom(list []string, id string) []string {
 	return list
 }
 
-func (p *Part) add(id string, dc string) {
-
-	_, ok := p.dcidx[id]
+func (p *Part) addDC(dc string) *DCPart {
+	i, ok := p.dcid[dc]
 	if ok {
-		// already got it
-		return
+		return p.dc[i]
 	}
 
-	for i, d := range p.dc {
-		if d.dcname == dc {
-			p.dcidx[id] = i
-			p.dc[i].servers = append(p.dc[i].servers, id)
-			return
-		}
+	i = len(p.dc)
+	p.dc = append(p.dc, newDC(dc))
+	p.dcid[dc] = i
+	return p.dc[i]
+}
+
+func (p *Part) add(id string, dc string) *DCPart {
+
+	i, ok := p.dcidx[id]
+	if ok {
+		// already got it
+		return p.dc[i]
+	}
+
+	i, ok = p.dcid[dc]
+	if ok {
+		// add server to dc
+		p.dcidx[id] = i
+		p.dc[i].servers = append(p.dc[i].servers, id)
+		return p.dc[i]
 	}
 
 	// add new dc
-	p.dc = append(p.dc, &DCPart{
-		dcname:  dc,
-		servers: []string{id},
-	})
-	p.dcidx[id] = len(p.dc) - 1
+	i = len(p.dc)
+
+	p.dc = append(p.dc, newDC(dc))
+	p.dc[i].servers = []string{id}
+
+	p.dcidx[id] = i
+	p.dcid[dc] = i
+	return p.dc[i]
 }
 
 func (p *Part) remove(id string) {
@@ -176,6 +191,66 @@ func (p *P) peerIsFaraway(id string) bool {
 
 // ################################################################
 
+func (p *P) forCompatPeers(loc *soty.Loc, fnc func(string, bool) bool) {
+
+	part := p.all
+	nrepl := 0
+
+	if len(p.part) != 0 {
+		if loc.PartIdx >= len(p.part) {
+			// invalid Idx
+			return
+		}
+		part = p.part[loc.PartIdx]
+		nrepl = p.replicas
+	}
+
+	for _, dc := range part.dc {
+		for sn, server := range dc.servers {
+			isAlt := false
+			if nrepl != 0 && sn >= nrepl {
+				// normally, will not have the data
+				isAlt = true
+			}
+
+			keepGoing := fnc(server, isAlt)
+			if !keepGoing {
+				return
+			}
+		}
+	}
+}
+
+func (p *P) forCompatPeersInDC(loc *soty.Loc, dcidx int, fnc func(string, bool)) {
+
+	part := p.all
+	nrepl := 0
+
+	if len(p.part) != 0 {
+		if loc.PartIdx >= len(p.part) {
+			// invalid Idx
+			return
+		}
+		part = p.part[loc.PartIdx]
+		nrepl = p.replicas
+	}
+
+	if dcidx >= len(part.dc) {
+		return
+	}
+
+	dc := part.dc[dcidx]
+	for sn, server := range dc.servers {
+		isAlt := false
+		if nrepl != 0 && sn >= nrepl {
+			// normally, will not have the data
+			isAlt = true
+		}
+
+		fnc(server, isAlt)
+	}
+}
+
 func (p *P) RandomAEPeer(loc *soty.Loc) string {
 
 	// look for an up to date peer, (usually) prefer local
@@ -188,36 +263,28 @@ func (p *P) RandomAEPeer(loc *soty.Loc) string {
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
-	part := p.all
-
-	if len(p.part) != 0 {
-		if loc.PartIdx >= len(p.part) {
-			return ""
-		}
-		part = p.part[loc.PartIdx]
-	}
-
 	local := &randString{}
 	faraway := &randString{}
 	ood := &randString{}
 
-	for peer, _ := range part.dcidx {
+	p.forCompatPeers(loc, func(peer string, isAlt bool) bool {
 		pd, ok := allsrvr[peer]
-		if !ok || !pd.isUp {
-			continue
+		if !ok || isAlt || !pd.isUp {
+			return true
 		}
 		addr := pd.bestAddr
 
 		if !pd.isUpToDate {
 			ood.maybe(addr)
-			continue
+			return true
 		}
 		if pd.sameDC {
 			local.maybe(addr)
-			continue
+			return true
 		}
 		faraway.maybe(addr)
-	}
+		return true
+	})
 
 	if random_n(8) == 0 && faraway.len() != 0 {
 		return faraway.use()
@@ -228,54 +295,6 @@ func (p *P) RandomAEPeer(loc *soty.Loc) string {
 	}
 
 	return ood.use()
-}
-
-func (p *P) RandomDistPeer(loc *soty.Loc) string {
-
-	// prefer most local
-
-	lock.RLock()
-	defer lock.RUnlock()
-
-	p.lock.RLock()
-	defer p.lock.RUnlock()
-
-	part := p.all
-
-	if len(p.part) != 0 {
-		if loc.PartIdx >= len(p.part) {
-			return ""
-		}
-		part = p.part[loc.PartIdx]
-	}
-
-	local := &randString{}
-	faraway := &randString{}
-
-	for peer, _ := range part.dcidx {
-		pd, ok := allsrvr[peer]
-		if !ok || !pd.isUp {
-			continue
-		}
-		addr := pd.bestAddr
-
-		if pd.sameRack {
-			local.maybe(addr)
-			local.maybe(addr)
-			continue
-		}
-		if pd.sameDC {
-			local.maybe(addr)
-			continue
-		}
-		faraway.maybe(addr)
-	}
-
-	if local.len() != 0 {
-		return local.use()
-	}
-
-	return faraway.use()
 }
 
 // get peers for specified dc.
@@ -289,30 +308,13 @@ func (p *P) DistPeers(loc *soty.Loc, dcidx int, splitRack bool, butnot string) (
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
-	part := p.all
-
-	if len(p.part) != 0 {
-		if loc.PartIdx >= len(p.part) {
-			// invalid loc?
-			return nil, nil
-		}
-		part = p.part[loc.PartIdx]
-	}
-
-	if dcidx >= len(part.dc) {
-		// invalid dcidx
-		return nil, nil
-	}
-
-	dc := part.dc[dcidx]
-
 	var rack []string
 	var other []string
 
-	for _, peer := range dc.servers {
+	p.forCompatPeersInDC(loc, dcidx, func(peer string, isAlt bool) {
 		pd, ok := allsrvr[peer]
-		if !ok || !pd.isUp || peer == butnot {
-			continue
+		if !ok || isAlt || !pd.isUp || peer == butnot {
+			return
 		}
 		addr := pd.bestAddr
 
@@ -321,11 +323,12 @@ func (p *P) DistPeers(loc *soty.Loc, dcidx int, splitRack bool, butnot string) (
 		} else {
 			other = append(other, addr)
 		}
-	}
+	})
 
 	return other, rack
 }
 
+// provide alt server for redirect
 func (p *P) AltPeers(loc *soty.Loc) []string {
 
 	lock.RLock()
@@ -334,34 +337,27 @@ func (p *P) AltPeers(loc *soty.Loc) []string {
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
-	part := p.all
-
-	if len(p.part) != 0 {
-		if loc.PartIdx >= len(p.part) {
-			// invalid loc?
-			return nil
-		}
-		part = p.part[loc.PartIdx]
-	}
-
 	var dist []string
+	var local []string
 
-	for dcidx, dc := range part.dc {
+	p.forCompatPeers(loc, func(peer string, isAlt bool) bool {
 
-		for _, peer := range dc.servers {
-			pd, ok := allsrvr[peer]
-			if !ok || !pd.isUp {
-				continue
-			}
-			addr := pd.bestAddr
-
-			dist = append(dist, addr)
+		pd, ok := allsrvr[peer]
+		if !ok || isAlt || !pd.isUp {
+			return true
 		}
+		addr := pd.bestAddr
+		dist = append(dist, addr)
 
-		// local or all of the faraway
-		if len(dist) > 0 && dcidx == 0 {
-			return dist
+		if pd.sameDC {
+			local = append(local, addr)
 		}
+		return true
+	})
+
+	// local or all of the faraway
+	if len(local) > 0 {
+		return local
 	}
 
 	return dist

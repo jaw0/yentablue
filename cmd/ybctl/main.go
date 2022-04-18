@@ -7,6 +7,7 @@ package main
 
 import (
 	"crypto/rand"
+	"encoding/binary"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -375,7 +376,7 @@ func random() uint32 {
 		dl.Fatal("%v", err)
 	}
 
-	return uint32(b[0]) | (uint32(b[1]) << 8) | (uint32(b[2]) << 16) | (uint32(b[3]) << 24)
+	return binary.LittleEndian.Uint32(b)
 }
 
 func serversForDB(dbname string) map[string]*info.Server {
@@ -397,7 +398,8 @@ func serversOnRing(rcf *ringcf.Ring) map[string]*ringcf.Part {
 	res := make(map[string]*ringcf.Part)
 
 	for _, p := range rcf.Parts {
-		res[p.Server] = &p
+		cp := p
+		res[p.Server] = &cp
 	}
 
 	return res

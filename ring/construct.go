@@ -45,14 +45,14 @@ func (p *P) maybeReconfigure() {
 	if cf.Replicas < 0 {
 		cf.Replicas = 0
 	}
-	if cf.Replicas == 0 && p.replicas == 0 {
-		return
+	if cf.Replicas == 0 {
+		cf.RingBits = 0
 	}
 
 	// tell repartitioner to stop
 	close(p.restop)
 
-	dl.Debug("bits %d, replicas %d", cf.RingBits, cf.Replicas)
+	dl.Debug("reconfiguring %s b=%d/r=%d -> b=%d/r=%d", p.name, p.ringbits, p.replicas, cf.RingBits, cf.Replicas)
 
 	var newparts []*Part
 
@@ -115,8 +115,8 @@ func (p *P) configureParts(cf *config.Ring) []*Part {
 			start = p.addReplicas(newparts, cf.Replicas, pi, start, di, true, false)
 			start = p.addReplicas(newparts, cf.Replicas, pi, start, di, false, false)
 
-			// add remainder of servers as hot spares
-			start = p.addReplicas(newparts, len(dcsrv[dc.dcname]), pi, start, di, false, true)
+			// QQQ - add remainder of servers as hot spares
+			//start = p.addReplicas(newparts, len(dcsrv[dc.dcname]), pi, start, di, false, true)
 		}
 	}
 
@@ -151,8 +151,9 @@ func (p *P) addReplicas(parts []*Part, replicas int, pn int, start int, dn int, 
 			continue
 		}
 		dl.Debug("slot %x + %s %v", pn, server, spare)
-		dc.servers = append(dc.servers, server)
+		pt.add(server, dc.dcname)
 		dc.rack[server] = rack
+
 		if server == p.myid && !spare {
 			pt.isLocal = true
 		}
@@ -181,7 +182,7 @@ func interpolateParts(parts []*Part) {
 	size := len(parts)
 
 	for i, p := range parts {
-		for d, dc := range p.dc {
+		for dn, dc := range p.dc {
 			if dc.isBoundary {
 				continue
 			}
@@ -189,44 +190,38 @@ func interpolateParts(parts []*Part) {
 			// walk backwards until we find something
 			for j := 0; j < size; j++ {
 				lp := parts[(i-j+size)%size]
-				ldc := lp.dc[d]
+
+				ldc := lp.dc[dn]
 				if len(ldc.servers) == 0 {
 					continue
 				}
+
+				for _, server := range ldc.servers {
+					p.add(server, ldc.dcname)
+				}
 				// copy
-				dc.servers = ldc.servers
 				dc.rack = ldc.rack
 				p.isLocal = lp.isLocal
+				break
 			}
 		}
 	}
 }
 
-func newPart(mydc string) *Part {
-	p := &Part{
-		dcidx: make(map[string]int),
-	}
-
-	p.addDC(mydc)
-
-	return p
-}
-
-func (pt *Part) addDC(dc string) {
-
-	dp := &DCPart{
+func newDC(dc string) *DCPart {
+	return &DCPart{
 		dcname: dc,
 		rack:   make(map[string]string),
 	}
-	pt.dc = append(pt.dc, dp)
-	pt.dcidx[dc] = len(pt.dc) - 1
 }
-
-func addDC(parts []*Part, dc string) {
-
-	for _, p := range parts {
-		p.addDC(dc)
+func newPart(dc string) *Part {
+	p := &Part{
+		dcidx: make(map[string]int),
+		dcid:  make(map[string]int),
 	}
+
+	p.addDC(dc)
+	return p
 }
 
 func (p *P) partInsert(parts []*Part, bits int, server string, dc string, rack string, shard uint32) {
@@ -238,16 +233,9 @@ func (p *P) partInsert(parts []*Part, bits int, server string, dc string, rack s
 		pt.isLocal = true
 	}
 
-	idx, ok := pt.dcidx[dc]
-	if !ok {
-		addDC(parts, dc)
-		idx = pt.dcidx[dc]
-	}
-
-	d := pt.dc[idx]
-	d.servers = append(pt.dc[idx].servers, server)
-	d.rack[server] = rack
-	d.isBoundary = true
+	dcp := pt.add(server, dc)
+	dcp.rack[server] = rack
+	dcp.isBoundary = true
 }
 
 func (p *P) getConfig() ([]byte, uint64, bool) {

@@ -25,6 +25,7 @@ type DCPart struct {
 type Part struct {
 	dc        []*DCPart      // [0] is the local dc
 	dcidx     map[string]int // which dc[i] is this server in?
+	dcid      map[string]int // dcname -> dcpart idx
 	isLocal   bool
 	stableVer uint64
 }
@@ -93,9 +94,13 @@ func New(name string, db Databaser, myid string, mydc string, myrack string, sdb
 		restop: make(chan struct{}),
 	}
 
+	p.all.add(myid, mydc)
 	distGrpcp = grpcp
 	p.configure()
 	go p.periodicReconfig()
+	if name == "cmdb" {
+		// XXX dl.Fatal("%#v", p.all)
+	}
 	return p
 }
 

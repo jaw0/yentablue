@@ -25,7 +25,10 @@ func (p *P) getCheckpoint() (*checkpoint, bool) {
 		return c, false
 	}
 
-	fmt.Scan(string(d), &c.ringver, &c.ringbits, &c.chktree, c.chkver)
+	_, err := fmt.Sscan(string(d), &c.ringver, &c.ringbits, &c.chktree, &c.chkver)
+	if err != nil {
+		dl.Problem("%v", err)
+	}
 	return c, true
 }
 
