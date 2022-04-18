@@ -497,6 +497,8 @@ func (db *DB) AE() bool {
 
 	if mismatch+synced > 0 {
 		dl.Verbose("ae %s mismatch %d synced %d", db.name, mismatch, synced)
+	} else {
+		dl.Debug("ae %s finished. no changes", db.name)
 	}
 
 	return ok
