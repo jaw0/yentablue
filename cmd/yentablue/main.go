@@ -25,10 +25,12 @@ import (
 	"github.com/jaw0/acgo/diag"
 	"github.com/jaw0/kibitz"
 
+	"github.com/jaw0/yentablue/autoshard"
 	"github.com/jaw0/yentablue/config"
 	"github.com/jaw0/yentablue/gclient"
 	"github.com/jaw0/yentablue/monitor"
 	"github.com/jaw0/yentablue/proto"
+	"github.com/jaw0/yentablue/raftish"
 	"github.com/jaw0/yentablue/store"
 )
 
@@ -37,13 +39,15 @@ const (
 )
 
 type peerChange struct {
-	id   string
-	isup bool
+	id       string
+	isup     bool
+	ischange bool
 }
 
 var dl = diag.Logger("main")
 var pdb *kibitz.DB
 var sdb *store.SDB
+var rft *raftish.R
 var peerChan = make(chan peerChange, 2)
 var shutdown = make(chan bool)
 var sigchan = make(chan os.Signal, 5)
@@ -106,6 +110,11 @@ func main() {
 
 	sdb = initDBs(cf, pdb.Id(), pdb.Datacenter(), pdb.Rack())
 
+	rft = raftish.New(raftish.Conf{
+		Id: pdb.Id(),
+		DB: dbnames(),
+	})
+
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR2)
 
 	go peerChanger()
@@ -118,11 +127,23 @@ func main() {
 
 	dl.Verbose("beginning graceful shutdown")
 
+	autoshard.Stop()
 	srv.Shutdown()
 	pdb.Stop()
 }
 
 //################################################################
+
+func dbnames() []string {
+
+	cf := config.Cf()
+
+	var dbNames []string
+	for _, db := range cf.Database {
+		dbNames = append(dbNames, db.Name)
+	}
+	return dbNames
+}
 
 func block() {
 
@@ -162,7 +183,10 @@ func Myself(info *kibitz.PeerInfo) *acproto.ACPHeartBeat {
 	var dbl []*acproto.ACPDatabaseInfo
 
 	for _, c := range cf.Database {
-		dbl = append(dbl, &acproto.ACPDatabaseInfo{Name: c.Name})
+		dbl = append(dbl, &acproto.ACPDatabaseInfo{
+			Name: c.Name,
+			Raft: rft.RaftInfo(c.Name),
+		})
 		// RSN - more info per database
 	}
 
@@ -180,15 +204,29 @@ func Myself(info *kibitz.PeerInfo) *acproto.ACPHeartBeat {
 	}
 }
 
-func (*pinfo) Notify(id string, isup bool, isMySys bool) {
+func (*pinfo) Update(id string, isup bool, isMySys bool) {
 
 	if !isMySys {
 		return
 	}
 
 	peerChan <- peerChange{
-		id:   id,
-		isup: isup,
+		id:       id,
+		isup:     isup,
+		ischange: false,
+	}
+}
+
+func (*pinfo) Change(id string, isup bool, isMySys bool) {
+
+	if !isMySys {
+		return
+	}
+
+	peerChan <- peerChange{
+		id:       id,
+		isup:     isup,
+		ischange: true,
 	}
 }
 
@@ -204,7 +242,11 @@ func peerChanger() {
 
 		switch wd := pd.GetData().(type) {
 		case *acproto.ACPHeartBeat:
-			sdb.PeerUpdate(c.id, c.isup, pd.GetExport(), wd)
+			if c.ischange {
+				sdb.PeerUpdate(c.id, c.isup, pd.GetExport(), wd)
+			} else {
+				rft.PeerUpdate(c.id, c.isup, wd)
+			}
 		}
 	}
 }

@@ -3,8 +3,16 @@ syntax = "proto3";
 package acproto;
 import "github.com/jaw0/kibitz/peer.proto";
 
+
+message ACPRaftish {
+        string          leader          = 1;
+        string          vote            = 2;
+        uint64          term_start      = 3;
+        uint64          time_voted      = 4;
+}
 message ACPDatabaseInfo {
         string          name            = 1;
+        ACPRaftish      raft            = 2;
         // RSN - more info
 }
 
