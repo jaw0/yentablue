@@ -3,16 +3,16 @@
 
 package database
 
-import proto "github.com/gogo/protobuf/proto"
-import fmt "fmt"
-import math "math"
-
-import bytes "bytes"
-
-import strings "strings"
-import reflect "reflect"
-
-import io "io"
+import (
+	bytes "bytes"
+	fmt "fmt"
+	proto "github.com/gogo/protobuf/proto"
+	io "io"
+	math "math"
+	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
+)
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -23,7 +23,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Record struct {
 	Flags   uint32 `protobuf:"varint,1,opt,name=flags,proto3" json:"flags,omitempty"`
@@ -36,7 +36,7 @@ type Record struct {
 func (m *Record) Reset()      { *m = Record{} }
 func (*Record) ProtoMessage() {}
 func (*Record) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dbwire_108b4c1f2d50c13f, []int{0}
+	return fileDescriptor_1dc27bdffea2d374, []int{0}
 }
 func (m *Record) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -46,15 +46,15 @@ func (m *Record) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return xxx_messageInfo_Record.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
+		n, err := m.MarshalToSizedBuffer(b)
 		if err != nil {
 			return nil, err
 		}
 		return b[:n], nil
 	}
 }
-func (dst *Record) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Record.Merge(dst, src)
+func (m *Record) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Record.Merge(m, src)
 }
 func (m *Record) XXX_Size() int {
 	return m.Size()
@@ -103,6 +103,26 @@ func (m *Record) GetValue() []byte {
 func init() {
 	proto.RegisterType((*Record)(nil), "database.record")
 }
+
+func init() { proto.RegisterFile("dbwire.proto", fileDescriptor_1dc27bdffea2d374) }
+
+var fileDescriptor_1dc27bdffea2d374 = []byte{
+	// 202 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x49, 0x49, 0x2a, 0xcf,
+	0x2c, 0x4a, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x48, 0x49, 0x2c, 0x49, 0x4c, 0x4a,
+	0x2c, 0x4e, 0x55, 0xaa, 0xe1, 0x62, 0x2b, 0x4a, 0x4d, 0xce, 0x2f, 0x4a, 0x11, 0x12, 0xe1, 0x62,
+	0x4d, 0xcb, 0x49, 0x4c, 0x2f, 0x96, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0d, 0x82, 0x70, 0x40, 0xa2,
+	0xc5, 0x19, 0x89, 0x45, 0x29, 0x12, 0x4c, 0x10, 0x51, 0x30, 0x47, 0x48, 0x82, 0x8b, 0xbd, 0x2c,
+	0xb5, 0xa8, 0x38, 0x33, 0x3f, 0x4f, 0x82, 0x59, 0x81, 0x51, 0x83, 0x25, 0x08, 0xc6, 0x15, 0x12,
+	0xe3, 0x62, 0x4b, 0xad, 0x28, 0xc8, 0x2c, 0x4a, 0x95, 0x60, 0x01, 0x4b, 0x40, 0x79, 0x20, 0x73,
+	0xca, 0x12, 0x73, 0x4a, 0x53, 0x25, 0x58, 0x15, 0x18, 0x35, 0x78, 0x82, 0x20, 0x1c, 0x27, 0x93,
+	0x0b, 0x0f, 0xe5, 0x18, 0x6e, 0x3c, 0x94, 0x63, 0xf8, 0xf0, 0x50, 0x8e, 0xb1, 0xe1, 0x91, 0x1c,
+	0xe3, 0x8a, 0x47, 0x72, 0x8c, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91,
+	0x1c, 0xe3, 0x8b, 0x47, 0x72, 0x0c, 0x1f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1,
+	0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x49, 0x6c, 0x60, 0x4f, 0x18, 0x03, 0x02, 0x00, 0x00,
+	0xff, 0xff, 0x46, 0xbf, 0xcf, 0x18, 0xd4, 0x00, 0x00, 0x00,
+}
+
 func (this *Record) Equal(that interface{}) bool {
 	if that == nil {
 		return this == nil
@@ -164,7 +184,7 @@ func valueToGoStringDbwire(v interface{}, typ string) string {
 func (m *Record) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -172,47 +192,55 @@ func (m *Record) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *Record) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Record) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.Flags != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintDbwire(dAtA, i, uint64(m.Flags))
-	}
-	if m.Shard != 0 {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintDbwire(dAtA, i, uint64(m.Shard))
-	}
-	if m.Version != 0 {
-		dAtA[i] = 0x18
-		i++
-		i = encodeVarintDbwire(dAtA, i, uint64(m.Version))
+	if len(m.Value) > 0 {
+		i -= len(m.Value)
+		copy(dAtA[i:], m.Value)
+		i = encodeVarintDbwire(dAtA, i, uint64(len(m.Value)))
+		i--
+		dAtA[i] = 0x2a
 	}
 	if m.Expire != 0 {
-		dAtA[i] = 0x20
-		i++
 		i = encodeVarintDbwire(dAtA, i, uint64(m.Expire))
+		i--
+		dAtA[i] = 0x20
 	}
-	if len(m.Value) > 0 {
-		dAtA[i] = 0x2a
-		i++
-		i = encodeVarintDbwire(dAtA, i, uint64(len(m.Value)))
-		i += copy(dAtA[i:], m.Value)
+	if m.Version != 0 {
+		i = encodeVarintDbwire(dAtA, i, uint64(m.Version))
+		i--
+		dAtA[i] = 0x18
 	}
-	return i, nil
+	if m.Shard != 0 {
+		i = encodeVarintDbwire(dAtA, i, uint64(m.Shard))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.Flags != 0 {
+		i = encodeVarintDbwire(dAtA, i, uint64(m.Flags))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
 }
 
 func encodeVarintDbwire(dAtA []byte, offset int, v uint64) int {
+	offset -= sovDbwire(v)
+	base := offset
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
 		v >>= 7
 		offset++
 	}
 	dAtA[offset] = uint8(v)
-	return offset + 1
+	return base
 }
 func (m *Record) Size() (n int) {
 	if m == nil {
@@ -240,14 +268,7 @@ func (m *Record) Size() (n int) {
 }
 
 func sovDbwire(x uint64) (n int) {
-	for {
-		n++
-		x >>= 7
-		if x == 0 {
-			break
-		}
-	}
-	return n
+	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozDbwire(x uint64) (n int) {
 	return sovDbwire(uint64((x << 1) ^ uint64((int64(x) >> 63))))
@@ -289,7 +310,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 			}
 			b := dAtA[iNdEx]
 			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
+			wire |= uint64(b&0x7F) << shift
 			if b < 0x80 {
 				break
 			}
@@ -317,7 +338,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Flags |= (uint32(b) & 0x7F) << shift
+				m.Flags |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -336,7 +357,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Shard |= (uint32(b) & 0x7F) << shift
+				m.Shard |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -355,7 +376,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Version |= (uint64(b) & 0x7F) << shift
+				m.Version |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -374,7 +395,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Expire |= (uint64(b) & 0x7F) << shift
+				m.Expire |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -393,7 +414,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= (int(b) & 0x7F) << shift
+				byteLen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -402,6 +423,9 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 				return ErrInvalidLengthDbwire
 			}
 			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDbwire
+			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
@@ -416,7 +440,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 			if err != nil {
 				return err
 			}
-			if skippy < 0 {
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
 				return ErrInvalidLengthDbwire
 			}
 			if (iNdEx + skippy) > l {
@@ -434,6 +458,7 @@ func (m *Record) Unmarshal(dAtA []byte) error {
 func skipDbwire(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
+	depth := 0
 	for iNdEx < l {
 		var wire uint64
 		for shift := uint(0); ; shift += 7 {
@@ -465,10 +490,8 @@ func skipDbwire(dAtA []byte) (n int, err error) {
 					break
 				}
 			}
-			return iNdEx, nil
 		case 1:
 			iNdEx += 8
-			return iNdEx, nil
 		case 2:
 			var length int
 			for shift := uint(0); ; shift += 7 {
@@ -485,72 +508,34 @@ func skipDbwire(dAtA []byte) (n int, err error) {
 					break
 				}
 			}
-			iNdEx += length
 			if length < 0 {
 				return 0, ErrInvalidLengthDbwire
 			}
-			return iNdEx, nil
+			iNdEx += length
 		case 3:
-			for {
-				var innerWire uint64
-				var start int = iNdEx
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return 0, ErrIntOverflowDbwire
-					}
-					if iNdEx >= l {
-						return 0, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					innerWire |= (uint64(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				innerWireType := int(innerWire & 0x7)
-				if innerWireType == 4 {
-					break
-				}
-				next, err := skipDbwire(dAtA[start:])
-				if err != nil {
-					return 0, err
-				}
-				iNdEx = start + next
-			}
-			return iNdEx, nil
+			depth++
 		case 4:
-			return iNdEx, nil
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupDbwire
+			}
+			depth--
 		case 5:
 			iNdEx += 4
-			return iNdEx, nil
 		default:
 			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
 		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthDbwire
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
 	}
-	panic("unreachable")
+	return 0, io.ErrUnexpectedEOF
 }
 
 var (
-	ErrInvalidLengthDbwire = fmt.Errorf("proto: negative length found during unmarshaling")
-	ErrIntOverflowDbwire   = fmt.Errorf("proto: integer overflow")
+	ErrInvalidLengthDbwire        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowDbwire          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupDbwire = fmt.Errorf("proto: unexpected end of group")
 )
-
-func init() { proto.RegisterFile("dbwire.proto", fileDescriptor_dbwire_108b4c1f2d50c13f) }
-
-var fileDescriptor_dbwire_108b4c1f2d50c13f = []byte{
-	// 202 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x49, 0x49, 0x2a, 0xcf,
-	0x2c, 0x4a, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x48, 0x49, 0x2c, 0x49, 0x4c, 0x4a,
-	0x2c, 0x4e, 0x55, 0xaa, 0xe1, 0x62, 0x2b, 0x4a, 0x4d, 0xce, 0x2f, 0x4a, 0x11, 0x12, 0xe1, 0x62,
-	0x4d, 0xcb, 0x49, 0x4c, 0x2f, 0x96, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0d, 0x82, 0x70, 0x40, 0xa2,
-	0xc5, 0x19, 0x89, 0x45, 0x29, 0x12, 0x4c, 0x10, 0x51, 0x30, 0x47, 0x48, 0x82, 0x8b, 0xbd, 0x2c,
-	0xb5, 0xa8, 0x38, 0x33, 0x3f, 0x4f, 0x82, 0x59, 0x81, 0x51, 0x83, 0x25, 0x08, 0xc6, 0x15, 0x12,
-	0xe3, 0x62, 0x4b, 0xad, 0x28, 0xc8, 0x2c, 0x4a, 0x95, 0x60, 0x01, 0x4b, 0x40, 0x79, 0x20, 0x73,
-	0xca, 0x12, 0x73, 0x4a, 0x53, 0x25, 0x58, 0x15, 0x18, 0x35, 0x78, 0x82, 0x20, 0x1c, 0x27, 0x93,
-	0x0b, 0x0f, 0xe5, 0x18, 0x6e, 0x3c, 0x94, 0x63, 0xf8, 0xf0, 0x50, 0x8e, 0xb1, 0xe1, 0x91, 0x1c,
-	0xe3, 0x8a, 0x47, 0x72, 0x8c, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91,
-	0x1c, 0xe3, 0x8b, 0x47, 0x72, 0x0c, 0x1f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1,
-	0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x49, 0x6c, 0x60, 0x4f, 0x18, 0x03, 0x02, 0x00, 0x00,
-	0xff, 0xff, 0x46, 0xbf, 0xcf, 0x18, 0xd4, 0x00, 0x00, 0x00,
-}

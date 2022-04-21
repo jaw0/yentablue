@@ -3,16 +3,16 @@
 
 package merkle
 
-import proto "github.com/gogo/protobuf/proto"
-import fmt "fmt"
-import math "math"
-
-import bytes "bytes"
-
-import strings "strings"
-import reflect "reflect"
-
-import io "io"
+import (
+	bytes "bytes"
+	fmt "fmt"
+	proto "github.com/gogo/protobuf/proto"
+	io "io"
+	math "math"
+	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
+)
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -23,7 +23,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type LeafSave struct {
 	Version uint64 `protobuf:"varint,1,opt,name=version,proto3" json:"version,omitempty"`
@@ -34,7 +34,7 @@ type LeafSave struct {
 func (m *LeafSave) Reset()      { *m = LeafSave{} }
 func (*LeafSave) ProtoMessage() {}
 func (*LeafSave) Descriptor() ([]byte, []int) {
-	return fileDescriptor_merkwire_61104c8bd4f442ee, []int{0}
+	return fileDescriptor_66c0e7c3b54455d3, []int{0}
 }
 func (m *LeafSave) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -44,15 +44,15 @@ func (m *LeafSave) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return xxx_messageInfo_LeafSave.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
+		n, err := m.MarshalToSizedBuffer(b)
 		if err != nil {
 			return nil, err
 		}
 		return b[:n], nil
 	}
 }
-func (dst *LeafSave) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_LeafSave.Merge(dst, src)
+func (m *LeafSave) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LeafSave.Merge(m, src)
 }
 func (m *LeafSave) XXX_Size() int {
 	return m.Size()
@@ -85,13 +85,13 @@ func (m *LeafSave) GetKey() string {
 }
 
 type LeafSaves struct {
-	Save []*LeafSave `protobuf:"bytes,1,rep,name=save" json:"save,omitempty"`
+	Save []*LeafSave `protobuf:"bytes,1,rep,name=save,proto3" json:"save,omitempty"`
 }
 
 func (m *LeafSaves) Reset()      { *m = LeafSaves{} }
 func (*LeafSaves) ProtoMessage() {}
 func (*LeafSaves) Descriptor() ([]byte, []int) {
-	return fileDescriptor_merkwire_61104c8bd4f442ee, []int{1}
+	return fileDescriptor_66c0e7c3b54455d3, []int{1}
 }
 func (m *LeafSaves) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -101,15 +101,15 @@ func (m *LeafSaves) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return xxx_messageInfo_LeafSaves.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
+		n, err := m.MarshalToSizedBuffer(b)
 		if err != nil {
 			return nil, err
 		}
 		return b[:n], nil
 	}
 }
-func (dst *LeafSaves) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_LeafSaves.Merge(dst, src)
+func (m *LeafSaves) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LeafSaves.Merge(m, src)
 }
 func (m *LeafSaves) XXX_Size() int {
 	return m.Size()
@@ -137,7 +137,7 @@ type NodeSave struct {
 func (m *NodeSave) Reset()      { *m = NodeSave{} }
 func (*NodeSave) ProtoMessage() {}
 func (*NodeSave) Descriptor() ([]byte, []int) {
-	return fileDescriptor_merkwire_61104c8bd4f442ee, []int{2}
+	return fileDescriptor_66c0e7c3b54455d3, []int{2}
 }
 func (m *NodeSave) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -147,15 +147,15 @@ func (m *NodeSave) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return xxx_messageInfo_NodeSave.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
+		n, err := m.MarshalToSizedBuffer(b)
 		if err != nil {
 			return nil, err
 		}
 		return b[:n], nil
 	}
 }
-func (dst *NodeSave) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NodeSave.Merge(dst, src)
+func (m *NodeSave) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NodeSave.Merge(m, src)
 }
 func (m *NodeSave) XXX_Size() int {
 	return m.Size()
@@ -195,13 +195,13 @@ func (m *NodeSave) GetHash() []byte {
 }
 
 type NodeSaves struct {
-	Save []*NodeSave `protobuf:"bytes,1,rep,name=save" json:"save,omitempty"`
+	Save []*NodeSave `protobuf:"bytes,1,rep,name=save,proto3" json:"save,omitempty"`
 }
 
 func (m *NodeSaves) Reset()      { *m = NodeSaves{} }
 func (*NodeSaves) ProtoMessage() {}
 func (*NodeSaves) Descriptor() ([]byte, []int) {
-	return fileDescriptor_merkwire_61104c8bd4f442ee, []int{3}
+	return fileDescriptor_66c0e7c3b54455d3, []int{3}
 }
 func (m *NodeSaves) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -211,15 +211,15 @@ func (m *NodeSaves) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return xxx_messageInfo_NodeSaves.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
+		n, err := m.MarshalToSizedBuffer(b)
 		if err != nil {
 			return nil, err
 		}
 		return b[:n], nil
 	}
 }
-func (dst *NodeSaves) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NodeSaves.Merge(dst, src)
+func (m *NodeSaves) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NodeSaves.Merge(m, src)
 }
 func (m *NodeSaves) XXX_Size() int {
 	return m.Size()
@@ -243,6 +243,31 @@ func init() {
 	proto.RegisterType((*NodeSave)(nil), "merkle.node_save")
 	proto.RegisterType((*NodeSaves)(nil), "merkle.node_saves")
 }
+
+func init() { proto.RegisterFile("merkwire.proto", fileDescriptor_66c0e7c3b54455d3) }
+
+var fileDescriptor_66c0e7c3b54455d3 = []byte{
+	// 286 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x90, 0x3f, 0x4e, 0xc3, 0x30,
+	0x14, 0xc6, 0xfd, 0x48, 0x5a, 0x9a, 0xc7, 0x1f, 0x81, 0xc5, 0x60, 0x81, 0xf4, 0x14, 0x55, 0x42,
+	0xca, 0xd4, 0x81, 0x72, 0x02, 0x98, 0x59, 0x7c, 0x81, 0x2a, 0xb4, 0x46, 0xa9, 0x12, 0x62, 0x64,
+	0x97, 0xa2, 0x6e, 0x1c, 0x81, 0x63, 0x70, 0x14, 0xc6, 0x8e, 0x1d, 0x89, 0xb3, 0x30, 0xf6, 0x08,
+	0xc8, 0x8e, 0xc8, 0xc6, 0xf6, 0xfd, 0xe4, 0x4f, 0xfe, 0x7e, 0x7a, 0x78, 0xfa, 0xac, 0x4c, 0xf9,
+	0xb6, 0x34, 0x6a, 0xf2, 0x62, 0xf4, 0x4a, 0xf3, 0xa1, 0xe7, 0x4a, 0x8d, 0x1f, 0x30, 0xa9, 0x54,
+	0xfe, 0x34, 0xb3, 0xf9, 0x5a, 0x71, 0x81, 0x87, 0x6b, 0x65, 0xec, 0x52, 0xd7, 0x02, 0x52, 0xc8,
+	0x62, 0xf9, 0x87, 0xfc, 0x02, 0x07, 0xb6, 0xc8, 0xcd, 0x42, 0x1c, 0xa4, 0x90, 0x9d, 0xc8, 0x0e,
+	0xf8, 0x19, 0x46, 0xa5, 0xda, 0x88, 0x28, 0x85, 0x2c, 0x91, 0x3e, 0x8e, 0xa7, 0x88, 0xfd, 0x77,
+	0x96, 0x5f, 0x63, 0xec, 0x83, 0x80, 0x34, 0xca, 0x8e, 0x6e, 0xce, 0x27, 0xdd, 0xe6, 0xa4, 0x6f,
+	0xc8, 0xf0, 0x3c, 0xae, 0x30, 0xa9, 0xf5, 0x42, 0x75, 0x0e, 0x57, 0x98, 0x94, 0x6a, 0x33, 0x9b,
+	0xeb, 0xd7, 0x7a, 0x15, 0x2c, 0x22, 0x39, 0x2a, 0xd5, 0xe6, 0xde, 0x33, 0xe7, 0x18, 0xdb, 0x4a,
+	0xaf, 0x82, 0xc5, 0x40, 0x86, 0xcc, 0x2f, 0x71, 0x34, 0x2f, 0x96, 0xd5, 0xc2, 0xa8, 0x3a, 0x98,
+	0x0c, 0x64, 0xcf, 0xbe, 0x5f, 0xe4, 0xb6, 0x10, 0x71, 0x0a, 0xd9, 0xb1, 0x0c, 0xd9, 0x2b, 0xf6,
+	0x6b, 0xff, 0x2a, 0xf6, 0x8d, 0x4e, 0xf1, 0xee, 0x76, 0xdb, 0x10, 0xdb, 0x35, 0xc4, 0xf6, 0x0d,
+	0xc1, 0xbb, 0x23, 0xf8, 0x74, 0x04, 0x5f, 0x8e, 0x60, 0xeb, 0x08, 0xbe, 0x1d, 0xc1, 0x8f, 0x23,
+	0xb6, 0x77, 0x04, 0x1f, 0x2d, 0xb1, 0x6d, 0x4b, 0x6c, 0xd7, 0x12, 0x7b, 0x1c, 0x86, 0x5b, 0x4f,
+	0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0xfa, 0x2b, 0x85, 0x15, 0x7d, 0x01, 0x00, 0x00,
+}
+
 func (this *LeafSave) Equal(that interface{}) bool {
 	if that == nil {
 		return this == nil
@@ -424,7 +449,7 @@ func valueToGoStringMerkwire(v interface{}, typ string) string {
 func (m *LeafSave) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -432,33 +457,39 @@ func (m *LeafSave) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *LeafSave) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *LeafSave) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.Version != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintMerkwire(dAtA, i, uint64(m.Version))
+	if len(m.Key) > 0 {
+		i -= len(m.Key)
+		copy(dAtA[i:], m.Key)
+		i = encodeVarintMerkwire(dAtA, i, uint64(len(m.Key)))
+		i--
+		dAtA[i] = 0x1a
 	}
 	if m.Shard != 0 {
-		dAtA[i] = 0x10
-		i++
 		i = encodeVarintMerkwire(dAtA, i, uint64(m.Shard))
+		i--
+		dAtA[i] = 0x10
 	}
-	if len(m.Key) > 0 {
-		dAtA[i] = 0x1a
-		i++
-		i = encodeVarintMerkwire(dAtA, i, uint64(len(m.Key)))
-		i += copy(dAtA[i:], m.Key)
+	if m.Version != 0 {
+		i = encodeVarintMerkwire(dAtA, i, uint64(m.Version))
+		i--
+		dAtA[i] = 0x8
 	}
-	return i, nil
+	return len(dAtA) - i, nil
 }
 
 func (m *LeafSaves) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -466,29 +497,36 @@ func (m *LeafSaves) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *LeafSaves) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *LeafSaves) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	if len(m.Save) > 0 {
-		for _, msg := range m.Save {
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintMerkwire(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
+		for iNdEx := len(m.Save) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Save[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintMerkwire(dAtA, i, uint64(size))
 			}
-			i += n
+			i--
+			dAtA[i] = 0xa
 		}
 	}
-	return i, nil
+	return len(dAtA) - i, nil
 }
 
 func (m *NodeSave) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -496,38 +534,44 @@ func (m *NodeSave) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *NodeSave) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *NodeSave) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.KeyCount != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintMerkwire(dAtA, i, uint64(m.KeyCount))
-	}
-	if m.Slot != 0 {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintMerkwire(dAtA, i, uint64(m.Slot))
+	if len(m.Hash) > 0 {
+		i -= len(m.Hash)
+		copy(dAtA[i:], m.Hash)
+		i = encodeVarintMerkwire(dAtA, i, uint64(len(m.Hash)))
+		i--
+		dAtA[i] = 0x22
 	}
 	if m.Children != 0 {
-		dAtA[i] = 0x18
-		i++
 		i = encodeVarintMerkwire(dAtA, i, uint64(m.Children))
+		i--
+		dAtA[i] = 0x18
 	}
-	if len(m.Hash) > 0 {
-		dAtA[i] = 0x22
-		i++
-		i = encodeVarintMerkwire(dAtA, i, uint64(len(m.Hash)))
-		i += copy(dAtA[i:], m.Hash)
+	if m.Slot != 0 {
+		i = encodeVarintMerkwire(dAtA, i, uint64(m.Slot))
+		i--
+		dAtA[i] = 0x10
 	}
-	return i, nil
+	if m.KeyCount != 0 {
+		i = encodeVarintMerkwire(dAtA, i, uint64(m.KeyCount))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *NodeSaves) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -535,33 +579,42 @@ func (m *NodeSaves) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *NodeSaves) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *NodeSaves) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	if len(m.Save) > 0 {
-		for _, msg := range m.Save {
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintMerkwire(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
+		for iNdEx := len(m.Save) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Save[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintMerkwire(dAtA, i, uint64(size))
 			}
-			i += n
+			i--
+			dAtA[i] = 0xa
 		}
 	}
-	return i, nil
+	return len(dAtA) - i, nil
 }
 
 func encodeVarintMerkwire(dAtA []byte, offset int, v uint64) int {
+	offset -= sovMerkwire(v)
+	base := offset
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
 		v >>= 7
 		offset++
 	}
 	dAtA[offset] = uint8(v)
-	return offset + 1
+	return base
 }
 func (m *LeafSave) Size() (n int) {
 	if m == nil {
@@ -635,14 +688,7 @@ func (m *NodeSaves) Size() (n int) {
 }
 
 func sovMerkwire(x uint64) (n int) {
-	for {
-		n++
-		x >>= 7
-		if x == 0 {
-			break
-		}
-	}
-	return n
+	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozMerkwire(x uint64) (n int) {
 	return sovMerkwire(uint64((x << 1) ^ uint64((int64(x) >> 63))))
@@ -663,8 +709,13 @@ func (this *LeafSaves) String() string {
 	if this == nil {
 		return "nil"
 	}
+	repeatedStringForSave := "[]*LeafSave{"
+	for _, f := range this.Save {
+		repeatedStringForSave += strings.Replace(fmt.Sprintf("%v", f), "LeafSave", "LeafSave", 1) + ","
+	}
+	repeatedStringForSave += "}"
 	s := strings.Join([]string{`&LeafSaves{`,
-		`Save:` + strings.Replace(fmt.Sprintf("%v", this.Save), "LeafSave", "LeafSave", 1) + `,`,
+		`Save:` + repeatedStringForSave + `,`,
 		`}`,
 	}, "")
 	return s
@@ -686,8 +737,13 @@ func (this *NodeSaves) String() string {
 	if this == nil {
 		return "nil"
 	}
+	repeatedStringForSave := "[]*NodeSave{"
+	for _, f := range this.Save {
+		repeatedStringForSave += strings.Replace(fmt.Sprintf("%v", f), "NodeSave", "NodeSave", 1) + ","
+	}
+	repeatedStringForSave += "}"
 	s := strings.Join([]string{`&NodeSaves{`,
-		`Save:` + strings.Replace(fmt.Sprintf("%v", this.Save), "NodeSave", "NodeSave", 1) + `,`,
+		`Save:` + repeatedStringForSave + `,`,
 		`}`,
 	}, "")
 	return s
@@ -715,7 +771,7 @@ func (m *LeafSave) Unmarshal(dAtA []byte) error {
 			}
 			b := dAtA[iNdEx]
 			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
+			wire |= uint64(b&0x7F) << shift
 			if b < 0x80 {
 				break
 			}
@@ -743,7 +799,7 @@ func (m *LeafSave) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Version |= (uint64(b) & 0x7F) << shift
+				m.Version |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -762,7 +818,7 @@ func (m *LeafSave) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Shard |= (uint32(b) & 0x7F) << shift
+				m.Shard |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -781,7 +837,7 @@ func (m *LeafSave) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -791,6 +847,9 @@ func (m *LeafSave) Unmarshal(dAtA []byte) error {
 				return ErrInvalidLengthMerkwire
 			}
 			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMerkwire
+			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
@@ -802,7 +861,7 @@ func (m *LeafSave) Unmarshal(dAtA []byte) error {
 			if err != nil {
 				return err
 			}
-			if skippy < 0 {
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
 				return ErrInvalidLengthMerkwire
 			}
 			if (iNdEx + skippy) > l {
@@ -832,7 +891,7 @@ func (m *LeafSaves) Unmarshal(dAtA []byte) error {
 			}
 			b := dAtA[iNdEx]
 			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
+			wire |= uint64(b&0x7F) << shift
 			if b < 0x80 {
 				break
 			}
@@ -860,7 +919,7 @@ func (m *LeafSaves) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -869,6 +928,9 @@ func (m *LeafSaves) Unmarshal(dAtA []byte) error {
 				return ErrInvalidLengthMerkwire
 			}
 			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMerkwire
+			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
@@ -883,7 +945,7 @@ func (m *LeafSaves) Unmarshal(dAtA []byte) error {
 			if err != nil {
 				return err
 			}
-			if skippy < 0 {
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
 				return ErrInvalidLengthMerkwire
 			}
 			if (iNdEx + skippy) > l {
@@ -913,7 +975,7 @@ func (m *NodeSave) Unmarshal(dAtA []byte) error {
 			}
 			b := dAtA[iNdEx]
 			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
+			wire |= uint64(b&0x7F) << shift
 			if b < 0x80 {
 				break
 			}
@@ -941,7 +1003,7 @@ func (m *NodeSave) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.KeyCount |= (int64(b) & 0x7F) << shift
+				m.KeyCount |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -960,7 +1022,7 @@ func (m *NodeSave) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Slot |= (int32(b) & 0x7F) << shift
+				m.Slot |= int32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -979,7 +1041,7 @@ func (m *NodeSave) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Children |= (int32(b) & 0x7F) << shift
+				m.Children |= int32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -998,7 +1060,7 @@ func (m *NodeSave) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= (int(b) & 0x7F) << shift
+				byteLen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1007,6 +1069,9 @@ func (m *NodeSave) Unmarshal(dAtA []byte) error {
 				return ErrInvalidLengthMerkwire
 			}
 			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMerkwire
+			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
@@ -1021,7 +1086,7 @@ func (m *NodeSave) Unmarshal(dAtA []byte) error {
 			if err != nil {
 				return err
 			}
-			if skippy < 0 {
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
 				return ErrInvalidLengthMerkwire
 			}
 			if (iNdEx + skippy) > l {
@@ -1051,7 +1116,7 @@ func (m *NodeSaves) Unmarshal(dAtA []byte) error {
 			}
 			b := dAtA[iNdEx]
 			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
+			wire |= uint64(b&0x7F) << shift
 			if b < 0x80 {
 				break
 			}
@@ -1079,7 +1144,7 @@ func (m *NodeSaves) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1088,6 +1153,9 @@ func (m *NodeSaves) Unmarshal(dAtA []byte) error {
 				return ErrInvalidLengthMerkwire
 			}
 			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMerkwire
+			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
@@ -1102,7 +1170,7 @@ func (m *NodeSaves) Unmarshal(dAtA []byte) error {
 			if err != nil {
 				return err
 			}
-			if skippy < 0 {
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
 				return ErrInvalidLengthMerkwire
 			}
 			if (iNdEx + skippy) > l {
@@ -1120,6 +1188,7 @@ func (m *NodeSaves) Unmarshal(dAtA []byte) error {
 func skipMerkwire(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
+	depth := 0
 	for iNdEx < l {
 		var wire uint64
 		for shift := uint(0); ; shift += 7 {
@@ -1151,10 +1220,8 @@ func skipMerkwire(dAtA []byte) (n int, err error) {
 					break
 				}
 			}
-			return iNdEx, nil
 		case 1:
 			iNdEx += 8
-			return iNdEx, nil
 		case 2:
 			var length int
 			for shift := uint(0); ; shift += 7 {
@@ -1171,77 +1238,34 @@ func skipMerkwire(dAtA []byte) (n int, err error) {
 					break
 				}
 			}
-			iNdEx += length
 			if length < 0 {
 				return 0, ErrInvalidLengthMerkwire
 			}
-			return iNdEx, nil
+			iNdEx += length
 		case 3:
-			for {
-				var innerWire uint64
-				var start int = iNdEx
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return 0, ErrIntOverflowMerkwire
-					}
-					if iNdEx >= l {
-						return 0, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					innerWire |= (uint64(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				innerWireType := int(innerWire & 0x7)
-				if innerWireType == 4 {
-					break
-				}
-				next, err := skipMerkwire(dAtA[start:])
-				if err != nil {
-					return 0, err
-				}
-				iNdEx = start + next
-			}
-			return iNdEx, nil
+			depth++
 		case 4:
-			return iNdEx, nil
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupMerkwire
+			}
+			depth--
 		case 5:
 			iNdEx += 4
-			return iNdEx, nil
 		default:
 			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
 		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthMerkwire
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
 	}
-	panic("unreachable")
+	return 0, io.ErrUnexpectedEOF
 }
 
 var (
-	ErrInvalidLengthMerkwire = fmt.Errorf("proto: negative length found during unmarshaling")
-	ErrIntOverflowMerkwire   = fmt.Errorf("proto: integer overflow")
+	ErrInvalidLengthMerkwire        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowMerkwire          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupMerkwire = fmt.Errorf("proto: unexpected end of group")
 )
-
-func init() { proto.RegisterFile("merkwire.proto", fileDescriptor_merkwire_61104c8bd4f442ee) }
-
-var fileDescriptor_merkwire_61104c8bd4f442ee = []byte{
-	// 286 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x90, 0x3f, 0x4e, 0xc3, 0x30,
-	0x14, 0xc6, 0xfd, 0x48, 0x5a, 0x9a, 0xc7, 0x1f, 0x81, 0xc5, 0x60, 0x81, 0xf4, 0x14, 0x55, 0x42,
-	0xca, 0xd4, 0x81, 0x72, 0x02, 0x98, 0x59, 0x7c, 0x81, 0x2a, 0xb4, 0x46, 0xa9, 0x12, 0x62, 0x64,
-	0x97, 0xa2, 0x6e, 0x1c, 0x81, 0x63, 0x70, 0x14, 0xc6, 0x8e, 0x1d, 0x89, 0xb3, 0x30, 0xf6, 0x08,
-	0xc8, 0x8e, 0xc8, 0xc6, 0xf6, 0xfd, 0xe4, 0x4f, 0xfe, 0x7e, 0x7a, 0x78, 0xfa, 0xac, 0x4c, 0xf9,
-	0xb6, 0x34, 0x6a, 0xf2, 0x62, 0xf4, 0x4a, 0xf3, 0xa1, 0xe7, 0x4a, 0x8d, 0x1f, 0x30, 0xa9, 0x54,
-	0xfe, 0x34, 0xb3, 0xf9, 0x5a, 0x71, 0x81, 0x87, 0x6b, 0x65, 0xec, 0x52, 0xd7, 0x02, 0x52, 0xc8,
-	0x62, 0xf9, 0x87, 0xfc, 0x02, 0x07, 0xb6, 0xc8, 0xcd, 0x42, 0x1c, 0xa4, 0x90, 0x9d, 0xc8, 0x0e,
-	0xf8, 0x19, 0x46, 0xa5, 0xda, 0x88, 0x28, 0x85, 0x2c, 0x91, 0x3e, 0x8e, 0xa7, 0x88, 0xfd, 0x77,
-	0x96, 0x5f, 0x63, 0xec, 0x83, 0x80, 0x34, 0xca, 0x8e, 0x6e, 0xce, 0x27, 0xdd, 0xe6, 0xa4, 0x6f,
-	0xc8, 0xf0, 0x3c, 0xae, 0x30, 0xa9, 0xf5, 0x42, 0x75, 0x0e, 0x57, 0x98, 0x94, 0x6a, 0x33, 0x9b,
-	0xeb, 0xd7, 0x7a, 0x15, 0x2c, 0x22, 0x39, 0x2a, 0xd5, 0xe6, 0xde, 0x33, 0xe7, 0x18, 0xdb, 0x4a,
-	0xaf, 0x82, 0xc5, 0x40, 0x86, 0xcc, 0x2f, 0x71, 0x34, 0x2f, 0x96, 0xd5, 0xc2, 0xa8, 0x3a, 0x98,
-	0x0c, 0x64, 0xcf, 0xbe, 0x5f, 0xe4, 0xb6, 0x10, 0x71, 0x0a, 0xd9, 0xb1, 0x0c, 0xd9, 0x2b, 0xf6,
-	0x6b, 0xff, 0x2a, 0xf6, 0x8d, 0x4e, 0xf1, 0xee, 0x76, 0xdb, 0x10, 0xdb, 0x35, 0xc4, 0xf6, 0x0d,
-	0xc1, 0xbb, 0x23, 0xf8, 0x74, 0x04, 0x5f, 0x8e, 0x60, 0xeb, 0x08, 0xbe, 0x1d, 0xc1, 0x8f, 0x23,
-	0xb6, 0x77, 0x04, 0x1f, 0x2d, 0xb1, 0x6d, 0x4b, 0x6c, 0xd7, 0x12, 0x7b, 0x1c, 0x86, 0x5b, 0x4f,
-	0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0xfa, 0x2b, 0x85, 0x15, 0x7d, 0x01, 0x00, 0x00,
-}
