@@ -15,7 +15,7 @@ func spaceAvail(dir string) int32 {
 
 	var st syscall.Statfs_t
 	syscall.Statfs(dir, &st)
-	return int32(st.Bavail / 2048) // MB avail
+	return int32(st.Bavail * st.Bsize / 1000000) // MB avail
 }
 
 func currentLoad() int32 {

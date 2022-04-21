@@ -3,7 +3,7 @@
 // Created: 2018-Nov-15 10:03 (EST)
 // Function: system info - empty stubs
 
-// +build netbsd
+// +build
 
 package main
 
