@@ -16,10 +16,11 @@ type Part struct {
 	Shard      []uint32
 }
 type Ring struct {
-	Version  int
-	Replicas int
-	RingBits int
-	Parts    []Part
+	Version   int
+	Replicas  int
+	RingBits  int
+	AutoShard bool
+	Parts     []Part
 }
 
 const VERSION = 1
