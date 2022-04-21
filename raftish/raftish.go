@@ -99,19 +99,22 @@ func (r *R) PeerUpdate(id string, isup bool, hb *acproto.ACPHeartBeat) {
 	}
 }
 
-// am I the leader?
-func (r *R) AmLeader(dbname string) bool {
-
+func (r *R) CurrentLeader(dbname string) string {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
 	dbr := r.dbr[dbname]
 	if dbr == nil {
 		dl.Debug("unknown db '%s'", dbname)
-		return false
+		return ""
 	}
 
-	return dbr.leader == r.myId
+	return dbr.leader
+}
+
+// am I the leader?
+func (r *R) AmLeader(dbname string) bool {
+	return r.CurrentLeader(dbname) == r.myId
 }
 
 // provide our current state to peers
@@ -158,7 +161,7 @@ func (dbr *dbR) vote(id, myid, dbname string, ballot *acproto.ACPRaftish) {
 	dbr.election(myid, dbname)
 }
 
-func (dbr *dbR) down(id, dbname, myid string, ballot *acproto.ACPRaftish) {
+func (dbr *dbR) down(id, myid, dbname string, ballot *acproto.ACPRaftish) {
 	dl.Debug("dn %s %s", id, dbname)
 
 	ps := dbr.peers[id]
@@ -235,7 +238,7 @@ func (dbr *dbR) election(myid, dbname string) {
 	winner, nVotes := leaderBallot.winner()
 	dl.Debug("leader ballots %s %d; %#v", winner, nVotes, leaderBallot)
 
-	if nVotes*2 > numTotal {
+	if nVotes*2 > numTotal && numTotal > 1 {
 		dbr.newLeader(winner, maxTerm, dbname)
 		if winner != "" {
 			return
@@ -246,7 +249,7 @@ func (dbr *dbR) election(myid, dbname string) {
 	best, nVotes := candidBallot.winner()
 	dl.Debug("candidate ballots %s %d; %#v", best, nVotes, candidBallot)
 
-	if nVotes*2 > numTotal {
+	if nVotes*2 > numTotal && numTotal > 1 {
 		dbr.newLeader(best, maxTerm, dbname)
 		if best != "" {
 			return
