@@ -200,6 +200,14 @@ func (db *SDB) GetRingConf(name string, dc string) (*acproto.ACPY2RingConfReply,
 	return res, nil
 }
 
+func (db *SDB) RingIsStable(name string) bool {
+	d, ok := db.find(name)
+	if !ok {
+		return false
+	}
+	return d.RingIsStable()
+}
+
 func (db *SDB) maint() {
 
 	time.Sleep(20 * time.Second) // so we can discover some peers

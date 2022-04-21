@@ -436,6 +436,10 @@ func (db *DB) Repartition(loc *soty.Loc, ver uint64) (bool, uint64) {
 	return db.merk.Repartition(db.ring, loc, ver)
 }
 
+func (db *DB) RingIsStable() bool {
+	return db.ring.IsStable()
+}
+
 func (db *DB) Redirect(rec *acproto.ACPY2MapDatum) {
 
 	shard := rec.GetShard()
