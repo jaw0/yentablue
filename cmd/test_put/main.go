@@ -18,6 +18,7 @@ import (
 	"github.com/jaw0/acgo/diag"
 
 	"github.com/jaw0/yentablue/proto"
+	"github.com/jaw0/yentablue/shard"
 	"github.com/jaw0/yentablue/soty"
 )
 
@@ -68,6 +69,7 @@ func main() {
 					Data: &acproto.ACPY2MapDatum{
 						Map:     dbname,
 						Key:     key,
+						Shard:   shard.Hash(key),
 						Version: soty.Now(),
 						Value:   []byte("value value value"),
 					}})
