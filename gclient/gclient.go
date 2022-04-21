@@ -342,10 +342,11 @@ type RingShard struct {
 	Server []string
 }
 type RingConf struct {
-	Vers uint64
-	DB   string
-	DC   string
-	Part []RingShard
+	Vers   uint64
+	Stable bool
+	DB     string
+	DC     string
+	Part   []RingShard
 }
 
 func (c *C) GetRingConf(db string, dc string) (*RingConf, error) {
@@ -360,9 +361,10 @@ func (c *C) GetRingConf(db string, dc string) (*RingConf, error) {
 	}
 
 	cf := &RingConf{
-		DB:   db,
-		DC:   dc,
-		Vers: res.GetVersion(),
+		DB:     db,
+		DC:     dc,
+		Vers:   res.GetVersion(),
+		Stable: res.GetIsStable(),
 	}
 
 	for _, p := range res.Part {
