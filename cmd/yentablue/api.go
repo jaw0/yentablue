@@ -43,7 +43,7 @@ func (*myServer) SendHB(ctx context.Context, hb *acproto.ACPHeartBeatRequest) (*
 		res.Hbinfo = append(res.Hbinfo, w)
 	}
 
-	res.Hbinfo = append(res.Hbinfo, Myself(pdb.MyInfo()))
+	res.Hbinfo = append(res.Hbinfo, pdb.Myself().(*acproto.ACPHeartBeat))
 
 	return res, nil
 }
@@ -111,7 +111,7 @@ func (*myServer) Servers(ctx context.Context, req *acproto.ACPY2ServerRequest) (
 		addServer(res, w, isUp)
 	}
 
-	addServer(res, Myself(pdb.MyInfo()), true)
+	addServer(res, pdb.Myself().(*acproto.ACPHeartBeat), true)
 
 	return res, nil
 }

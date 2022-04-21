@@ -62,7 +62,7 @@ func SaveServers(file string) error {
 		res = addServerInfo(res, w, isUp)
 	}
 
-	res = addServerInfo(res, Myself(pdb.MyInfo()), true)
+	res = addServerInfo(res, pdb.Myself().(*acproto.ACPHeartBeat), true)
 
 	return info.SaveJson(file, res)
 }

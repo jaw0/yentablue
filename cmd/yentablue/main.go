@@ -48,7 +48,7 @@ var dl = diag.Logger("main")
 var pdb *kibitz.DB
 var sdb *store.SDB
 var rft *raftish.R
-var peerChan = make(chan peerChange, 2)
+var peerChan = make(chan peerChange, 5)
 var shutdown = make(chan bool)
 var sigchan = make(chan os.Signal, 5)
 
@@ -122,12 +122,13 @@ func main() {
 	srv := startServer()
 	go periodicSaveServerInfo(cf.Save_status)
 	go monitor.Run(pdb)
+	as := autoshard.Start(rft, sdb, pdb)
 
 	block()
 
 	dl.Verbose("beginning graceful shutdown")
 
-	autoshard.Stop()
+	as.Stop()
 	srv.Shutdown()
 	pdb.Stop()
 }
@@ -177,7 +178,7 @@ func statsInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 // ################################################################
 // interface with peerdb
 
-func Myself(info *kibitz.PeerInfo) *acproto.ACPHeartBeat {
+func (*pinfo) Myself(info *kibitz.PeerInfo) kibitz.PeerImport {
 
 	cf := config.Cf()
 	var dbl []*acproto.ACPDatabaseInfo
@@ -193,7 +194,7 @@ func Myself(info *kibitz.PeerInfo) *acproto.ACPHeartBeat {
 	load := currentLoad()
 	avail := spaceAvail(cf.Basedir)
 
-	return &acproto.ACPHeartBeat{
+	res := &acproto.ACPHeartBeat{
 		PeerInfo:       info,
 		ProcessId:      int32(os.Getpid()),
 		SortMetric:     load,
@@ -202,6 +203,8 @@ func Myself(info *kibitz.PeerInfo) *acproto.ACPHeartBeat {
 		Uptodate:       sdb.Uptodate,
 		Database:       dbl,
 	}
+
+	return res
 }
 
 func (*pinfo) Update(id string, isup bool, isMySys bool) {
@@ -210,10 +213,16 @@ func (*pinfo) Update(id string, isup bool, isMySys bool) {
 		return
 	}
 
-	peerChan <- peerChange{
+	pc := peerChange{
 		id:       id,
 		isup:     isup,
 		ischange: false,
+	}
+
+	// non-blocking. drop if backlogged
+	select {
+	case peerChan <- pc:
+	default:
 	}
 }
 
@@ -223,11 +232,18 @@ func (*pinfo) Change(id string, isup bool, isMySys bool) {
 		return
 	}
 
-	peerChan <- peerChange{
+	pc := peerChange{
 		id:       id,
 		isup:     isup,
 		ischange: true,
 	}
+
+	// non-blocking. drop if backlogged
+	select {
+	case peerChan <- pc:
+	default:
+	}
+
 }
 
 func peerChanger() {
@@ -251,7 +267,7 @@ func peerChanger() {
 	}
 }
 
-func (x *pinfo) Send(addr string, timeout time.Duration, info *kibitz.PeerInfo) ([]kibitz.PeerImport, error) {
+func (x *pinfo) Send(addr string, timeout time.Duration, myself kibitz.PeerImport) ([]kibitz.PeerImport, error) {
 
 	ac, closer, err := gclient.GrpcClient(&gclient.GrpcConfig{
 		Addr:    []string{addr},
@@ -272,7 +288,7 @@ func (x *pinfo) Send(addr string, timeout time.Duration, info *kibitz.PeerInfo) 
 
 	ctx, _ := context.WithTimeout(context.Background(), timeout)
 	res, err := ac.SendHB(ctx, &acproto.ACPHeartBeatRequest{
-		Myself: Myself(info),
+		Myself: myself.(*acproto.ACPHeartBeat),
 	})
 
 	if err != nil {
