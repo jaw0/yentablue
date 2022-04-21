@@ -32,9 +32,8 @@ import (
 //   servers
 //   get db
 //   put db
-//   shard db on|off|#replicas
+//   shard db on|off|auto|noauto|#replicas
 //
-//   set db param value
 //   status db
 
 // -h addr:port
@@ -103,13 +102,35 @@ func getServers() error {
 
 func showServers() {
 
-	// QQQ - format?
+	fmt.Printf("%s %s %8s %8s %8s %8s %5s %5s %s\n", "  ", "  ", "Sys", "Env", "DC", "Rack", "CPU", "Avail", "Id")
+
 	for _, s := range sinfo {
-		fmt.Printf("%+v\n", s)
+		//fmt.Printf("%+v\n", s)
+		updn := "dn"
+		dc := "-"
+		rk := "-"
+		utd := ".."
+
+		if s.IsUp {
+			updn = "up"
+		}
+		if s.Uptodate {
+			utd = "ok"
+		}
+		if s.Datacenter != "" {
+			dc = s.Datacenter
+		}
+		if s.Rack != "" {
+			rk = s.Rack
+		}
+
+		// Hostname, TimeLastUp, TimeUpSince
+		fmt.Printf("%s %s %8s %8s %8s %8s %5d %5d %s\n",
+			updn, utd, s.Subsystem, s.Environment, dc, rk, s.CpuMetric, s.CapacityMetric, s.Id)
 	}
 }
 
-func getConf(db string) ([]byte, error) {
+func getConf(db string) ([]byte, uint64, error) {
 
 	res, err := ac.Get(&gclient.Datum{
 		Map: "_conf",
@@ -121,10 +142,10 @@ func getConf(db string) ([]byte, error) {
 	}
 
 	if len(res.Value) < 1 {
-		return nil, nil
+		return nil, 0, nil
 	}
 
-	return res.Value, nil
+	return res.Value, res.Version, nil
 }
 
 //	if len(r.Value) == 0 {
@@ -133,13 +154,14 @@ func getConf(db string) ([]byte, error) {
 //
 //	return config.FromBytes(r.Value)
 
-func setConf(db string, cf []byte) {
+func setConf(db string, ver uint64, cf []byte) {
 
 	res, err := ac.Put(&gclient.Datum{
-		Map:     "_conf",
-		Key:     db + ".cf",
-		Version: soty.Now(),
-		Value:   cf,
+		Map:       "_conf",
+		Key:       db + ".cf",
+		Version:   soty.Now(),
+		IfVersion: ver,
+		Value:     cf,
 	})
 
 	if err != nil {
@@ -158,7 +180,7 @@ func cmdGet(args []string) {
 		dl.Fatal("get database")
 	}
 
-	cf, err := getConf(args[1])
+	cf, _, err := getConf(args[1])
 	if err != nil {
 		dl.Fatal("could not read cf: %v")
 	}
@@ -179,7 +201,7 @@ func cmdPut(args []string) {
 		dl.Fatal("could not read cf: %v", err)
 	}
 
-	setConf(args[1], cf)
+	setConf(args[1], 0, cf)
 
 }
 
@@ -209,25 +231,25 @@ func emptyCf() []byte {
 
 //################################################################
 
-func getDBConf(dbname string) (*ringcf.Ring, error) {
+func getDBConf(dbname string) (*ringcf.Ring, uint64, error) {
 
-	dbcf, err := getConf(dbname)
+	dbcf, ver, err := getConf(dbname)
 	if err != nil {
 		dl.Fatal("error: %v", err)
 	}
 
 	if dbcf == nil {
-		return &ringcf.Ring{}, nil
+		return &ringcf.Ring{}, 0, nil
 	}
 	rcf, err := ringcf.FromBytes(dbcf)
 	if err != nil {
 		dl.Fatal("error: %v", err)
 	}
 
-	return rcf, nil
+	return rcf, ver, nil
 }
 
-func putDBConf(dbname string, rcf *ringcf.Ring) error {
+func putDBConf(dbname string, rcf *ringcf.Ring, ver uint64) error {
 	if dryRun {
 		return nil
 	}
@@ -238,7 +260,7 @@ func putDBConf(dbname string, rcf *ringcf.Ring) error {
 		dl.Fatal("%v", err)
 	}
 
-	setConf(dbname, buf)
+	setConf(dbname, ver, buf)
 
 	return nil
 }
@@ -252,7 +274,7 @@ func cmdShard(args []string) {
 	}
 
 	dbname := args[1]
-	rcf, err := getDBConf(dbname)
+	rcf, rcver, err := getDBConf(dbname)
 
 	if err != nil {
 		// RSN - usage
@@ -261,10 +283,7 @@ func cmdShard(args []string) {
 
 	if len(args) == 2 {
 		// display config
-		fmt.Printf("%#v\n", rcf)
-		// and curr status
-		res, _ := ac.GetRingConf(dbname, "*")
-		fmt.Printf("%#v\n", res)
+		showRingConf(dbname, rcf, rcver)
 		return
 	}
 
@@ -276,13 +295,28 @@ func cmdShard(args []string) {
 		dl.Verbose("disabling sharding for '%s'", dbname)
 		rcf.Replicas = 0
 		rcf.Parts = nil
-		putDBConf(dbname, rcf)
+		rcf.AutoShard = false
+		putDBConf(dbname, rcf, rcver)
+		return
+	}
+
+	if args[2] == "auto" {
+		if rcf.Replicas == 0 {
+			rcf.Replicas = 2
+		}
+		rcf.AutoShard = true
+		putDBConf(dbname, rcf, rcver)
+		return
+	}
+	if args[2] == "noauto" {
+		rcf.AutoShard = false
+		putDBConf(dbname, rcf, rcver)
 		return
 	}
 
 	if args[2] == "on" {
 		if rcf.Replicas == 0 {
-			rcf.Replicas = 1
+			rcf.Replicas = 2
 		}
 	} else {
 		n, _ := strconv.Atoi(args[2])
@@ -299,7 +333,7 @@ func cmdShard(args []string) {
 	}
 
 	dl.Verbose("> %#v", rcf)
-	putDBConf(dbname, rcf)
+	putDBConf(dbname, rcf, rcver)
 }
 
 func updateRing(dbname string, rcf *ringcf.Ring) error {
@@ -403,4 +437,35 @@ func serversOnRing(rcf *ringcf.Ring) map[string]*ringcf.Part {
 	}
 
 	return res
+}
+
+func showRingConf(dbname string, rcf *ringcf.Ring, rcver uint64) {
+
+	res, _ := ac.GetRingConf(dbname, "*")
+
+	ff := "    %-10s: %v\n"
+
+	fmt.Printf("%s\n", dbname)
+	fmt.Printf(ff, "replicas", rcf.Replicas)
+	fmt.Printf(ff, "ringbits", rcf.RingBits)
+	fmt.Printf(ff, "autoshard", rcf.AutoShard)
+	fmt.Printf(ff, "version", res.Vers)
+
+	if rcver != res.Vers {
+		fmt.Printf(ff, "pending", rcver)
+	}
+	if rcf.Replicas > 0 {
+		if res.Stable {
+			fmt.Printf(ff, "partitions", "stable")
+		} else {
+			fmt.Printf(ff, "partitions", "repartitioning")
+		}
+	}
+
+	for _, p := range rcf.Parts {
+		fmt.Printf("      %-40s %v\n", p.Server, p.Shard)
+	}
+
+	//fmt.Printf("%#v\n", rcf)
+	//fmt.Printf("%#v\n", res)
 }
