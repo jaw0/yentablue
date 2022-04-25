@@ -20,6 +20,12 @@ func (p *P) configure() {
 
 }
 
+type ConstrCf struct {
+	MyId   string
+	MyDC   string
+	MyRack string
+}
+
 func (p *P) maybeReconfigure() {
 
 	cftxt, cfver, cfok := p.getConfig()
@@ -57,7 +63,8 @@ func (p *P) maybeReconfigure() {
 	var newparts []*Part
 
 	if cf.Replicas > 0 && len(cf.Parts) > 0 {
-		newparts = p.configureParts(cf)
+		pcf := &ConstrCf{p.myid, p.mydc, p.myrack}
+		newparts = pcf.ConfigureParts(cf)
 	}
 
 	// make sure repartitioner finished
@@ -81,14 +88,14 @@ func (p *P) maybeReconfigure() {
 	dl.Verbose("database %s reconfigured", p.name)
 }
 
-func (p *P) configureParts(cf *config.Ring) []*Part {
+func (p *ConstrCf) ConfigureParts(cf *config.Ring) []*Part {
 
 	slots := 1 << uint(cf.RingBits)
 	newparts := make([]*Part, slots)
 	dcsrv := make(map[string]map[string]bool)
 
 	for i := 0; i < slots; i++ {
-		newparts[i] = newPart(p.mydc)
+		newparts[i] = newPart(p.MyDC)
 	}
 	// add the shards as sonfigured
 	for _, cfp := range cf.Parts {
@@ -106,8 +113,8 @@ func (p *P) configureParts(cf *config.Ring) []*Part {
 	// add replicas
 	start := 0
 	for pi, pt := range newparts {
-		for di, dc := range pt.dc {
-			if !dc.isBoundary {
+		for di, dc := range pt.DC {
+			if !dc.IsBoundary {
 				continue
 			}
 
@@ -126,13 +133,13 @@ func (p *P) configureParts(cf *config.Ring) []*Part {
 	return newparts
 }
 
-func (p *P) addReplicas(parts []*Part, replicas int, pn int, start int, dn int, tryrack bool, spare bool) int {
+func (p *ConstrCf) addReplicas(parts []*Part, replicas int, pn int, start int, dn int, tryrack bool, spare bool) int {
 
 	pt := parts[pn]
-	dc := pt.dc[dn]
+	dc := pt.DC[dn]
 
 	// have enough servers?
-	if len(dc.servers) >= replicas {
+	if len(dc.Servers) >= replicas {
 		return start
 	}
 
@@ -140,24 +147,24 @@ func (p *P) addReplicas(parts []*Part, replicas int, pn int, start int, dn int, 
 	size := len(parts)
 	for i := 0; i < size; i++ {
 		pos := (start + i + 1) % size
-		tdc := parts[pos].dc[dn]
-		if !tdc.isBoundary {
+		tdc := parts[pos].DC[dn]
+		if !tdc.IsBoundary {
 			continue
 		}
-		server := tdc.servers[0]
+		server := tdc.Servers[0]
 		rack := tdc.rack[server]
 		// can we use this server?
 		if !replicaIsCompatHere(server, rack, dc, tryrack) {
 			continue
 		}
 		dl.Debug("slot %x + %s %v", pn, server, spare)
-		pt.add(server, dc.dcname)
+		pt.add(server, dc.DCName)
 		dc.rack[server] = rack
 
-		if server == p.myid && !spare {
-			pt.isLocal = true
+		if server == p.MyDC && !spare {
+			pt.IsLocal = true
 		}
-		if len(dc.servers) >= replicas {
+		if len(dc.Servers) >= replicas {
 			return pos
 		}
 	}
@@ -166,7 +173,7 @@ func (p *P) addReplicas(parts []*Part, replicas int, pn int, start int, dn int, 
 
 func replicaIsCompatHere(server string, rack string, dc *DCPart, tryrack bool) bool {
 
-	for _, s := range dc.servers {
+	for _, s := range dc.Servers {
 		if s == server {
 			return false
 		}
@@ -182,8 +189,8 @@ func interpolateParts(parts []*Part) {
 	size := len(parts)
 
 	for i, p := range parts {
-		for dn, dc := range p.dc {
-			if dc.isBoundary {
+		for dn, dc := range p.DC {
+			if dc.IsBoundary {
 				continue
 			}
 
@@ -191,17 +198,17 @@ func interpolateParts(parts []*Part) {
 			for j := 0; j < size; j++ {
 				lp := parts[(i-j+size)%size]
 
-				ldc := lp.dc[dn]
-				if len(ldc.servers) == 0 {
+				ldc := lp.DC[dn]
+				if len(ldc.Servers) == 0 {
 					continue
 				}
 
-				for _, server := range ldc.servers {
-					p.add(server, ldc.dcname)
+				for _, server := range ldc.Servers {
+					p.add(server, ldc.DCName)
 				}
 				// copy
 				dc.rack = ldc.rack
-				p.isLocal = lp.isLocal
+				p.IsLocal = lp.IsLocal
 				break
 			}
 		}
@@ -210,7 +217,7 @@ func interpolateParts(parts []*Part) {
 
 func newDC(dc string) *DCPart {
 	return &DCPart{
-		dcname: dc,
+		DCName: dc,
 		rack:   make(map[string]string),
 	}
 }
@@ -224,18 +231,18 @@ func newPart(dc string) *Part {
 	return p
 }
 
-func (p *P) partInsert(parts []*Part, bits int, server string, dc string, rack string, shard uint32) {
+func (p *ConstrCf) partInsert(parts []*Part, bits int, server string, dc string, rack string, shard uint32) {
 
-	slot := partShard2Idx(bits, shard)
+	slot := PartShard2Idx(bits, shard)
 	pt := parts[slot]
 
-	if server == p.myid {
-		pt.isLocal = true
+	if server == p.MyId {
+		pt.IsLocal = true
 	}
 
 	dcp := pt.add(server, dc)
 	dcp.rack[server] = rack
-	dcp.isBoundary = true
+	dcp.IsBoundary = true
 }
 
 func (p *P) getConfig() ([]byte, uint64, bool) {

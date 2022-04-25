@@ -127,13 +127,13 @@ func removeFrom(list []string, id string) []string {
 func (p *Part) addDC(dc string) *DCPart {
 	i, ok := p.dcid[dc]
 	if ok {
-		return p.dc[i]
+		return p.DC[i]
 	}
 
-	i = len(p.dc)
-	p.dc = append(p.dc, newDC(dc))
+	i = len(p.DC)
+	p.DC = append(p.DC, newDC(dc))
 	p.dcid[dc] = i
-	return p.dc[i]
+	return p.DC[i]
 }
 
 func (p *Part) add(id string, dc string) *DCPart {
@@ -141,26 +141,26 @@ func (p *Part) add(id string, dc string) *DCPart {
 	i, ok := p.dcidx[id]
 	if ok {
 		// already got it
-		return p.dc[i]
+		return p.DC[i]
 	}
 
 	i, ok = p.dcid[dc]
 	if ok {
 		// add server to dc
 		p.dcidx[id] = i
-		p.dc[i].servers = append(p.dc[i].servers, id)
-		return p.dc[i]
+		p.DC[i].Servers = append(p.DC[i].Servers, id)
+		return p.DC[i]
 	}
 
 	// add new dc
-	i = len(p.dc)
+	i = len(p.DC)
 
-	p.dc = append(p.dc, newDC(dc))
-	p.dc[i].servers = []string{id}
+	p.DC = append(p.DC, newDC(dc))
+	p.DC[i].Servers = []string{id}
 
 	p.dcidx[id] = i
 	p.dcid[dc] = i
-	return p.dc[i]
+	return p.DC[i]
 }
 
 func (p *Part) remove(id string) {
@@ -171,7 +171,7 @@ func (p *Part) remove(id string) {
 		return
 	}
 
-	p.dc[i].servers = removeFrom(p.dc[i].servers, id)
+	p.DC[i].Servers = removeFrom(p.DC[i].Servers, id)
 	// QQQ - remove dc if empty?
 }
 
@@ -205,8 +205,8 @@ func (p *P) forCompatPeers(loc *soty.Loc, fnc func(string, bool) bool) {
 		nrepl = p.replicas
 	}
 
-	for _, dc := range part.dc {
-		for sn, server := range dc.servers {
+	for _, dc := range part.DC {
+		for sn, server := range dc.Servers {
 			isAlt := false
 			if nrepl != 0 && sn >= nrepl {
 				// normally, will not have the data
@@ -235,12 +235,12 @@ func (p *P) forCompatPeersInDC(loc *soty.Loc, dcidx int, fnc func(string, bool))
 		nrepl = p.replicas
 	}
 
-	if dcidx >= len(part.dc) {
+	if dcidx >= len(part.DC) {
 		return
 	}
 
-	dc := part.dc[dcidx]
-	for sn, server := range dc.servers {
+	dc := part.DC[dcidx]
+	for sn, server := range dc.Servers {
 		isAlt := false
 		if nrepl != 0 && sn >= nrepl {
 			// normally, will not have the data

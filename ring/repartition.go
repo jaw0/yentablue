@@ -52,7 +52,7 @@ func (p *P) repartition(chk *checkpoint) bool {
 		return true
 	}
 
-	newLoc := p.GetLoc(partTreeID2Shard(p.ringbits, chk.chktree))
+	newLoc := p.GetLoc(PartTreeID2Shard(p.ringbits, chk.chktree))
 
 	if chk.chktree == newLoc.TreeID && newLoc.IsLocal {
 		// these keys belong here, no need to analyze
@@ -62,9 +62,9 @@ func (p *P) repartition(chk *checkpoint) bool {
 		dl.Debug("repart local/ok %x", newLoc.TreeID)
 	} else {
 		chkLoc := &soty.Loc{
-			Shard:   partTreeID2Shard(chk.ringbits, chk.chktree),
+			Shard:   PartTreeID2Shard(chk.ringbits, chk.chktree),
 			TreeID:  chk.chktree,
-			PartIdx: partTreeID2Idx(chk.ringbits, chk.chktree),
+			PartIdx: PartTreeID2Idx(chk.ringbits, chk.chktree),
 		}
 
 		dl.Debug("repart %x -> %x", chk.chktree, newLoc.TreeID)

@@ -30,7 +30,12 @@ func TestConstruct(t *testing.T) {
 		all:    newPart("dc1"),
 	}
 
-	np := p.configureParts(cf)
+	pcf := &cfCf{
+		myid:   "s1",
+		mydc:   "dc1",
+		myrack: "r1",
+	}
+	np := pcf.configureParts(cf)
 
 	for pi, pt := range np {
 		fmt.Printf("Part %x\t%v\t", pi, pt.isLocal)

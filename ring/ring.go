@@ -16,18 +16,18 @@ import (
 )
 
 type DCPart struct {
-	dcname     string
-	servers    []string
+	DCName     string
+	Servers    []string
+	IsBoundary bool
 	rack       map[string]string // only used for configuring
-	isBoundary bool
 }
 
 type Part struct {
-	dc        []*DCPart      // [0] is the local dc
+	DC        []*DCPart      // [0] is the local dc
 	dcidx     map[string]int // which dc[i] is this server in?
 	dcid      map[string]int // dcname -> dcpart idx
-	isLocal   bool
-	stableVer uint64
+	IsLocal   bool
+	StableVer uint64
 }
 
 type P struct {
@@ -116,12 +116,12 @@ func (p *P) GetLoc(shard uint32) *soty.Loc {
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
-	id := partShard2TreeID(p.ringbits, shard)
-	idx := partShard2Idx(p.ringbits, shard)
+	id := PartShard2TreeID(p.ringbits, shard)
+	idx := PartShard2Idx(p.ringbits, shard)
 	isl := true
 
 	if len(p.part) != 0 {
-		isl = p.part[idx].isLocal
+		isl = p.part[idx].IsLocal
 	}
 
 	return &soty.Loc{
@@ -141,10 +141,10 @@ func (p *P) GetLocN(partidx int) *soty.Loc {
 		x := p.part[partidx]
 
 		return &soty.Loc{
-			Shard:   partIdx2Shard(p.ringbits, partidx),
-			TreeID:  partIdx2TreeID(p.ringbits, partidx),
+			Shard:   PartIdx2Shard(p.ringbits, partidx),
+			TreeID:  PartIdx2TreeID(p.ringbits, partidx),
 			PartIdx: partidx,
-			IsLocal: x.isLocal,
+			IsLocal: x.IsLocal,
 		}
 	}
 	return &soty.Loc{
@@ -180,7 +180,7 @@ func (p *P) NumDC(loc *soty.Loc) int {
 	defer p.lock.RUnlock()
 
 	if len(p.part) == 0 {
-		return len(p.all.dc)
+		return len(p.all.DC)
 	}
 
 	if loc.PartIdx >= len(p.part) {
@@ -189,7 +189,7 @@ func (p *P) NumDC(loc *soty.Loc) int {
 
 	part := p.part[loc.PartIdx]
 
-	return len(part.dc)
+	return len(part.DC)
 
 }
 
@@ -223,28 +223,36 @@ func (p *P) GetConf(dcreq string) *acproto.ACPY2RingConfReply {
 	}
 
 	for pidx, pt := range p.part {
-		for dcidx, dc := range pt.dc {
+		for dcidx, dc := range pt.DC {
 			if dcreq != "*" {
 				if dcidx != 0 && dcreq != "" {
 					continue
 				}
-				if dcreq != "" && dcreq != dc.dcname {
+				if dcreq != "" && dcreq != dc.DCName {
 					continue
 				}
 			}
 
-			if !dc.isBoundary {
+			if !dc.IsBoundary {
 				continue
 			}
 
-			sh := partIdx2Shard(p.ringbits, pidx)
+			sh := PartIdx2Shard(p.ringbits, pidx)
 
-			res.Part = append(res.Part, &acproto.ACPY2RingPart{Shard: sh, Server: dc.servers})
+			res.Part = append(res.Part, &acproto.ACPY2RingPart{Shard: sh, Server: dc.Servers})
 
 		}
 	}
 
 	return res
+}
+
+func (p *Part) DCpart(dcname string) *DCPart {
+	n, ok := p.dcid[dcname]
+	if ok {
+		return p.DC[n]
+	}
+	return nil
 }
 
 // ##############################################################
