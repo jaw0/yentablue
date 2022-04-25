@@ -13,6 +13,8 @@ message ACPRaftish {
 message ACPDatabaseInfo {
         string          name            = 1;
         ACPRaftish      raft            = 2;
+        int32           space_total     = 3;
+        int32           space_avail     = 4;
         // RSN - more info
 }
 

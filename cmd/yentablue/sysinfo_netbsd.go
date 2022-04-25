@@ -17,7 +17,15 @@ func spaceAvail(dir string) int32 {
 	// has statvfs instead of statfs
 	var st unix.Statvfs_t
 	unix.Statvfs(dir, &st)
-	return int32(st.Bavail * st.Bsize / 1000000) // MB avail
+	return int32(st.Bavail * st.Frsize / 1000000) // MB avail
+}
+
+func spaceTotal(dir string) int32 {
+
+	// has statvfs instead of statfs
+	var st unix.Statvfs_t
+	unix.Statvfs(dir, &st)
+	return int32(st.Blocks * st.Frsize / 1000000) // MB total
 }
 
 func currentLoad() int32 {

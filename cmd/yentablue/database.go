@@ -93,6 +93,7 @@ func openBE(cf *config.DBConf, dir string) database.BackEnder {
 	} else {
 		file = dir + "/" + cf.Pathname
 	}
+	cf.FullPathName = file
 
 	switch cf.Backend {
 	case "sqlite":

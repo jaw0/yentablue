@@ -16,12 +16,13 @@ import (
 )
 
 type DBConf struct {
-	Name      string
-	Pathname  string
-	Backend   string
-	Secret    string
-	Expire    int `convert:"duration"`
-	CacheSize int
+	Name         string
+	Pathname     string
+	Backend      string
+	Secret       string
+	Expire       int `convert:"duration"`
+	CacheSize    int
+	FullPathName string
 }
 
 // proto:

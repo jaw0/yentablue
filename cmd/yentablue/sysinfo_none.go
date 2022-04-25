@@ -13,6 +13,10 @@ func spaceAvail(dir string) int32 {
 
 	return 0
 }
+func spaceTotal(dir string) int32 {
+
+	return 0
+}
 
 func currentLoad() int32 {
 

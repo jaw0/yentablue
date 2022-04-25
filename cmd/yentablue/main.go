@@ -184,9 +184,14 @@ func (*pinfo) Myself(info *kibitz.PeerInfo) kibitz.PeerImport {
 	var dbl []*acproto.ACPDatabaseInfo
 
 	for _, c := range cf.Database {
+		dbSpace := spaceTotal(c.FullPathName)
+		dbAvail := spaceAvail(c.FullPathName)
+
 		dbl = append(dbl, &acproto.ACPDatabaseInfo{
-			Name: c.Name,
-			Raft: rft.RaftInfo(c.Name),
+			Name:       c.Name,
+			Raft:       rft.RaftInfo(c.Name),
+			SpaceTotal: dbSpace,
+			SpaceAvail: dbAvail,
 		})
 		// RSN - more info per database
 	}
