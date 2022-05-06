@@ -19,10 +19,10 @@ func TestConvert(t *testing.T) {
 
 func checkCvt(t *testing.T, bits int, shard uint32, treeid uint16, partidx int) {
 
-	checkRes(t, partShard2TreeID(bits, shard) == treeid)
-	checkRes(t, partShard2Idx(bits, shard) == partidx)
-	checkRes(t, partTreeID2Idx(bits, treeid) == partidx)
-	checkRes(t, partIdx2TreeID(bits, partidx) == treeid)
+	checkRes(t, PartShard2TreeID(bits, shard) == treeid)
+	checkRes(t, PartShard2Idx(bits, shard) == partidx)
+	checkRes(t, PartTreeID2Idx(bits, treeid) == partidx)
+	checkRes(t, PartIdx2TreeID(bits, partidx) == treeid)
 }
 
 func checkRes(t *testing.T, ok bool) {

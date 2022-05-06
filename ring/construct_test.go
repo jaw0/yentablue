@@ -30,19 +30,19 @@ func TestConstruct(t *testing.T) {
 		all:    newPart("dc1"),
 	}
 
-	pcf := &cfCf{
-		myid:   "s1",
-		mydc:   "dc1",
-		myrack: "r1",
+	pcf := &ConstrCf{
+		MyId:   "s1",
+		MyDC:   "dc1",
+		MyRack: "r1",
 	}
-	np := pcf.configureParts(cf)
+	np := pcf.ConfigureParts(cf)
 
 	for pi, pt := range np {
-		fmt.Printf("Part %x\t%v\t", pi, pt.isLocal)
+		fmt.Printf("Part %x\t%v\t", pi, pt.IsLocal)
 
-		for _, dc := range pt.dc {
+		for _, dc := range pt.DC {
 			//fmt.Printf("  DC %s\t%v\n", dc.dcname, dc.isBoundary)
-			fmt.Printf("    %v\n", dc.servers)
+			fmt.Printf("    %v\n", dc.Servers)
 			dc = dc
 		}
 
