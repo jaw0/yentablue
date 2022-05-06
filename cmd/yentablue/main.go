@@ -274,6 +274,8 @@ func peerChanger() {
 
 func (x *pinfo) Send(addr string, timeout time.Duration, myself kibitz.PeerImport) ([]kibitz.PeerImport, error) {
 
+	t0 := time.Now()
+
 	ac, closer, err := gclient.GrpcClient(&gclient.GrpcConfig{
 		Addr:    []string{addr},
 		Timeout: timeout,
@@ -284,25 +286,29 @@ func (x *pinfo) Send(addr string, timeout time.Duration, myself kibitz.PeerImpor
 		dl.Debug(" => down err %v", err)
 		return nil, err
 	}
-
-	if ac == nil {
-		dl.Verbose("wtf")
-	}
-
 	defer closer()
 
-	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	if ac == nil {
+		dl.Debug("unable to connect")
+		return nil, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
 	res, err := ac.SendHB(ctx, &acproto.ACPHeartBeatRequest{
 		Myself: myself.(*acproto.ACPHeartBeat),
 	})
 
+	td := time.Now().Sub(t0)
+
 	if err != nil {
-		dl.Debug(" => down err %v", err)
+		dl.Problem(" => down err %v", err)
 		return nil, err
 	}
 
 	if res.GetStatusCode() != 200 {
-		dl.Debug(" => down code %d", res.GetStatusCode)
+		dl.Debug(" => down code %d; %s; %#v, %s", res.GetStatusCode(), addr, ctx.Err(), td)
 		return nil, fmt.Errorf("status %d", res.GetStatusCode())
 	}
 
