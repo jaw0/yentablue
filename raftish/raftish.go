@@ -94,6 +94,7 @@ func (r *R) PeerUpdate(id string, isup bool, hb *acproto.ACPHeartBeat) {
 		if isup {
 			dbr.vote(id, r.myId, db.Name, ballot)
 		} else {
+			dl.Debug("raftish down: %#v", hb.GetPeerInfo())
 			dbr.down(id, r.myId, db.Name, ballot)
 		}
 	}
@@ -220,7 +221,7 @@ func (dbr *dbR) election(myid, dbname string) {
 				candidBallot.cast(ps.leader)
 			}
 		} else {
-			dl.Debug("%x < %x", ps.termStart, dbr.termStart)
+			dl.Debug("%x < %x : %#v", ps.termStart, dbr.termStart, ps)
 		}
 
 		if ps.termStart > maxTerm {
@@ -241,6 +242,7 @@ func (dbr *dbR) election(myid, dbname string) {
 	if nVotes*2 > numTotal && numTotal > 1 {
 		dbr.newLeader(winner, maxTerm, dbname)
 		if winner != "" {
+			dl.Debug("winner: %s %s %d %d", dbname, dbr.leader, maxTerm, dbr.termStart)
 			return
 		}
 	}
@@ -252,13 +254,14 @@ func (dbr *dbR) election(myid, dbname string) {
 	if nVotes*2 > numTotal && numTotal > 1 {
 		dbr.newLeader(best, maxTerm, dbname)
 		if best != "" {
+			dl.Debug("winner: %s %s %x %x", dbname, dbr.leader, maxTerm, dbr.termStart)
 			return
 		}
 	}
 
 	dbr.termStart = maxTerm
 	dbr.voteFor = best
-	dl.Debug("voting for %s", best)
+	dl.Debug("voting for %s %x", best, maxTerm)
 }
 
 func (dbr *dbR) newLeader(leader string, maxTerm lamport.Time, dbname string) {
