@@ -33,7 +33,8 @@ func (mon *monDat) monitor_yb() {
 	}
 
 	ac := client.RPC()
-	ctx, _ := context.WithTimeout(context.Background(), TIMEOUT)
+	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
+	defer cancel()
 	res, err := ac.SendHB(ctx, &acproto.ACPHeartBeatRequest{})
 
 	if err != nil {
