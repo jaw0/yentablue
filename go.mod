@@ -9,7 +9,7 @@ require (
 	github.com/golang/snappy v0.0.4
 	github.com/hashicorp/golang-lru v0.5.4
 	github.com/jaw0/acgo v0.0.0-20200108170510-4e35a23083f1
-	github.com/jaw0/kibitz v0.0.0-20220421161031-1cfc1d30fcba
+	github.com/jaw0/kibitz v0.0.0-20220506173908-b71ab6a774bf
 	github.com/jaw0/streaminginsight v0.0.0-20190418231949-ebb6adc61503
 	github.com/mackerelio/go-osstat v0.2.2
 	github.com/mattn/go-sqlite3 v1.14.12
