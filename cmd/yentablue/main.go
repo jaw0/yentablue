@@ -303,7 +303,7 @@ func (x *pinfo) Send(addr string, timeout time.Duration, myself kibitz.PeerImpor
 	td := time.Now().Sub(t0)
 
 	if err != nil {
-		dl.Problem(" => down err %v", err)
+		dl.Debug(" => down err %v", err)
 		return nil, err
 	}
 
