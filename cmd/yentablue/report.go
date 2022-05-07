@@ -6,8 +6,10 @@
 package main
 
 import (
+	"expvar"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/jaw0/kibitz"
 )
@@ -16,8 +18,7 @@ import (
 func init() {
 	http.HandleFunc("/status", wwwStatus)
 	http.HandleFunc("/servers", wwwServers)
-	http.HandleFunc("/loadave", wwwLoadAve)
-	http.HandleFunc("/netreqs", wwwNetReqs)
+	http.HandleFunc("/var/", wwwVar)
 }
 
 // for your monitoring system to check
@@ -25,13 +26,9 @@ func wwwStatus(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "status: OK\n")
 }
 
-func wwwLoadAve(w http.ResponseWriter, r *http.Request) {
-	l := &load{}
-	fmt.Fprintf(w, "loadave: %s\n", l)
-}
-
-func wwwNetReqs(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "netreqs: %s\n", requests)
+func wwwVar(w http.ResponseWriter, r *http.Request) {
+	v := strings.TrimPrefix(r.URL.Path, "/var/")
+	fmt.Fprintf(w, "%s: %s\n", v, expvar.Get(v))
 }
 
 // ################################################################
