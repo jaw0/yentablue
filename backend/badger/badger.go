@@ -62,8 +62,8 @@ func (be *Be) Get(sub string, key string) ([]byte, bool, error) {
 	}
 
 	var val []byte
-	err = item.Value(func(val []byte) error {
-		val = append([]byte{}, val...)
+	err = item.Value(func(v []byte) error {
+		val = append(val, v...)
 		return nil
 	})
 
