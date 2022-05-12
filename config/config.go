@@ -72,22 +72,22 @@ var dl = diag.Logger("config")
 
 func Init(file string) {
 
-	err := read_config(file)
+	err := readConfig(file)
 	if err != nil {
 		dl.Fatal("%s", err)
 	}
 
-	go manage_config(file)
+	go manageConfig(file)
 
 }
 
 // continually check + reread config in background
-func manage_config(file string) {
+func manageConfig(file string) {
 
 	var lastmod = time.Now()
 
 	for {
-		mt, err := read_config_if_newer(file, lastmod)
+		mt, err := readConfigIfNewer(file, lastmod)
 
 		if err != nil {
 			dl.Verbose("cannot stat %s: %v", file, err)
@@ -100,14 +100,14 @@ func manage_config(file string) {
 
 }
 
-func read_config_if_newer(file string, modtime time.Time) (time.Time, error) {
+func readConfigIfNewer(file string, modtime time.Time) (time.Time, error) {
 	s, err := os.Stat(file)
 	if err != nil {
 		return time.Time{}, err
 	}
 	if s.ModTime().After(modtime) {
 		dl.Verbose("config changed. reloading")
-		err = read_config(file)
+		err = readConfig(file)
 		return s.ModTime(), err
 	}
 
@@ -121,7 +121,7 @@ func Cf() *Config {
 	return r
 }
 
-func read_config(file string) error {
+func readConfig(file string) error {
 
 	newcf := &Config{
 		Seedpeer: make([]string, 0),
