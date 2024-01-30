@@ -21,8 +21,8 @@ import (
 	//"google.golang.org/grpc/grpclog"
 	gpeer "google.golang.org/grpc/peer"
 
-	"github.com/jaw0/acgo/daemon"
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
+	"github.com/jaw0/go-daemon"
 	"github.com/jaw0/kibitz"
 
 	"github.com/jaw0/yentablue/autoshard"
@@ -88,7 +88,6 @@ func main() {
 
 	// grpclog.SetLogger(&peerdb.Stfu{})
 	runtime.GOMAXPROCS(128)
-	diag.Init("yentablue")
 	config.Init(configfile)
 	dl.Verbose("starting...")
 

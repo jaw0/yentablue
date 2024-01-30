@@ -17,7 +17,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 
 	"github.com/jaw0/yentablue/gclient"
 	"github.com/jaw0/yentablue/info"

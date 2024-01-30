@@ -138,9 +138,15 @@ github.com/iris-contrib/blackfriday v2.0.0+incompatible/go.mod h1:UzZ2bDEoaSGPbk
 github.com/iris-contrib/go.uuid v2.0.0+incompatible/go.mod h1:iz2lgM/1UnEf1kP0L/+fafWORmlnuysV2EMP8MW+qe0=
 github.com/iris-contrib/i18n v0.0.0-20171121225848-987a633949d0/go.mod h1:pMCz62A0xJL6I+umB2YTlFRwWXaDFA0jy+5HzGiJjqI=
 github.com/iris-contrib/schema v0.0.1/go.mod h1:urYA3uvUNG1TIIjOSCzHr9/LmbQo8LrOcOqfqxa4hXw=
+github.com/jaw0/acconfig v0.0.0-20240128000518-3cdcf8a3b5e8 h1:2WTHfU2ebfUgepMBodxrQmSvj1apogIfB46kgYMHPxQ=
+github.com/jaw0/acconfig v0.0.0-20240128000518-3cdcf8a3b5e8/go.mod h1:1A+5Dhi5GWESD7nEvOo61dNkjUBD5cAIq+FDySKvWVo=
+github.com/jaw0/acdiag v0.0.0-20240130233029-909cb48df08b h1:a/DO7fPlfvPDDKjBCLt6beP8JlymNZhTXpJbkELGgh8=
+github.com/jaw0/acdiag v0.0.0-20240130233029-909cb48df08b/go.mod h1:YDv3l4NBJM8F3hRN4PRkfqUu5xh6qcOYkAHk2xoVBu4=
 github.com/jaw0/acgo v0.0.0-20200108170510-4e35a23083f1 h1:sS3NpTOPDflwrhpb+gDkVxU0kOaD00hccjvRCZHNV5A=
 github.com/jaw0/acgo v0.0.0-20200108170510-4e35a23083f1/go.mod h1:LMNUdCsYvGGFv1l/ACcxbcwM4w5Ghck/8Cp/sksPJlk=
 github.com/jaw0/enginz v0.0.0-20220407205441-3bd26b329f1a/go.mod h1:NwXMQSJgSx3uCFSAytPiZI5EPqH5qMD4aI+5LuSSXHY=
+github.com/jaw0/go-daemon v0.0.0-20240130233342-2b87370ebf19 h1:yq9UIVdC7kf6+WdLDqQnAJRlKSSaTJW/KFgR6bAUwxY=
+github.com/jaw0/go-daemon v0.0.0-20240130233342-2b87370ebf19/go.mod h1:GcRLS/6maW6i7Le0cipzKZgq/FLxQ8SjunxR7hJ7XBo=
 github.com/jaw0/kibitz v0.0.0-20220412180821-e96ce84159dd h1:XVyXcv+A/2aptjS57AupICKT8pErfdP+U9Ff0LvRGdY=
 github.com/jaw0/kibitz v0.0.0-20220412180821-e96ce84159dd/go.mod h1:tbf0xG2reGfFBmU0VKzJpFlkM27vV34MDEOU2m1ac2s=
 github.com/jaw0/kibitz v0.0.0-20220421161031-1cfc1d30fcba h1:gVc9iIEUyYLv1z1vVr51pPHCS+b3pQJmzcLaVfvipDs=

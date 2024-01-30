@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jaw0/acgo/accfg"
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acconfig"
+	"github.com/jaw0/acdiag"
 )
 
 type DBConf struct {
@@ -20,7 +20,7 @@ type DBConf struct {
 	Pathname     string
 	Backend      string
 	Secret       string
-	Expire       int `convert:"duration"`
+	Expire       int `ac/convert:"duration"`
 	CacheSize    int
 	FullPathName string
 }
@@ -34,7 +34,7 @@ type DBConf struct {
 type Monitor struct {
 	Protocol    string // ac, yb, http, [...]
 	System      string
-	Environment string `name:"env"`
+	Environment string `ac/name:"env"`
 	Datacenter  string
 	Rack        string
 	Id          string
@@ -45,7 +45,7 @@ type Monitor struct {
 }
 
 type Config struct {
-	Environment    string `name:"env"`
+	Environment    string `ac/name:"env"`
 	Datacenter     string
 	Rack           string
 	Error_mailto   string
@@ -59,8 +59,8 @@ type Config struct {
 	Net_threads    int
 	AE_threads     int
 	Port_Server    int
-	Seedpeer       []string `validate:"ipport"`
-	Allow          []string `validate:"ipmask"`
+	Seedpeer       []string `ac/validate:"ipport"`
+	Allow          []string `ac/validate:"ipmask"`
 	Monitor        []*Monitor
 	Debug          map[string]bool
 	Database       []*DBConf
@@ -130,7 +130,7 @@ func readConfig(file string) error {
 		Database: make([]*DBConf, 0),
 	}
 
-	err := accfg.Read(file, newcf)
+	err := acconfig.Read(file, newcf)
 
 	if err != nil {
 		return fmt.Errorf("cannot read config '%s': %v", file, err)
@@ -140,9 +140,9 @@ func readConfig(file string) error {
 	cf = newcf
 	cf_lock.Unlock()
 
-	diag.SetConfig(&diag.Config{
-		Mailto:   newcf.Error_mailto,
-		Mailfrom: newcf.Error_mailfrom,
+	diag.SetConfig(diag.Config{
+		MailTo:   newcf.Error_mailto,
+		MailFrom: newcf.Error_mailfrom,
 		Debug:    newcf.Debug,
 		Facility: newcf.Syslog,
 	})

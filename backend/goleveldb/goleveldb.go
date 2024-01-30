@@ -9,7 +9,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/util"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 )
 
 type Be struct {

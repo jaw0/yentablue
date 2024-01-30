@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 
 	"github.com/jaw0/yentablue/proto"
 	"github.com/jaw0/yentablue/soty"

@@ -17,7 +17,7 @@ import (
 	"google.golang.org/grpc"
 	gpeer "google.golang.org/grpc/peer"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 
 	"github.com/jaw0/yentablue/config"
 	"github.com/jaw0/yentablue/proto"

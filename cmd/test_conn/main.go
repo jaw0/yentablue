@@ -13,7 +13,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 
 	"github.com/jaw0/yentablue/proto"
 )
@@ -33,7 +33,7 @@ func main() {
 		diag.Fatal("%v", err)
 	}
 
-	diag.SetConfig(&diag.Config{
+	diag.SetConfig(diag.Config{
 		Debug: map[string]bool{"all": true},
 	})
 

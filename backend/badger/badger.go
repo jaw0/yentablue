@@ -10,7 +10,7 @@ import (
 
 	"github.com/dgraph-io/badger"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 )
 
 type Be struct {

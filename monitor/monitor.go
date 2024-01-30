@@ -11,7 +11,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 	"github.com/jaw0/kibitz"
 	"github.com/jaw0/kibitz/myinfo"
 

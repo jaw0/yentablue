@@ -9,7 +9,7 @@ import (
 	"math/rand"
 	"sync"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 	"github.com/jaw0/kibitz/lamport"
 
 	"github.com/jaw0/yentablue/proto"

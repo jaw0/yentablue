@@ -14,7 +14,7 @@ import (
 	"github.com/golang/snappy"
 	"github.com/hashicorp/golang-lru"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 	"github.com/jaw0/kibitz"
 
 	"github.com/jaw0/yentablue/crypto"

@@ -11,7 +11,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"strings"
 
-	"github.com/jaw0/acgo/diag"
+	"github.com/jaw0/acdiag"
 )
 
 type Be struct {
